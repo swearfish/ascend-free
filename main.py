@@ -1,5 +1,10 @@
+from ascendancy_game import AscendancyGame
+
+
 def main():
-    print("Hello world")
+    
+    game = AscendancyGame()
+    game.run()
 
 
 if __name__ == "__main__":
