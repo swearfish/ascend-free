@@ -5,6 +5,7 @@ def main():
     
     game = AscendancyGame()
     game.run()
+    game.close()
 
 
 if __name__ == "__main__":

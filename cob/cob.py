@@ -6,6 +6,7 @@ Based on https://github.com/daumiller/ascendancy
 import io
 import os
 import struct
+from typing import AnyStr
 
 
 class CobFile:
@@ -48,8 +49,11 @@ class CobArchive:
     def close(self):
         self._handle.close()
 
-    def read_file(self, name: str):
-        assert name in self.files, f'{name} not found'
+    def exists(self, name: str) -> bool:
+        return name in self.files
+
+    def read_file(self, name: str) -> AnyStr:
+        assert self.exists(name), f'{name} not found'
         file = self.files[name]
         self._handle.seek(file.offset)
         return self._handle.read(file.size)

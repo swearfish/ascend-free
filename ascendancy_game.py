@@ -3,6 +3,7 @@ import sys
 import pygame as pg
 
 from cob import CobArchive
+from cob.file_system import FileSystem
 from settings import SCREEN_SIZE, GAME_NAME
 
 
@@ -13,14 +14,9 @@ class AscendancyGame:
         self.screen = pg.display.set_mode(SCREEN_SIZE)
         pg.mouse.set_visible(True)
         pg.display.set_caption(GAME_NAME, GAME_NAME)
+        self.fs = FileSystem('../assets')
 
-        self.cobs = [
-            CobArchive('../assets/ascend00.cob'),
-            CobArchive('../assets/ascend01.cob'),
-            CobArchive('../assets/ascend02.cob')
-            ]
-        bg_data = self.cobs[1].read_file('data/0opening.gif')
-        self.bg = pg.image.load('../assets/cob01/data/0opening.gif')
+        self.bg = pg.image.load(self.fs.get_as_file('data/0opening.gif', 1))
 
     def run(self):
         while True:
@@ -30,8 +26,7 @@ class AscendancyGame:
             pg.display.flip()
 
     def close(self):
-        for cob in self.cobs:
-            cob.close()
+        self.fs.close()
 
     def update(self):
         pass
