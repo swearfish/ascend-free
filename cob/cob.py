@@ -55,5 +55,13 @@ class CobArchive:
     def read_file(self, name: str) -> AnyStr:
         assert self.exists(name), f'{name} not found'
         file = self.files[name]
+        return self._read(file)
+
+    def _read(self, file: CobFile) -> AnyStr:
         self._handle.seek(file.offset)
         return self._handle.read(file.size)
+
+
+def dump_file(content: AnyStr, file_name: str | os.PathLike[str]):
+    with open(file_name, "wb") as f:
+        f.write(content)

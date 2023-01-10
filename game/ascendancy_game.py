@@ -2,8 +2,7 @@ import sys
 
 import pygame as pg
 
-from cob import CobArchive
-from cob.file_system import FileSystem
+from engine import FileSystem
 from settings import SCREEN_SIZE, GAME_NAME
 
 

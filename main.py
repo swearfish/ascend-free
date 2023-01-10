@@ -1,4 +1,4 @@
-from ascendancy_game import AscendancyGame
+from game.ascendancy_game import AscendancyGame
 
 
 def main():

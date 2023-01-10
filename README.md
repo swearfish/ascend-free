@@ -22,6 +22,14 @@ game, and they also offer the original user manual and a useful handbook.
 Ascendancy as most games of its era used its own file formats.
 I've used an open sourced tool from GitHub: https://github.com/daumiller/ascendancy 
 
+### Other useful sources
+
+https://b-sting.nl/ascendancy/about.html
+
+https://mikefay.info/wiki/index.php?title=Game-Ascendancy
+
+https://github.com/btigi/iiAscendancyLib
+
 ## Motivation
 
 Ascendancy was a childhood favourite for me. Unfortunately I had no access to the
