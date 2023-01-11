@@ -9,6 +9,7 @@ class LogoScene(Scene):
     def __init__(self):
         self.blending = None
         self.logo: Surface | None = None
+        self.alpha = 0
 
     def enter(self):
         pass
@@ -25,18 +26,17 @@ class LogoScene(Scene):
         pass
 
     def update(self, total_time: float, frame_time: float):
-        alpha = None
         if total_time < 1000:
-            alpha = total_time // 4
+            self.alpha = total_time // 4
         elif total_time < 2000:
-            alpha = 255
+            self.alpha = 255
         elif total_time < 3000:
-            alpha = (3000-total_time) // 4
+            self.alpha = (3000-total_time) // 4
         else:
-            alpha = 0
-        if alpha is not None and 0 <= alpha < 256:
-            self.logo.set_alpha(alpha)
+            self.alpha = 0
 
     def draw(self, screen: Surface | SurfaceType):
         screen.fill((0,0,0))
-        screen.blit(self.logo, (0,0))
+        if 0 <= self.alpha < 256:
+            self.logo.set_alpha(self.alpha)
+            screen.blit(self.logo, (0,0))

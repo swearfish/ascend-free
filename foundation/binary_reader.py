@@ -76,6 +76,9 @@ class BinaryReader:
     def read_bytes(self, byte_count: int) -> AnyStr:
         pass
 
+    def read_all(self) -> AnyStr:
+        return self.read_bytes(self.remaining)
+
     def read_int8(self) -> Optional[int]:
         return self._read_fmt(1, self._fmt_i8)
 

@@ -19,6 +19,7 @@ class FileSystem:
             cob.close()
 
     def find_file(self, name: str, cob_index: int | None = None) -> CobFile:
+        name = name.replace('\\', '/')
         if cob_index is None:
             for cob in self.cobs:
                 if cob.exists(name):
@@ -33,6 +34,12 @@ class FileSystem:
         file = self.find_file(name, cob)
         return file.read_all()
 
+    def read_text(self, name: str, cob: int | None = None) -> str:
+        return self.read_file(name, cob).decode('utf-8')
+
+    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n') -> list[str]:
+        return self.read_text(name, cob).split(line_ending)
+
     def open_file(self, name: str, cob: int | None = None, buffered: bool = False) -> BinaryReader:
         if buffered:
             buffer = self.read_file(name, cob)
@@ -40,13 +47,18 @@ class FileSystem:
         else:
             return self.find_file(name, cob).open_reader()
 
-    def get_as_file(self, name: str, cob: int | None = None) -> ntpath:
+    def get_cached_name(self, name: str) -> ntpath:
+        name = name.replace('\\', '/')
         parts = name.split('/')
         cache_dir = self.cache_dir
         for i in range(0, len(parts) - 1):
             cache_dir = os.path.join(cache_dir, parts[i])
         os.makedirs(cache_dir, exist_ok=True)
         cache_file = os.path.join(cache_dir, parts[-1])
+        return cache_file
+
+    def get_as_file(self, name: str, cob: int | None = None) -> ntpath:
+        cache_file = self.get_cached_name(name)
         if not os.path.exists(cache_file):
             content = self.read_file(name, cob)
             with open(cache_file, "wb") as f:

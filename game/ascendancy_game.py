@@ -2,7 +2,7 @@ import sys
 
 import pygame as pg
 
-from engine import FileSystem
+from engine import FileSystem, Jukebox
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from game.logo_scene import LogoScene
@@ -19,6 +19,8 @@ class AscendancyGame:
         self.fs = FileSystem('../assets')
         self.res = ResourceManager(self.fs)
         self.scenes = SceneManager(LogoScene(), self.screen, self.res)
+        self.jukebox = Jukebox(self.fs)
+        self.jukebox.play_now(0)
 
     def run(self):
         while True:
