@@ -1,9 +1,9 @@
 import os
 
-from cob.palette import Palette
-from cob.shape import Shape
-from cob.shape_image import ShapeImage
-from engine.binary_reader import open_binary_reader, BinaryReader
+from ascendancy.palette import Palette
+from ascendancy.shp.shape import Shape
+from ascendancy.shp.shape_image import ShapeImage
+from foundation import BinaryReader, binary_reader_from_file_path
 
 
 def extract_shapes(filename: os.PathLike[str] | str, pal0: Palette):
@@ -12,7 +12,7 @@ def extract_shapes(filename: os.PathLike[str] | str, pal0: Palette):
     parent = os.path.join(parent, file_ + '.ext')
     if not os.path.isdir(parent):
         os.makedirs(parent)
-    with open_binary_reader(filename) as reader:
+    with binary_reader_from_file_path(filename) as reader:
         read_shp_file(reader, parent, pal0)
 
 

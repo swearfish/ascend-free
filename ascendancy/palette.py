@@ -1,4 +1,4 @@
-from engine.binary_reader import BinaryReader
+from foundation import BinaryReader
 
 
 class Palette:

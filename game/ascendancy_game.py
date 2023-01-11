@@ -3,6 +3,7 @@ import sys
 import pygame as pg
 
 from engine import FileSystem
+from engine.resource_manager import ResourceManager
 from settings import SCREEN_SIZE, GAME_NAME
 
 
@@ -14,8 +15,10 @@ class AscendancyGame:
         pg.mouse.set_visible(True)
         pg.display.set_caption(GAME_NAME, GAME_NAME)
         self.fs = FileSystem('../assets')
+        self.res = ResourceManager(self.fs)
 
-        self.bg = pg.image.load(self.fs.get_as_file('data/0opening.gif', 1))
+        self.logo = self.res.read_gif('data/logo.gif')
+        self.bg = self.res.read_gif('data/0opening.gif')
 
     def run(self):
         while True:
@@ -32,7 +35,7 @@ class AscendancyGame:
 
     def draw(self):
         self.screen.fill((0,0,0))
-        self.screen.blit(self.bg, (0, 0))
+        self.screen.blit(self.logo, (0, 0))
         pass
 
     def check_events(self):

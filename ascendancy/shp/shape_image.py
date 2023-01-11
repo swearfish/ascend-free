@@ -3,9 +3,9 @@ from pathlib import Path
 
 import png
 
-from cob.palette import Palette
-from cob.shape_exception import ShapeException
-from engine.binary_reader import BinaryReader
+from ascendancy.palette import Palette
+from ascendancy.shp.shape_exception import ShapeException
+from foundation import BinaryReader
 
 
 class ShapeImageReader:

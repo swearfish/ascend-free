@@ -1,6 +1,6 @@
 import struct
-from os import PathLike
-from typing import BinaryIO, AnyStr, Literal, Optional
+from abc import abstractmethod
+from typing import AnyStr, Literal, Optional
 
 ENDIANNESS = Literal['LITTLE_ENDIAN', 'BIG_ENDIAN', 'NATIVE']
 
@@ -24,8 +24,7 @@ U_SIZE_CHR = {
 
 
 class BinaryReader:
-    def __init__(self, handle: BinaryIO, endianness: ENDIANNESS = 'NATIVE', close_handle: bool = True,
-                 start_pos: int = None, size: int = None):
+    def __init__(self, endianness: ENDIANNESS = 'NATIVE'):
         self._fmt_i8 = None
         self._fmt_i16 = None
         self._fmt_i32 = None
@@ -33,17 +32,7 @@ class BinaryReader:
         self._fmt_u16 = None
         self._fmt_u32 = None
         self._endianness = None
-        self._handle = handle
         self.set_endianness(endianness)
-        self._close_handle = close_handle
-        tmp_pos = self._handle.tell()
-        if size is None:
-            self._size = self._handle.seek(0, 2)
-            self._handle.seek(tmp_pos)
-        else:
-            self._size = size
-        self._start_pos = tmp_pos if start_pos is None else start_pos
-        self._position = self._start_pos
 
     def __enter__(self):
         return self
@@ -65,21 +54,27 @@ class BinaryReader:
     def eof(self):
         return self.remaining <= 0
 
+    @abstractmethod
     def seek(self, offset: int) -> int:
-        self._position = min(self._size, offset)
-        return self._handle.seek(self._start_pos + self._position) - self._start_pos
+        pass
 
     @property
+    @abstractmethod
     def position(self) -> int:
-        return self._position
+        pass
 
     @property
+    @abstractmethod
     def remaining(self) -> int:
-        return self._size - self._position
+        pass
 
+    @abstractmethod
     def close(self):
-        if self._close_handle:
-            self._handle.close()
+        pass
+
+    @abstractmethod
+    def read_bytes(self, byte_count: int) -> AnyStr:
+        pass
 
     def read_int8(self) -> Optional[int]:
         return self._read_fmt(1, self._fmt_i8)
@@ -99,12 +94,6 @@ class BinaryReader:
     def read_uint32(self) -> Optional[int]:
         return self._read_fmt(4, self._fmt_u32)
 
-    def read_bytes(self, byte_count: int) -> AnyStr:
-        to_read = min(byte_count, self.remaining)
-        result = self._handle.read(to_read)
-        self._position += len(result)
-        return result
-
     def _read_fmt(self, byte_count: int, fmt: str) -> Optional[int]:
         buffer = self.read_bytes(byte_count)
         if len(buffer) < byte_count:
@@ -120,8 +109,3 @@ class BinaryReader:
         else:
             format_chr = U_SIZE_CHR[size]
         return endianness_chr + format_chr
-
-
-def open_binary_reader(file_name: PathLike[str] | str, endianness: ENDIANNESS = 'NATIVE') -> BinaryReader:
-    handle = open(file_name, 'rb')
-    return BinaryReader(handle, endianness)
