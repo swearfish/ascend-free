@@ -4,7 +4,8 @@ from os import PathLike
 from typing import AnyStr
 
 from cob import CobArchive
-from cob.shape import extract_shapes, read_palette
+from cob.shape_tools import extract_shapes
+from cob.palette import read_palette
 from engine.binary_reader import open_binary_reader
 
 
