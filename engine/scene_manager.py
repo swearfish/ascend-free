@@ -9,11 +9,11 @@ class SceneManager:
     def __init__(self, first_scene: Scene, screen: pg.Surface | SurfaceType, res: ResourceManager):
         self.active_scene: Scene | None = None
         self.clock = pg.time.Clock()
-        self.scene_enter_time = self.clock.get_time()
-        self.prev_frame_time = self.clock.get_time()
+        self.scene_enter_time = pg.time.get_ticks()
         self.screen = screen
         self.res = res
         self.enter_scene(first_scene)
+        self.frame_rate = 30
 
     def enter_scene(self, scene: Scene):
         if self.active_scene == scene:
@@ -24,14 +24,14 @@ class SceneManager:
         self.active_scene = scene
         self.active_scene.load(self.res)
         self.active_scene.enter()
+        self.scene_enter_time = pg.time.get_ticks()
 
     def update(self):
-        time = self.clock.get_time()
-        time_scene = time - self.scene_enter_time
-        time_elapsed = time - self.prev_frame_time
-        self.prev_frame_time = time
-        self.active_scene.update(time_scene, time_elapsed)
-        self.clock.tick()
+        self.clock.tick(self.frame_rate)
+        current_time = pg.time.get_ticks()
+        total_scene_time = current_time - self.scene_enter_time
+        time_elapsed = self.clock.get_time()
+        self.active_scene.update(total_scene_time, time_elapsed)
 
     def draw(self):
         self.active_scene.draw(self.screen)
