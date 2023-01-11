@@ -4,6 +4,8 @@ import pygame as pg
 
 from engine import FileSystem
 from engine.resource_manager import ResourceManager
+from engine.scene_manager import SceneManager
+from game.logo_scene import LogoScene
 from settings import SCREEN_SIZE, GAME_NAME
 
 
@@ -16,27 +18,17 @@ class AscendancyGame:
         pg.display.set_caption(GAME_NAME, GAME_NAME)
         self.fs = FileSystem('../assets')
         self.res = ResourceManager(self.fs)
-
-        self.logo = self.res.read_gif('data/logo.gif')
-        self.bg = self.res.read_gif('data/0opening.gif')
+        self.scenes = SceneManager(LogoScene(), self.screen, self.res)
 
     def run(self):
         while True:
             self.check_events()
-            self.update()
-            self.draw()
+            self.scenes.update()
+            self.scenes.draw()
             pg.display.flip()
 
     def close(self):
         self.fs.close()
-
-    def update(self):
-        pass
-
-    def draw(self):
-        self.screen.fill((0,0,0))
-        self.screen.blit(self.logo, (0, 0))
-        pass
 
     def check_events(self):
         for event in pg.event.get():
