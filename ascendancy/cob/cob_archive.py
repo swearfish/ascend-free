@@ -6,15 +6,24 @@ Based on https://github.com/daumiller/ascendancy
 import io
 import os
 import struct
+import sys
 from typing import AnyStr
 
 from ascendancy.cob.cob_file import CobFile
 from foundation import BinaryReader
+from settings import ORIGINAL_TITLE
 
 
 class CobArchive:
     def __init__(self, cob_file_name: str):
-        self._handle = open(cob_file_name, 'rb')
+        try:
+            self._handle = open(cob_file_name, 'rb')
+        except Exception:
+            print(f'FATAL ERROR: unable to open {cob_file_name}!')
+            print(f'Please ensure that ASSETS directory is properly configured,')
+            print(f'and copy original {ORIGINAL_TITLE["game_name"]} assets (*.cob) into the ASSETS directory!')
+            print('')
+            sys.exit()
         self._handle.seek(0, io.SEEK_SET)
         self.files: dict[str, CobFile] = {}
         num_files = struct.unpack('<i', self._handle.read(4))[0]

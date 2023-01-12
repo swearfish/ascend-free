@@ -1,5 +1,3 @@
-import sys
-
 import pygame as pg
 
 from engine import FileSystem, Jukebox
@@ -23,8 +21,7 @@ class AscendancyGame:
         self.jukebox.play_now(0)
 
     def run(self):
-        while True:
-            self.check_events()
+        while self.check_events():
             self.scenes.update()
             self.scenes.draw()
             pg.display.flip()
@@ -36,4 +33,5 @@ class AscendancyGame:
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
-                sys.exit()
+                return False
+        return True
