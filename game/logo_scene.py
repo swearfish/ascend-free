@@ -3,6 +3,7 @@ from pygame.surface import SurfaceType, Surface
 
 from engine.resource_manager import ResourceManager
 from engine.scene import Scene
+from settings import SCREEN_SIZE
 
 
 class LogoScene(Scene):
@@ -18,7 +19,8 @@ class LogoScene(Scene):
         pass
 
     def load(self, res: ResourceManager):
-        self.logo = res.read_gif('data/logo.gif')
+        logo = res.read_gif('data/logo.gif')
+        self.logo = pg.transform.scale(logo, SCREEN_SIZE)
         pass
 
     def unload(self):
@@ -39,4 +41,4 @@ class LogoScene(Scene):
         screen.fill((0,0,0))
         if 0 <= self.alpha < 256:
             self.logo.set_alpha(self.alpha)
-            screen.blit(self.logo, (0,0))
+            screen.blit(self.logo, (0, 0))

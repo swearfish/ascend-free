@@ -4,7 +4,7 @@ from engine import FileSystem, Jukebox
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from game.logo_scene import LogoScene
-from settings import SCREEN_SIZE, GAME_NAME
+from settings import ORIGINAL_SCREEN_SIZE, GAME_NAME, SCREEN_SIZE
 
 
 class AscendancyGame:
