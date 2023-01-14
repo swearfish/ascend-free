@@ -1,3 +1,5 @@
+import pyglet.app
+
 from game.ascendancy_game import AscendancyGame
 from settings import GAME_NAME, ORIGINAL_TITLE, COPYRIGHT, LICENSE
 
@@ -17,9 +19,8 @@ def main():
         print(f'\t{ORIGINAL_TITLE["copyright"]}')
         print('\tAll rights reserved!')
     print('')
-    game = AscendancyGame()
-    game.run()
-    game.close()
+    with AscendancyGame() as game:
+        game.run()
 
     print('')
     print(f'Thank you for playing {GAME_NAME}.')

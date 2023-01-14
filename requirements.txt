@@ -1,2 +1,4 @@
-pygame
+pygame~=2.1.2
 pypng
+
+pyglet~=2.0.3

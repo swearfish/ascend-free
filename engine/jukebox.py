@@ -1,15 +1,16 @@
 import os.path
 
-import pygame as pg
+import pygame
 
 from ascendancy.voc import convert_voice
 from .file_system import FileSystem
+from .game_engine import the_engine
 
 
-class Jukebox():
-    def __init__(self, fs: FileSystem):
-        self.fs = fs
-        self.music_list = fs.read_lines('music.txt')
+class Jukebox:
+    def __init__(self):
+        self.fs: FileSystem = the_engine.get(FileSystem)
+        self.music_list = self.fs.read_lines('music.txt')
         music_count = int(self.music_list[0])
         assert music_count < len(self.music_list)
         self.music_list = self.music_list[1:music_count+1]
@@ -21,8 +22,8 @@ class Jukebox():
         if not os.path.exists(cached_name):
             with self.fs.open_file(name) as voc:
                 convert_voice(voc, cached_name)
-        pg.mixer.music.load(cached_name)
-        pg.mixer.music.play()
+        pygame.mixer.music.load(cached_name)
+        pygame.mixer.music.play()
 
     def play_now(self, index: int):
         self.play_music(self.music_list[index])

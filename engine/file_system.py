@@ -47,7 +47,7 @@ class FileSystem:
         else:
             return self.find_file(name, cob).open_reader()
 
-    def get_cached_name(self, name: str) -> ntpath:
+    def get_cached_name(self, name: str, include_cache_path = True) -> ntpath:
         name = name.replace('\\', '/')
         parts = name.split('/')
         cache_dir = self.cache_dir
@@ -55,12 +55,13 @@ class FileSystem:
             cache_dir = os.path.join(cache_dir, parts[i])
         os.makedirs(cache_dir, exist_ok=True)
         cache_file = os.path.join(cache_dir, parts[-1])
-        return cache_file
+        # return cache_file
+        return cache_file if include_cache_path else cache_file[len(self.cache_dir) + 1:]
 
-    def get_as_file(self, name: str, cob: int | None = None) -> ntpath:
+    def get_as_file(self, name: str, cob: int | None = None, include_cache_path = True) -> ntpath:
         cache_file = self.get_cached_name(name)
         if not os.path.exists(cache_file):
             content = self.read_file(name, cob)
             with open(cache_file, "wb") as f:
                 f.write(content)
-        return cache_file
+        return cache_file if include_cache_path else cache_file[len(self.cache_dir) + 1:]
