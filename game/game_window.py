@@ -1,4 +1,3 @@
-# import pygame as pygame
 import pygame
 
 from engine import FileSystem, Jukebox
@@ -6,10 +5,11 @@ from engine.game_engine import the_engine
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from game.logo_scene import LogoScene
+from game.main_menu import MainMenu
 from settings import GAME_NAME, SCREEN_SIZE
 
 
-class AscendancyGame():
+class GameWindow:
 
     def __init__(self):
         super().__init__()
@@ -23,9 +23,10 @@ class AscendancyGame():
         self.jukebox: Jukebox = the_engine.register(Jukebox)
         self.scene_manager: SceneManager = the_engine.register(SceneManager, init_args=[self.screen])
 
-        self.jukebox.play_now(0)
         self.time = pygame.time.get_ticks()
-        self.scene_manager.enter_scene(LogoScene())
+        self.scene_manager.register_scene('logo', LogoScene)
+        self.scene_manager.register_scene('main_menu', MainMenu)
+        self.scene_manager.enter_scene('logo')
 
     def __enter__(self):
         return self
@@ -49,7 +50,8 @@ class AscendancyGame():
     def close(self):
         self.file_system.close()
 
-    def check_events(self):
+    @staticmethod
+    def check_events():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()

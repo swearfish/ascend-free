@@ -1,11 +1,9 @@
 import pygame.transform
 from pygame.surface import Surface
 
-from engine.game_engine import the_engine
-
 
 class Sprite:
-    def __init__(self, image, pos = (0, 0), center = (0, 0), size = None, opacity = 255):
+    def __init__(self, image, pos=(0, 0), center=(0, 0), size=None):
         self._orig_img: Surface = image
         self._pos = (0, 0)
         self._center = center

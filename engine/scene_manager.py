@@ -1,3 +1,5 @@
+from typing import Type
+
 from .game_engine import the_engine
 from .resource_manager import ResourceManager
 from .scene import Scene
@@ -11,20 +13,31 @@ class SceneManager:
         self._total_time = 0
         self._next_scene = None
         self._screen = screen
+        self._scenes: dict[str, Type[Scene]] = {}
 
-    def enter_scene(self, scene: Scene):
-        if self._active_scene == scene:
+    def register_scene(self, name: str, clazz: Type[Scene]):
+        self._scenes[name] = clazz
+
+    def enter_scene(self, scene: Scene | Type[Scene] | str):
+        if isinstance(scene, str):
+            assert scene in self._scenes, f'Unknown scene {scene}'
+            scene = self._scenes[scene]
+        # noinspection PyTypeChecker
+        if isinstance(scene, Type):
+            scene = scene(self)
+        if self._active_scene == scene or self._next_scene == scene:
             return
         self._next_scene = scene
 
     def _do_scene_switch(self):
+        if self._active_scene == self._next_scene:
+            return
         if self._active_scene is not None:
             self._active_scene.exit()
-            self._active_scene.unload()
         self._active_scene = self._next_scene
         self._next_scene = None
-        self._active_scene.load(self._resource_manager)
-        self._active_scene.enter()
+        if self._active_scene is not None:
+            self._active_scene.enter()
         self._scene_time = 0
 
     def update(self, time_delta):
@@ -36,4 +49,4 @@ class SceneManager:
 
     def draw(self):
         if self._active_scene is not None:
-            self._active_scene.draw(self._screen)
+            self._active_scene.draw()
