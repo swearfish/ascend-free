@@ -2,6 +2,18 @@
 
 ## January
 
+### 16
+
+Implemented font rendering and GUI basics.
+
+Realized, that rendering all scenes in 640x480 and scaling the back buffer to 
+fit the screen will make my life much easier for now.
+
+I might implement resizable GUI in the future, but that will require a much more
+complex logic than scaling coordinates.
+
+Nevertheless, the font rendering supports different font sizes.
+
 ### 14
 
 Had some experimentation with pyglet, which supposed to be faster 

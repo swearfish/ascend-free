@@ -5,6 +5,7 @@ from engine.lin_alg import Area
 
 class Control:
     def __init__(self):
+        self.children: list[Control] = []
         pass
 
     def mouse_enter(self):

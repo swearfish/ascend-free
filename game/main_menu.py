@@ -35,3 +35,6 @@ class MainMenu(Scene):
         self.small_font.text_out('Hello world', self.screen, Vec2(0, 0), FONT_SIZE)
         self.big_font.text_out('Hello world', self.screen, Vec2(0, 20), FONT_SIZE)
         self.intro_font.text_out('Hello world', self.screen, Vec2(0, 50), FONT_SIZE)
+
+    def handle_back_key(self) -> bool:
+        return True

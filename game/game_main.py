@@ -10,7 +10,7 @@ def run_game():
     print(f'Licensed under terms of {LICENSE}, for further details read LICENSE file in the source folder')
     if ORIGINAL_TITLE:
         print('')
-        print(f'Based on original PC game:')
+        print(f'This remake is based on original PC game:')
         print('')
         print(f'\t{ORIGINAL_TITLE["game_name"]}')
         print(f'\t{ORIGINAL_TITLE["copyright"]}')

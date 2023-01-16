@@ -22,3 +22,7 @@ class Scene:
 
     def draw(self):
         pass
+
+    # noinspection PyMethodMayBeStatic
+    def handle_back_key(self) -> bool:
+        return False
