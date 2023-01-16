@@ -6,6 +6,8 @@ class Palette:
         self.entries: list[list[int]] = []
         for index in range(size):
             rgb = reader.read_bytes(3)
+            if len(rgb) < 3:
+                break
             self.entries.append([rgb[0] << 2, rgb[1] << 2, rgb[2] << 2, 0xFF])
 
     def get_color_for_index(self, index: int):

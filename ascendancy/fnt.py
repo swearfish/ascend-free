@@ -5,9 +5,11 @@ from foundation import BinaryReader
 
 
 class Font:
-    def __init__(self, reader: BinaryReader, pal: Palette):
+    def __init__(self, name: str, reader: BinaryReader, pal: Palette):
+        self.name = name
         self.palette = pal
         self.color_key: int | None = None
+        self.transparent_color: list[int] | None = None
         self.chars: dict[str, tuple] = {}
         self.character_height: int | None = None
         self.total_width = 0
@@ -32,6 +34,7 @@ class Font:
         character_count = reader.read_uint32()
         self.character_height = reader.read_uint32()
         self.color_key = reader.read_uint32()
+        self.transparent_color = self.palette.entries[self.color_key]
 
         self.pixels = []
         for i in range(self.character_height):
@@ -49,7 +52,7 @@ class Font:
         if not width:
             return
 
-        result = (self.total_width, 0, self.total_width + width, self.character_height)
+        result = (self.total_width, 0, width, self.character_height)
         self.total_width += width
         for y in range(self.character_height):
             row = self.pixels[y]

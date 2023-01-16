@@ -3,25 +3,34 @@ import os.path
 import pygame.image
 
 from ascendancy import Palette, Shape
+from ascendancy.fnt import Font
 from engine import FileSystem
 from engine.game_engine import the_engine
 from engine.sprite import Sprite
+from engine.text_render import TextRenderer
 
 COLOR_BUTTON_BG = (12, 32, 49)
 COLOR_BUTTON_BG_HIGH = (16, 69, 77)
 
+
 class ResourceManager:
     def __init__(self):
         self.fs: FileSystem = the_engine.get(FileSystem)
-        self.game_pal = self.read_palette('data/game.pal')
+        self.fonts: dict[str, TextRenderer] = {}
+        self.palette: dict[str, Palette] = {}
+
+        self.game_pal = self.get_palette('data/game.pal')
         self.shapes: dict[str, Shape] = {}
         from ascendancy.windows_txt import load_windows_txt
         self.windows = load_windows_txt(self.fs.read_lines('windows.txt'))
         pass
 
-    def read_palette(self, name: str) -> Palette:
+    def get_palette(self, name: str) -> Palette:
+        if name in self.palette:
+            return self.palette[name]
         with self.fs.open_file(name) as f:
-            return Palette(f)
+            result = self.palette[name] = Palette(f)
+            return result
 
     def read_gif(self, name: str):
         physical_file = self.fs.get_as_file(name)
@@ -46,3 +55,14 @@ class ResourceManager:
 
     def sprite_from_gif(self, name: str, size=None) -> Sprite:
         return Sprite(self.read_gif(name), size=size)
+
+    def get_font(self, name: str, palette: Palette = None) -> TextRenderer:
+        if name in self.fonts:
+            return self.fonts[name]
+        if palette is None:
+            palette = self.game_pal
+        with self.fs.open_file(name) as f:
+            font = Font(name, f, palette)
+            renderer = TextRenderer(font)
+            self.fonts[name] = renderer
+            return renderer

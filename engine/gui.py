@@ -1,3 +1,8 @@
+from typing import Optional
+
+from engine.lin_alg import Area
+
+
 class Control:
     def __init__(self):
         pass
@@ -24,7 +29,7 @@ class Frame(Control):
 
 
 class Button(Control):
-    def __init__(self, name: str, help_index: str = None, area):
+    def __init__(self, name: str, help_index: str = None, area: Optional[Area] = None):
         super().__init__()
         self.name = name
         self.area = area
