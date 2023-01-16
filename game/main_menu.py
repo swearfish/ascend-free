@@ -2,13 +2,13 @@ import pygame
 
 from engine.scene import Scene
 from engine.lin_alg import Vec2
-from settings import SCREEN_SIZE, ORIGINAL_SCREEN_SIZE, FONT_SIZE
+from settings import SCREEN_SIZE, FONT_SIZE
 
 
 class MainMenu(Scene):
     def __init__(self, sm):
         super().__init__(sm)
-        self.bg = self.resource_manager.sprite_from_gif('data/0opening.gif', size=SCREEN_SIZE)
+        self.bg = self.resource_manager.sprite_from_gif('data/0opening.gif')
         self.buffer = pygame.Surface(SCREEN_SIZE)
         self.small_font = self.resource_manager.get_font('data/smfont.fnt')
         self.big_font = self.resource_manager.get_font('data/bigfont.fnt')

@@ -1,13 +1,12 @@
 from engine import Jukebox
 from engine.game_engine import the_engine
 from engine.scene import Scene
-from settings import SCREEN_SIZE
 
 
 class LogoScene(Scene):
     def __init__(self, sm):
         super().__init__(sm)
-        self.logo = self.resource_manager.sprite_from_gif('data/logo.gif', size=SCREEN_SIZE)
+        self.logo = self.resource_manager.sprite_from_gif('data/logo.gif')
         self.jukebox = the_engine.get(Jukebox)
 
     def enter(self):
