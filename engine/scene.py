@@ -1,14 +1,19 @@
 from pygame import Surface
 
-from engine.game_engine import the_engine
+from engine.gcom import gcom
+from engine.gui.gui_builder import AscendancyGui
 from engine.resource_manager import ResourceManager
+from foundation.vector import Vec2
 
 
 class Scene:
-    def __init__(self, scene_manager):
-        self.resource_manager: ResourceManager = the_engine.get(ResourceManager)
-        self.screen: Surface = the_engine.get(Surface)
+    def __init__(self, scene_manager, state_index: int = -1):
+        self.resource_manager: ResourceManager = gcom.get(ResourceManager)
+        self.screen: Surface = gcom.get(Surface)
         self.scene_manager = scene_manager
+        self.gui_manager: AscendancyGui = gcom.get(AscendancyGui)
+        if 0 <= state_index:
+            self.state_frame = self.gui_manager.states[state_index]
         pass
 
     def enter(self):
@@ -21,7 +26,8 @@ class Scene:
         pass
 
     def draw(self):
-        pass
+        if self.state_frame is not None:
+            self.state_frame.handle_draw(self.screen, Vec2(0, 0))
 
     # noinspection PyMethodMayBeStatic
     def handle_back_key(self) -> bool:

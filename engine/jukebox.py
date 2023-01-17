@@ -2,14 +2,14 @@ import os.path
 
 import pygame
 
-from ascendancy.voc import convert_voice
+from ascendancy_assets import convert_voice
 from .file_system import FileSystem
-from .game_engine import the_engine
+from .gcom import gcom
 
 
 class Jukebox:
     def __init__(self):
-        self.fs: FileSystem = the_engine.get(FileSystem)
+        self.fs: FileSystem = gcom.get(FileSystem)
         self.music_list = self.fs.read_lines('music.txt')
         music_count = int(self.music_list[0])
         assert music_count < len(self.music_list)

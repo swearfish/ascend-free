@@ -9,7 +9,7 @@ import struct
 import sys
 from typing import AnyStr
 
-from ascendancy.cob.cob_file import CobFile
+from .cob_file import CobFile
 from foundation import BinaryReader
 from settings import ORIGINAL_TITLE
 

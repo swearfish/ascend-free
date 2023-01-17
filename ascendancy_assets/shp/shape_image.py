@@ -3,8 +3,8 @@ from pathlib import Path
 
 import png
 
-from ascendancy.palette import Palette
-from ascendancy.shp.shape_exception import ShapeException
+from ..palette import Palette
+from .shape_exception import ShapeException
 from foundation import BinaryReader
 
 

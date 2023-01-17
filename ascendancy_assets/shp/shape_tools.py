@@ -1,8 +1,8 @@
 import os
 
-from ascendancy.palette import Palette
-from ascendancy.shp.shape import Shape
-from ascendancy.shp.shape_image import ShapeImage
+from ..palette import Palette
+from .shape import Shape
+from .shape_image import ShapeImage
 from foundation import BinaryReader, binary_reader_from_file_path
 
 

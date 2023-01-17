@@ -4,9 +4,9 @@ Based on https://github.com/daumiller/ascendancy
 
 """
 
-from ascendancy.palette import Palette
-from ascendancy.shp.shape_exception import ShapeException
-from ascendancy.shp.shape_image import image_from_reader, ShapeImage
+from ..palette import Palette
+from .shape_exception import ShapeException
+from .shape_image import image_from_reader, ShapeImage
 from foundation import BinaryReader
 
 SHAPE_MAGIC = 0x30312E31

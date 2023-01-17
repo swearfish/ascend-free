@@ -1,19 +1,14 @@
 import pygame
 
 from engine.scene import Scene
-from engine.lin_alg import Vec2
-from settings import SCREEN_SIZE, FONT_SIZE
+from settings import SCREEN_SIZE
 
 
 class MainMenu(Scene):
     def __init__(self, sm):
-        super().__init__(sm)
+        super().__init__(sm, state_index=0)
         self.bg = self.resource_manager.sprite_from_gif('data/0opening.gif')
         self.buffer = pygame.Surface(SCREEN_SIZE)
-        self.small_font = self.resource_manager.get_font('data/smfont.fnt')
-        self.big_font = self.resource_manager.get_font('data/bigfont.fnt')
-        self.intro_font = self.resource_manager.get_font('data/intro.fnt')
-        self.font_size = FONT_SIZE
         pass
 
     def enter(self):
@@ -32,9 +27,7 @@ class MainMenu(Scene):
         self.screen.fill((0, 0, 0))
         self.bg.draw(self.buffer)
         self.screen.blit(self.buffer, (0, 0))
-        self.small_font.text_out('Hello world', self.screen, Vec2(0, 0), FONT_SIZE)
-        self.big_font.text_out('Hello world', self.screen, Vec2(0, 20), FONT_SIZE)
-        self.intro_font.text_out('Hello world', self.screen, Vec2(0, 50), FONT_SIZE)
+        super().draw()
 
     def handle_back_key(self) -> bool:
         return True

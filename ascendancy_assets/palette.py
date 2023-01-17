@@ -2,8 +2,10 @@ from foundation import BinaryReader
 
 
 class Palette:
-    def __init__(self, reader: BinaryReader, size=256):
+    def __init__(self, reader: BinaryReader, start = 0, size=256):
         self.entries: list[list[int]] = []
+        for index in range(start):
+            self.entries.append([0, 0, 0])
         for index in range(size):
             rgb = reader.read_bytes(3)
             if len(rgb) < 3:

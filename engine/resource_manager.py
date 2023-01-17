@@ -2,34 +2,28 @@ import os.path
 
 import pygame.image
 
-from ascendancy import Palette, Shape
-from ascendancy.fnt import Font
+from ascendancy_assets import Palette, Shape
+from ascendancy_assets.fnt_file import FntFile
 from engine import FileSystem
-from engine.game_engine import the_engine
+from engine.gcom import gcom
 from engine.sprite import Sprite
-from engine.text_render import TextRenderer
-
-COLOR_BUTTON_BG = (12, 32, 49)
-COLOR_BUTTON_BG_HIGH = (16, 69, 77)
+from engine.text.text_render import TextRenderer
 
 
 class ResourceManager:
     def __init__(self):
-        self.fs: FileSystem = the_engine.get(FileSystem)
+        self.fs: FileSystem = gcom.get(FileSystem)
         self.fonts: dict[str, TextRenderer] = {}
         self.palette: dict[str, Palette] = {}
 
         self.game_pal = self.get_palette('data/game.pal')
         self.shapes: dict[str, Shape] = {}
-        from ascendancy.windows_txt import load_windows_txt
-        self.windows = load_windows_txt(self.fs.read_lines('windows.txt'))
-        pass
 
-    def get_palette(self, name: str) -> Palette:
+    def get_palette(self, name: str, start=0, size=256) -> Palette:
         if name in self.palette:
             return self.palette[name]
         with self.fs.open_file(name) as f:
-            result = self.palette[name] = Palette(f)
+            result = self.palette[name] = Palette(f, start, size)
             return result
 
     def read_gif(self, name: str):
@@ -41,7 +35,7 @@ class ResourceManager:
             with self.fs.open_file(name) as shp_file:
                 shape = Shape(shp_file, self.game_pal)
                 self.shapes[name] = shape
-        return self.shapes[name].images[index-1]
+        return self.shapes[name].images[index - 1]
 
     def image_from_shape(self, name: str, index: int = 1):
         extracted_name = f'{name}.ext/{index}.png'
@@ -57,12 +51,15 @@ class ResourceManager:
         return Sprite(self.read_gif(name), size=size)
 
     def get_font(self, name: str, palette: Palette = None) -> TextRenderer:
+        from engine.text.bitmap_font import BitmapFont
+        from engine.text.bitmap_text_render import BitmapTextRenderer
         if name in self.fonts:
             return self.fonts[name]
         if palette is None:
             palette = self.game_pal
         with self.fs.open_file(name) as f:
-            font = Font(name, f, palette)
-            renderer = TextRenderer(font)
+            fnt_file = FntFile(name, f, palette)
+            bitmap_font = BitmapFont(fnt_file)
+            renderer = BitmapTextRenderer(bitmap_font)
             self.fonts[name] = renderer
             return renderer

@@ -1,32 +1,32 @@
-def load_windows_txt(lines: str | list[str]) -> dict[str, int | str]:
+# noinspection SpellCheckingInspection
+def parse_windows_txt(lines: str | list[str]) -> dict[str, int | str]:
     if isinstance(lines, str):
         lines = lines.split('\r\n')
-    result = {
+    result: dict[str, any] = {
         'tables': [],
         'states': {}
     }
-    current_state = {}
-    current_window = {}
-    current_object = result
+    current_state: dict[str, any] = {}
+    current_object: dict[str, any] = result
     for line in lines:
         parts = list(filter(None, line.split(' ')))
         if len(parts) < 2:
             continue
-        name = parts[0]
-        args = parts[1:]
+        name: str = parts[0]
+        args: list[str] = parts[1:]
         if name == 'TABLE':
             result['tables'].append(args[0])
         if name == 'TYPE':
-            type = int(args[0])
-            if type == 100:
+            type_id = int(args[0])
+            if type_id == 100:
                 current_state = {
-                    'TYPE': type,
+                    'TYPE': type_id,
                     'windows': []
                 }
                 current_object = current_state
             else:
                 current_window = {
-                    'TYPE': type,
+                    'TYPE': type_id,
                     'items': []
                 }
                 current_object = current_window

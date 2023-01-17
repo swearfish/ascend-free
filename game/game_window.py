@@ -1,7 +1,8 @@
 import pygame
 
 from engine import FileSystem, Jukebox
-from engine.game_engine import the_engine
+from engine.gcom import gcom
+from engine.gui.gui_builder import AscendancyGui
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from game.logo_scene import LogoScene
@@ -19,15 +20,20 @@ class GameWindow:
         self.display_surface = pygame.display.set_mode(self.screen_size)
         self.back_buffer = pygame.surface.Surface(SCREEN_SIZE)
         self.front_buffer = pygame.surface.Surface(self.screen_size)
-        the_engine.register(pygame.Surface, self.back_buffer)
+        gcom.register(pygame.Surface, self.back_buffer)
 
         pygame.mouse.set_visible(True)
         pygame.display.set_caption(GAME_NAME, GAME_NAME)
 
-        self.file_system: FileSystem = the_engine.register(FileSystem, init_args=['../assets'])
-        self.resource_manager: ResourceManager = the_engine.register(ResourceManager)
-        self.jukebox: Jukebox = the_engine.register(Jukebox)
-        self.scene_manager: SceneManager = the_engine.register(SceneManager, init_args=[self.back_buffer])
+        self.file_system: FileSystem = gcom.register(FileSystem, init_args=['../assets'])
+        self.resource_manager: ResourceManager = gcom.register(ResourceManager)
+        self.jukebox: Jukebox = gcom.register(Jukebox)
+
+        from ascendancy_assets.txt.windows_txt import parse_windows_txt
+        windows = parse_windows_txt(self.file_system.read_lines('windows.txt'))
+        gcom.register(AscendancyGui, init_args=[windows])
+
+        self.scene_manager: SceneManager = gcom.register(SceneManager, init_args=[self.back_buffer])
 
         self.time = pygame.time.get_ticks()
         self.scene_manager.register_scene('logo', LogoScene)

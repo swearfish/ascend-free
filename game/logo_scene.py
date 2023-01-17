@@ -1,5 +1,5 @@
 from engine import Jukebox
-from engine.game_engine import the_engine
+from engine.gcom import gcom
 from engine.scene import Scene
 
 
@@ -7,7 +7,7 @@ class LogoScene(Scene):
     def __init__(self, sm):
         super().__init__(sm)
         self.logo = self.resource_manager.sprite_from_gif('data/logo.gif')
-        self.jukebox = the_engine.get(Jukebox)
+        self.jukebox = gcom.get(Jukebox)
 
     def enter(self):
         pass
@@ -16,8 +16,8 @@ class LogoScene(Scene):
         self.jukebox.play_now(0)
 
     def update(self, total_time: float, frame_time: float):
-        if total_time < 1000:
-            self.logo.set_opacity(int(total_time // 4))
+        if total_time < 500:
+            self.logo.set_opacity(int(total_time // 2))
         elif total_time < 2000:
             self.logo.set_opacity(255)
         elif total_time < 3000:

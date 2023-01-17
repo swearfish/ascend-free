@@ -1,4 +1,4 @@
-class GameEngine:
+class GCOM:
     def __init__(self):
         self.instances = {}
 
@@ -19,4 +19,4 @@ class GameEngine:
         return str(clazz)
 
 
-the_engine: GameEngine = GameEngine()
+gcom: GCOM = GCOM()

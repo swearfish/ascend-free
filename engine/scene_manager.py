@@ -1,6 +1,6 @@
 from typing import Type
 
-from .game_engine import the_engine
+from .gcom import gcom
 from .resource_manager import ResourceManager
 from .scene import Scene
 
@@ -8,7 +8,7 @@ from .scene import Scene
 class SceneManager:
     def __init__(self, screen):
         self._active_scene: Scene | None = None
-        self._resource_manager: ResourceManager = the_engine.get(ResourceManager)
+        self._resource_manager: ResourceManager = gcom.get(ResourceManager)
         self._scene_time = 0
         self._total_time = 0
         self._next_scene = None

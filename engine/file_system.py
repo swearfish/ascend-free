@@ -3,7 +3,7 @@ import os.path
 from os import PathLike
 from typing import AnyStr
 
-from ascendancy import CobArchive, CobFile
+from ascendancy_assets import CobArchive, CobFile
 from foundation import BinaryReader, binary_reader_from_buffer
 
 
@@ -19,7 +19,7 @@ class FileSystem:
             cob.close()
 
     def find_file(self, name: str, cob_index: int | None = None) -> CobFile:
-        name = name.replace('\\', '/')
+        name = name.replace('\\', '/').lower()
         if cob_index is None:
             for cob in self.cobs:
                 if cob.exists(name):
