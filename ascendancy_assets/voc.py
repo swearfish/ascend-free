@@ -1,3 +1,9 @@
+"""
+
+Originally based on https://github.com/daumiller/ascendancy
+
+"""
+
 import wave
 from os import PathLike
 from pathlib import Path

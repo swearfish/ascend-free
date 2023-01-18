@@ -1,3 +1,9 @@
+"""
+
+Originally based on https://github.com/daumiller/ascendancy
+
+"""
+
 import os
 from pathlib import Path
 

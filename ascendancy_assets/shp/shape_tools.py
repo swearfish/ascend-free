@@ -1,7 +1,13 @@
+"""
+
+Originally based on https://github.com/daumiller/ascendancy
+
+"""
+
 import os
 
 from ..palette import Palette
-from .shape import Shape
+from .shape_file import ShapeFile
 from .shape_image import ShapeImage
 from foundation import BinaryReader, binary_reader_from_file_path
 
@@ -18,7 +24,7 @@ def extract_shapes(filename: os.PathLike[str] | str, pal0: Palette):
 
 def read_shp_file(reader: BinaryReader, parent: os.PathLike[str] | str, pal0: Palette):
     reader.set_endianness('LITTLE_ENDIAN')
-    shape_file = Shape(reader, pal0)
+    shape_file = ShapeFile(reader, pal0)
     image_count = len(shape_file.images)
     i = 1
     for image in shape_file.images:

@@ -1,3 +1,9 @@
+"""
+
+Originally based on https://github.com/daumiller/ascendancy
+
+"""
+
 from typing import Optional
 
 import png

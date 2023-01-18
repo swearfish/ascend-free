@@ -1,6 +1,6 @@
 """
 
-Based on https://github.com/daumiller/ascendancy
+Originally based on https://github.com/daumiller/ascendancy
 
 """
 
@@ -12,7 +12,7 @@ from foundation import BinaryReader
 SHAPE_MAGIC = 0x30312E31
 
 
-class Shape:
+class ShapeFile:
     def __init__(self, reader: BinaryReader, default_palette: Palette):
         self.images: list[ShapeImage] = []
         self.default_palette: Palette = default_palette

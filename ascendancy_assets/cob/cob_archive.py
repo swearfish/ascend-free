@@ -1,8 +1,9 @@
 """
 
-Based on https://github.com/daumiller/ascendancy
+Originally based on https://github.com/daumiller/ascendancy
 
 """
+
 import io
 import os
 import struct

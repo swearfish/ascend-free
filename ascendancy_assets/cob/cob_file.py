@@ -1,5 +1,10 @@
-from typing import BinaryIO, AnyStr
+"""
 
+Originally based on https://github.com/daumiller/ascendancy
+
+"""
+
+from typing import BinaryIO, AnyStr
 from foundation import BinaryReader, binary_reader_from_file_handle
 
 
