@@ -1,4 +1,5 @@
-from engine.gui.control import Control, MOUSE_SHIFT_MOD
+from .control import Control, MOUSE_SHIFT_MOD
+from .listener import Listener
 from foundation.area import area_with_size_vec
 from foundation.vector import Vec2
 
@@ -11,16 +12,19 @@ class StateFrame(Control):
         self.mouse_buttons = 0
         self.mouse_pos: Vec2 | None = None
 
-    def update_mouse(self, mouse_pos: Vec2, buttons: tuple[bool], shift: bool):
+    def update_mouse(self, mouse_pos: Vec2, buttons: tuple, shift: bool) -> bool:
         if mouse_pos != self.mouse_pos:
             self.handle_mouse_move(mouse_pos)
             self.mouse_pos = mouse_pos
         shift_flag = MOUSE_SHIFT_MOD if shift else 0
+        handled = False
         for i in range(3):
             mb_flag = 1 << i
             if (buttons[i]) and (not self.mouse_buttons & mb_flag):
-                self.handle_mouse_down(mb_flag & shift_flag, mouse_pos)
-                self.mouse_buttons &= mb_flag
+                handled = self.handle_mouse_down(mb_flag | shift_flag, mouse_pos)
+                self.mouse_buttons |= mb_flag
             if (not buttons[i]) and (self.mouse_buttons & mb_flag):
-                self.handle_mouse_up(mb_flag & shift_flag, mouse_pos)
+                print(f'mb_up {i} @ {mouse_pos}')
+                handled = self.handle_mouse_up(mb_flag | shift_flag, mouse_pos)
                 self.mouse_buttons &= ~mb_flag
+        return handled

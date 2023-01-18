@@ -1,5 +1,6 @@
 from pygame import Surface
 
+from .listener import Listener
 from foundation.area import Area
 from foundation.vector import Vec2
 
@@ -9,16 +10,35 @@ MOUSE_SHIFT_MOD = 128
 
 
 class Control:
-    def __init__(self, parent, area: Area, name: str = None):
+    def __init__(self, parent, area: Area, name: str = None, listener: Listener = None):
         self.children: list[Control] = []
         self.name = name
         self.area = area
         self.parent: Control | None = parent
-        self.active_control: Control | None = None
-        self.mouse_focus = False
+        self._active_control: Control | None = None
+        self._mouse_focus = False
+        self._message = None
+        self._listener = listener
         if self.parent is not None:
             self.parent.children.append(self)
-        pass
+
+    @property
+    def listener(self):
+        if self._listener is not None:
+            return self._listener
+        if self.parent is not None:
+            return self.parent._listener
+        return None
+
+    @listener.setter
+    def listener(self, value):
+        self._listener = value
+
+    def _invoke_listener(self, fn) -> bool:
+        listener = self.listener
+        if listener is not None:
+            return fn(listener)
+        return False
 
     def on_draw(self, screen: Surface, pos: Vec2):
         pass
@@ -30,7 +50,7 @@ class Control:
         pass
 
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
-        return False
+        return self._invoke_listener(lambda listener: listener.on_click(self, self._message))
 
     def on_mouse_down(self, button: int, mouse_pos: Vec2) -> bool:
         return False
@@ -45,14 +65,14 @@ class Control:
         handled = False
         for c in self.children:
             if c.area.contains(mouse_pos):
-                if not c.mouse_focus:
+                if not c._mouse_focus:
                     c.on_mouse_enter()
-                    c.mouse_focus = True
+                    c._mouse_focus = True
                 handled = c.handle_mouse_move(mouse_pos - c.area.top_left)
             else:
-                if c.mouse_focus and self.active_control != c:
+                if c._mouse_focus and self._active_control != c:
                     c.on_mouse_leave()
-                    c.mouse_focus = False
+                    c._mouse_focus = False
         if not handled:
             handled = self.on_mouse_move(mouse_pos)
         return handled
@@ -62,7 +82,7 @@ class Control:
         for c in self.children:
             if c.area.contains(mouse_pos):
                 if button & MOUSE_BUTTON_LEFT:
-                    self.active_control = c
+                    self._active_control = c
                 handled = c.handle_mouse_down(button, mouse_pos - c.area.top_left)
         if not handled:
             handled = self.on_mouse_down(button, mouse_pos)
@@ -70,13 +90,13 @@ class Control:
 
     def handle_mouse_up(self, button: int, mouse_pos: Vec2):
         handled = False
-        if self.active_control is not None:
+        if self._active_control is not None:
             if button & MOUSE_BUTTON_LEFT:
-                if self.active_control.area.contains(mouse_pos):
-                    handled = handled or self.active_control.on_mouse_click(mouse_pos)
-                handled = handled or self.active_control.handle_mouse_up(button, mouse_pos - self.active_control.area.top_left)
-                self.active_control.mouse_focus = False
-                self.active_control = None
+                if self._active_control.area.contains(mouse_pos):
+                    handled = handled or self._active_control.on_mouse_click(mouse_pos)
+                handled = handled or self._active_control.handle_mouse_up(button, mouse_pos - self._active_control.area.top_left)
+                self._active_control._mouse_focus = False
+                self._active_control = None
         else:
             for c in self.children:
                 if c.area.contains(mouse_pos):

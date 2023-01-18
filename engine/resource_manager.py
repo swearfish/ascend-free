@@ -2,7 +2,7 @@ import os.path
 
 import pygame.image
 
-from ascendancy_assets import Palette, Shape
+from ascendancy_assets import Palette, ShapeFile
 from ascendancy_assets.fnt_file import FntFile
 from engine import FileSystem
 from engine.gcom import gcom
@@ -17,7 +17,7 @@ class ResourceManager:
         self.palette: dict[str, Palette] = {}
 
         self.game_pal = self.get_palette('data/game.pal')
-        self.shapes: dict[str, Shape] = {}
+        self.shapes: dict[str, ShapeFile] = {}
 
     def get_palette(self, name: str, start=0, size=256) -> Palette:
         if name in self.palette:
@@ -33,7 +33,7 @@ class ResourceManager:
     def read_shape(self, name: str, index: int = 1):
         if name not in self.shapes:
             with self.fs.open_file(name) as shp_file:
-                shape = Shape(shp_file, self.game_pal)
+                shape = ShapeFile(shp_file, self.game_pal)
                 self.shapes[name] = shape
         return self.shapes[name].images[index - 1]
 

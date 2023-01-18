@@ -27,7 +27,8 @@ class AscendancyGui:
                     x1 = int(wnd['X1'])
                     y1 = int(wnd['Y1'])
                     help_index = wnd['HELPINDEX']
-                    button = Button(state_frame, name, area_from_rect(x0, y0, x1, y1), help_index)
+                    msg = (int(wnd['SENDMESSAGE']), int(wnd['SENDPARAM1']), int(wnd['SENDPARAM2']))
+                    button = Button(state_frame, name, area_from_rect(x0, y0, x1, y1), help_index, msg)
                     for item_type, item_args in wnd['items']:
                         if item_type == 'TEXTITEM':
                             unused, text, flags, x, y = item_args

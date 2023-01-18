@@ -12,7 +12,9 @@ class GCOM:
         return instance
 
     def get(self, clazz):
-        return self.instances[self._key_from_class(clazz)]
+        key = self._key_from_class(clazz)
+        assert key in self.instances, f'Unknown GCOM: {key}'
+        return self.instances[key]
 
     @staticmethod
     def _key_from_class(clazz):
