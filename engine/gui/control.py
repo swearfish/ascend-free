@@ -5,7 +5,7 @@ from foundation.vector import Vec2
 
 MOUSE_BUTTON_LEFT = 1
 MOUSE_BUTTON_RIGHT = 2
-MOUSE_SHIFT_KEY = 4
+MOUSE_SHIFT_MOD = 128
 
 
 class Control:

@@ -1,9 +1,11 @@
-from pygame import Surface
+import pygame.mouse
+from pygame import Surface, KMOD_SHIFT
 
 from engine.gcom import gcom
 from engine.gui.gui_builder import AscendancyGui
 from engine.resource_manager import ResourceManager
 from foundation.vector import Vec2
+from settings import SCREEN_SCALE
 
 
 class Scene:
@@ -28,6 +30,11 @@ class Scene:
     def draw(self):
         if self.state_frame is not None:
             self.state_frame.handle_draw(self.screen, Vec2(0, 0))
+            mouse_buttons = pygame.mouse.get_pressed()
+            mods = pygame.key.get_mods()
+            shift = mods & KMOD_SHIFT
+            mouse_pos = Vec2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) / SCREEN_SCALE
+            self.state_frame.update_mouse(mouse_pos, mouse_buttons, shift)
 
     # noinspection PyMethodMayBeStatic
     def handle_back_key(self) -> bool:

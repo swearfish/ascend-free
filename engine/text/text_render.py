@@ -5,8 +5,8 @@ from pygame import Surface
 
 from foundation.vector import Vec2
 
-TEXT_CENTER = 1
-TEXT_VCENTER = 2
+TEXT_CENTER = 2
+TEXT_VCENTER = 1
 
 
 class TextRenderer:
@@ -30,9 +30,9 @@ class TextRenderer:
             size = self.measure_text(text)
         else:
             size = (0, 0)
-        if mode and TEXT_CENTER:
+        if mode & TEXT_CENTER:
             pos.x -= size.x / 2
-        if mode and TEXT_VCENTER:
+        if mode & TEXT_VCENTER:
             pos.y -= size.y / 2
         self._text_out(text, screen, pos)
 

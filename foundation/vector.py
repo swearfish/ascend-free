@@ -6,6 +6,11 @@ class Vec2:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        if not isinstance(other, Vec2):
+            return False
+        return self.x == other.x and self.y == other.y
+
     def __add__(self, other):
         assert isinstance(other, Vec2)
         return Vec2(self.x + other.x, self.y + other.y)
