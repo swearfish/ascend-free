@@ -3,15 +3,16 @@ from pygame import Surface, KMOD_SHIFT
 
 from engine.gcom import gcom
 from engine.gui.button import Button
+from engine.gui.control import Control
 from engine.gui.gui_builder import AscendancyGui
-from engine.gui.listener import Listener
+from engine.gui.ui_event_listener import UiEventListener
 from engine.resource_manager import ResourceManager
 from engine.sound_manager import SoundManager
 from foundation.vector import Vec2
 from settings import SCREEN_SCALE
 
 
-class Scene(Listener):
+class Scene(UiEventListener):
     def __init__(self, scene_manager, state_index: int = -1):
         self.resource_manager: ResourceManager = gcom.get(ResourceManager)
         self.screen: Surface = gcom.get(Surface)
@@ -21,11 +22,20 @@ class Scene(Listener):
         if 0 <= state_index:
             self.state_frame = self.gui_manager.states[state_index]
             self.state_frame.listener = self
-        pass
+        self.click_events: dict = {}
 
-    def on_click(self, sender, message) -> bool:
+    def on_click(self, sender: Control, message) -> bool:
         if isinstance(sender, Button):
             self.sound_manager.play('button')
+        if sender in self.click_events:
+            self.click_events[sender](sender, message)
+            return True
+        elif sender.name in self.click_events:
+            self.click_events[sender.name](sender, message)
+            return True
+        elif message in self.click_events:
+            self.click_events[message](sender, message)
+            return True
         return False
 
     def enter(self):

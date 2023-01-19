@@ -10,13 +10,7 @@ class MainMenu(Scene):
         super().__init__(sm, state_index=0)
         self.bg = self.resource_manager.sprite_from_gif('data/0opening.gif')
         self.buffer = pygame.Surface(SCREEN_SIZE)
-
-    def on_click(self, sender: Control, message) -> bool:
-        result = super().on_click(sender, message)
-        if sender.name == 'EXITTODOS' or message == (2, 0, 0):
-            pygame.event.post(pygame.event.Event(pygame.QUIT))
-            result = True
-        return result
+        self.click_events['EXITTODOS'] = lambda s, m: pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def enter(self):
         pass

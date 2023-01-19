@@ -1,6 +1,6 @@
 from pygame import Surface
 
-from .listener import Listener
+from .ui_event_listener import UiEventListener
 from foundation.area import Area
 from foundation.vector import Vec2
 
@@ -10,7 +10,7 @@ MOUSE_SHIFT_MOD = 128
 
 
 class Control:
-    def __init__(self, parent, area: Area, name: str = None, listener: Listener = None):
+    def __init__(self, parent, area: Area, name: str = None, listener: UiEventListener = None):
         self.children: list[Control] = []
         self.name = name
         self.area = area

@@ -22,14 +22,15 @@ class AscendancyGui:
                 if wnd['TYPE'] == 0:
                     # assert wnd['MOUSEFOCUS'] == '1'
                     name = wnd['NAME']
-                    x0 = int(wnd['X0'])
-                    y0 = int(wnd['Y0'])
-                    x1 = int(wnd['X1'])
-                    y1 = int(wnd['Y1'])
+                    x0 = wnd['X0']
+                    y0 = wnd['Y0']
+                    x1 = wnd['X1']
+                    y1 = wnd['Y1']
                     help_index = wnd['HELPINDEX']
-                    msg = (int(wnd['SENDMESSAGE']), int(wnd['SENDPARAM1']), int(wnd['SENDPARAM2']))
+                    msg = (wnd['SENDMESSAGE'], wnd['SENDPARAM1'], wnd['SENDPARAM2'])
                     button = Button(state_frame, name, area_from_rect(x0, y0, x1, y1), help_index, msg)
                     for item_type, item_args in wnd['items']:
                         if item_type == 'TEXTITEM':
                             unused, text, flags, x, y = item_args
-                            button.add_text_item(font=self.large_font, text=text.replace('^', ' '), pos=Vec2(int(x), int(y)), flags=int(flags))
+                            button.add_text_item(font=self.large_font, text=text.replace('^', ' '),
+                                                 pos=Vec2(x, y), flags=flags)

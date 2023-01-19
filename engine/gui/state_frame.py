@@ -1,5 +1,5 @@
 from .control import Control, MOUSE_SHIFT_MOD
-from .listener import Listener
+from .ui_event_listener import UiEventListener
 from foundation.area import area_with_size_vec
 from foundation.vector import Vec2
 
