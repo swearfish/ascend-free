@@ -1,5 +1,8 @@
 from typing import Optional, Callable
 
+import pygame.draw
+from pygame import Surface
+
 from foundation.area import Area, area_with_size, area_from_rect, area_with_size_vec
 from foundation.ascendancy_exception import AscendancyException
 from foundation.vector import Vec2
@@ -189,3 +192,10 @@ class DialogBuilder:
 class Dialog(Control):
     def __init__(self, parent: Control, area: Area, name: str = "dlg"):
         super().__init__(parent, area, name)
+        self.dimming: Surface = pygame.Surface(parent.area.size.to_tuple())
+        self.dimming.fill([0, 0, 0, 128])
+        self.dimming.set_alpha(128)
+
+    def on_draw(self, screen: Surface, pos: Vec2):
+        screen.blit(self.dimming, (0, 0))
+        super().on_draw(screen, pos)
