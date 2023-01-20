@@ -1,12 +1,13 @@
 from engine import Jukebox
 from engine.gcom import gcom
 from engine.scene import Scene
+from foundation.vector import Vec2
 
 
 class LogoScene(Scene):
     def __init__(self, sm):
         super().__init__(sm)
-        self.logo = self.resource_manager.sprite_from_gif('data/logo.gif')
+        self.logo = self.resource_manager.load_shape('data/logo.gif')
         self.jukebox = gcom.get(Jukebox)
 
     def enter(self):
@@ -31,7 +32,7 @@ class LogoScene(Scene):
 
     def draw(self):
         self.screen.fill([0, 0, 0])
-        self.logo.draw(self.screen)
+        self.logo.draw(self.screen, Vec2(0,0))
 
     def handle_back_key(self) -> bool:
         self.scene_manager.enter_scene('main_menu')

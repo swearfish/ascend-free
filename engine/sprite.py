@@ -1,27 +1,33 @@
 import pygame.transform
 from pygame.surface import Surface
 
+from foundation.ascendancy_exception import AscendancyException
+from foundation.vector import Vec2
 
-class Sprite:
-    def __init__(self, image, pos=(0, 0), center=(0, 0), size=None):
-        self._orig_img: Surface = image
-        self._pos = (0, 0)
-        self._center = center
+
+class ShapeRenderer:
+    def __init__(self, image, size=None):
+        if isinstance(image, Surface):
+            self._orig_img: Surface = image
+        elif isinstance(image, ShapeRenderer):
+            self._orig_img: Surface = image._img
+        else:
+            raise AscendancyException('ShapeRenderer requires a shape or surface')
         self._img = self._orig_img
-        self.move(pos)
         if size is not None:
             self.scale(size)
 
     @property
-    def position(self):
-        return self._pos[0] + self._center[0], self._pos[1] + self._center[1]
+    def width(self) -> int:
+        return self._img.get_width()
 
-    def move(self, pos):
-        self._pos = (pos[0] - self._center[0], pos[1] - self._center[1])
+    @property
+    def height(self) -> int:
+        return self._img.get_height()
 
-    def move_by(self, delta):
-        self._pos[0] += delta[0]
-        self._pos[1] += delta[1]
+    @property
+    def size(self) -> Vec2:
+        return Vec2(self.width, self.height)
 
     def scale(self, size):
         if size is not None:
@@ -31,5 +37,31 @@ class Sprite:
         assert 0 <= opacity < 256
         self._img.set_alpha(opacity)
 
+    def draw(self, screen: Surface, pos: Vec2):
+        screen.blit(self._img, pos.to_tuple())
+
+
+class Sprite:
+    def __init__(self, image: ShapeRenderer | Surface, pos=Vec2(0, 0), center=Vec2(0, 0), size=None):
+        if isinstance(image, ShapeRenderer):
+            self.shape = image
+        else:
+            self.shape = ShapeRenderer(image)
+        if size is not None:
+            self.shape = ShapeRenderer(self.shape, size)
+        self._pos = Vec2(0,0)
+        self._center = center
+        self.move(pos)
+
+    @property
+    def position(self) -> Vec2:
+        return self._pos + self._center
+
+    def move(self, pos: Vec2):
+        self._pos = pos - self._center
+
+    def move_by(self, delta: Vec2):
+        self._pos += delta
+
     def draw(self, screen: Surface):
-        screen.blit(self._img, self._pos)
+        self.shape.draw(screen, self._pos)

@@ -1,10 +1,8 @@
 import pygame.draw
 from pygame import Surface
 
-from engine.gcom import gcom
 from engine.gui.control import Control
 from engine.gui.text_item import TextItem
-from engine.sound_manager import SoundManager
 from engine.text.text_render import TextRenderer
 from foundation.area import Area
 from foundation.vector import Vec2
@@ -21,15 +19,22 @@ class Button(Control):
         self.help_index = help_index
         self._message = message
 
+    @property
+    def title(self) -> str:
+        for item in self.children:
+            if isinstance(item, TextItem):
+                return item.text
+        return self.name
+
     def add_text_item(self, font: TextRenderer, text: str, pos: Vec2, flags: int):
         item = TextItem(self, font, text, pos, flags)
         return item
 
     def on_draw(self, screen: Surface, pos: Vec2):
         if self._mouse_focus:
-            pygame.draw.rect(screen, COLOR_BUTTON_BG_HIGH, self.area.to_tuple())
+            pygame.draw.rect(screen, COLOR_BUTTON_BG_HIGH, self.area.new_origin(pos).to_tuple())
         else:
-            pygame.draw.rect(screen, COLOR_BUTTON_BG, self.area.to_tuple())
+            pygame.draw.rect(screen, COLOR_BUTTON_BG, self.area.new_origin(pos).to_tuple())
 
     def __repr__(self):
         return self.__str__()

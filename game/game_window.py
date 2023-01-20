@@ -6,8 +6,10 @@ from engine.gui.gui_builder import AscendancyGui
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from engine.sound_manager import SoundManager
-from game.logo_scene import LogoScene
-from game.main_menu import MainMenu
+from engine.text.font_manager import FontManager
+from game.vis.ascendancy_dialogs import AscendancyDialogs
+from game.vis.logo_scene import LogoScene
+from game.vis.main_menu import MainMenu
 from settings import GAME_NAME, SCREEN_SIZE, SCREEN_SCALE
 
 
@@ -28,12 +30,14 @@ class GameWindow:
 
         self.file_system: FileSystem = gcom.register(FileSystem, init_args=['../assets'])
         self.resource_manager: ResourceManager = gcom.register(ResourceManager)
+        self.font_manager: FontManager = gcom.register(FontManager)
         self.sound_manager: SoundManager = gcom.register(SoundManager)
         self.jukebox: Jukebox = gcom.register(Jukebox)
 
         from ascendancy_assets.txt.windows_txt import parse_windows_txt
         windows = parse_windows_txt(self.file_system.read_lines('windows.txt'))
         gcom.register(AscendancyGui, init_args=[windows])
+        self.dialogs: AscendancyDialogs = gcom.register(AscendancyDialogs)
 
         self.scene_manager: SceneManager = gcom.register(SceneManager, init_args=[self.back_buffer])
 

@@ -50,7 +50,9 @@ class FntFile:
             off_char = reader.read_uint32()
             off_restore = reader.position
             reader.seek(off_char)
-            self.char_map[chr(i)] = self._read_chr(reader)
+            area = self._read_chr(reader)
+            if area is not None:
+                self.char_map[chr(i)] = area
             reader.seek(off_restore)
 
     def _read_chr(self, reader: BinaryReader) -> Optional[Area]:

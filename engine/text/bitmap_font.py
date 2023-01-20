@@ -26,7 +26,7 @@ class BitmapFont:
         width = 0
         height = 0
         for ch in text:
-            if ch not in self.char_map:
+            if ch not in self.char_map or self.char_map[ch] is None:
                 continue
             area = self.char_map[ch]
             width += area.width

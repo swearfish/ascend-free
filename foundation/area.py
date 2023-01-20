@@ -1,3 +1,5 @@
+import copy
+
 from foundation.vector import Vec2
 
 
@@ -34,6 +36,9 @@ class Area:
     def height(self):
         return self.size.y
 
+    def new_origin(self, origin = Vec2(0,0)):
+        return Area(origin, self.size)
+
     def to_tuple(self):
         return self.left, self.top, self.width, self.height
 
@@ -46,8 +51,9 @@ class Area:
     def __repr__(self):
         return self.__str__()
 
+
 def area_with_size_vec(top_left: Vec2, size: Vec2) -> Area:
-    return Area(top_left, size)
+    return Area(copy.copy(top_left), copy.copy(size))
 
 
 def area_from_rect_vec(top_left: Vec2, bottom_right: Vec2) -> Area:
