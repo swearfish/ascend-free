@@ -39,7 +39,7 @@ class Area:
     def new_origin(self, origin = Vec2(0,0)):
         return Area(origin, self.size)
 
-    def to_tuple(self):
+    def as_tuple(self):
         return self.left, self.top, self.width, self.height
 
     def contains(self, v: Vec2) -> bool:

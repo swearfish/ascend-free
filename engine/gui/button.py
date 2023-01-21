@@ -32,9 +32,9 @@ class Button(Control):
 
     def on_draw(self, screen: Surface, pos: Vec2):
         if self._mouse_focus:
-            pygame.draw.rect(screen, COLOR_BUTTON_BG_HIGH, self.area.new_origin(pos).to_tuple())
+            pygame.draw.rect(screen, COLOR_BUTTON_BG_HIGH, self.area.new_origin(pos).as_tuple())
         else:
-            pygame.draw.rect(screen, COLOR_BUTTON_BG, self.area.new_origin(pos).to_tuple())
+            pygame.draw.rect(screen, COLOR_BUTTON_BG, self.area.new_origin(pos).as_tuple())
 
     def __repr__(self):
         return self.__str__()

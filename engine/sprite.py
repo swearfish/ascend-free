@@ -1,6 +1,7 @@
 import pygame.transform
 from pygame.surface import Surface
 
+from foundation.area import Area
 from foundation.ascendancy_exception import AscendancyException
 from foundation.vector import Vec2
 
@@ -10,20 +11,20 @@ class ShapeRenderer:
         if isinstance(image, Surface):
             self._orig_img: Surface = image
         elif isinstance(image, ShapeRenderer):
-            self._orig_img: Surface = image._img
+            self._orig_img: Surface = image.surface
         else:
             raise AscendancyException('ShapeRenderer requires a shape or surface')
-        self._img = self._orig_img
+        self.surface = self._orig_img
         if size is not None:
             self.scale(size)
 
     @property
     def width(self) -> int:
-        return self._img.get_width()
+        return self.surface.get_width()
 
     @property
     def height(self) -> int:
-        return self._img.get_height()
+        return self.surface.get_height()
 
     @property
     def size(self) -> Vec2:
@@ -31,14 +32,17 @@ class ShapeRenderer:
 
     def scale(self, size):
         if size is not None:
-            self._img = pygame.transform.scale(self._orig_img, size)
+            self.surface = pygame.transform.scale(self._orig_img, size)
 
     def set_opacity(self, opacity: int = 255):
         assert 0 <= opacity < 256
-        self._img.set_alpha(opacity)
+        self.surface.set_alpha(opacity)
 
-    def draw(self, screen: Surface, pos: Vec2):
-        screen.blit(self._img, pos.to_tuple())
+    def draw(self, screen: Surface, pos: Vec2, area: Area = None):
+        if area is not None:
+            screen.blit(self.surface, pos.to_tuple(), area.as_tuple())
+        else:
+            screen.blit(self.surface, pos.to_tuple())
 
 
 class Sprite:

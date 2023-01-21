@@ -22,5 +22,5 @@ class BitmapTextRenderer(TextRenderer):
             if ch not in char_map:
                 continue
             area = char_map[ch]
-            screen.blit(atlas, pos.to_tuple(), area.to_tuple())
+            screen.blit(atlas, pos.to_tuple(), area.as_tuple())
             pos.x += area.width

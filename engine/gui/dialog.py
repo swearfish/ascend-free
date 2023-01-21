@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Optional, Callable
 
 import pygame.draw
@@ -20,17 +21,21 @@ DialogMessageHandler = Callable[[Control, Control, any], None]
 
 
 class DialogEventListener(UiEventListener):
-    def __init__(self, message_handler: Optional[DialogMessageHandler] = None):
+    def __init__(self, dialog: Control, message_handler: Optional[DialogMessageHandler] = None):
         self._message_handler: Optional[DialogMessageHandler] = message_handler
+        self._dialog = dialog
 
     def on_click(self, sender, message) -> bool:
         if isinstance(sender, Button):
+            self._dialog.listener.on_click(sender, message)
             self.on_dialog_button_click(sender.parent, sender, message)
             return True
 
     def on_dialog_button_click(self, dialog, button, message):
         if self._message_handler is not None:
             self._message_handler(dialog, button, message)
+        else:
+            self._dialog.listener.on_dialog_button_click(dialog, button, message)
         dialog.close()
 
 
@@ -55,8 +60,11 @@ class DialogBuilder:
         self._title: str | None = None
         self._title_font: TextRenderer | None = None
         self._title_height = 30
+        self._allow_resize = False
 
         self._text_border: int = 10
+        self._line_spacing = 4
+        self._line_separator = '@@'
 
         self._lambda: Optional[DialogMessageHandler] = None
 
@@ -64,6 +72,10 @@ class DialogBuilder:
 
     def background(self, shape: ShapeRenderer):
         self._background = shape
+        return self
+
+    def allow_resize(self):
+        self._allow_resize = True
         return self
 
     def title(self, title: str, font: TextRenderer = None, title_height=30):
@@ -74,7 +86,7 @@ class DialogBuilder:
         return self
 
     def button_area(self, area: Area):
-        self._button_area = area
+        self._button_area = deepcopy(area)
         return self
 
     def button_font(self, font: TextRenderer):
@@ -105,12 +117,14 @@ class DialogBuilder:
         self._validate()
 
         area, text_area = self._get_area()
+        if self._allow_resize:
+            area, text_area = self._resize(area, text_area)
         result = Dialog(self._parent, area, self._name)
-        result.listener = DialogEventListener(self._lambda)
+        result.listener = DialogEventListener(result, self._lambda)
 
         self._get_fonts()
         self._add_background(result)
-        self._add_title_bar(result, text_area)
+        self._add_title_bar(result, area, text_area)
         self._add_image(result, text_area)
         self._add_text(result, text_area)
         self._add_buttons(result)
@@ -122,6 +136,29 @@ class DialogBuilder:
             self._parent.show_modal(result)
 
         return result
+
+    def _resize(self, area, text_area):
+        text_size = self._font.measure_text(self._text, text_area.width, self._line_spacing, self._line_separator)
+        if self._title is not None:
+            text_size.y += self._title_height
+        text_size.y += self._text_border
+        height_diff = text_area.height - text_size.y
+        if 0 == height_diff:
+            return area, text_area
+        assert 0 < height_diff
+        self._pos.y += height_diff // 2
+        new_dlg_size = Vec2(area.width, area.height - height_diff)
+        self._button_area.top_left.y -= height_diff
+        new_background = pygame.Surface(new_dlg_size.to_tuple())
+        center = new_dlg_size.y // 2
+        top_area = area_with_size(0, 0, new_dlg_size.x, center)
+        bottom_area = area_from_rect(0, area.height - center, new_dlg_size.x - 1, area.height - 2)
+        top_part = self._background.surface.subsurface(top_area.as_tuple())
+        bottom_part = self._background.surface.subsurface(bottom_area.as_tuple())
+        new_background.blit(top_part, (0, 0))
+        new_background.blit(bottom_part, (0, top_part.get_height()))
+        self._background = ShapeRenderer(new_background)
+        return self._get_area()
 
     def _validate(self):
         assert self._button_area is not None
@@ -150,9 +187,9 @@ class DialogBuilder:
         if self._title_font is None:
             self._title_font = self._font
 
-    def _add_title_bar(self, result, text_area):
+    def _add_title_bar(self, result, area, text_area):
         if self._title is not None:
-            title_area = area_with_size_vec(text_area.top_left, Vec2(text_area.width, self._title_height))
+            title_area = area_with_size(0, 0, area.width, self._title_height)
             text_area.top_left.y += self._title_height
             text_area.size.y -= self._title_height
             Label(result, title_area, self._title, self._title_font, TEXT_CENTER | TEXT_VCENTER)
@@ -165,7 +202,7 @@ class DialogBuilder:
 
     def _add_text(self, result, text_area):
         if self._text is not None:
-            Label(result, text_area, self._text, self._font, self._text_flags, line_spacing=4)
+            Label(result, text_area, self._text, self._font, self._text_flags, self._line_spacing, self._line_separator)
 
     def _add_buttons(self, result):
         button_left = self._button_area.left
@@ -187,6 +224,7 @@ class DialogBuilder:
         message = button_index if button_props[2] is None else button_props[2]
         button = Button(result, name, area, message=message)
         button.add_text_item(self._button_font, button_props[0], Vec2(0, 0), TEXT_CENTER | TEXT_VCENTER)
+        button.listener = result.listener
 
 
 class Dialog(Control):
