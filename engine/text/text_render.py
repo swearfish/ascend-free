@@ -20,9 +20,9 @@ class TextRenderer:
         else:
             size = (0, 0)
         if mode & TEXT_CENTER:
-            screen_pos.x -= size.x / 2
+            screen_pos._x -= size._x / 2
         if mode & TEXT_VCENTER:
-            screen_pos.y -= size.y / 2
+            screen_pos._y -= size._y / 2
         self._text_out(text, screen, screen_pos)
 
     def measure_text(self, text: str, max_width: int, line_spacing=0, line_separator='\n') -> Vec2:
@@ -37,19 +37,19 @@ class TextRenderer:
     def draw_text(self, text: str, screen: Surface, area: Area, mode: int = 0, line_spacing=0, line_separator='\n'):
         lines, max_width = self._split_lines(text, area.width, line_separator)
         line_height, total_height = self._calc_height(len(lines), line_spacing)
-        pos = area.top_left
+        pos = area._top_left
         flags = 0
         if mode & TEXT_CENTER:
-            pos.x += area.width // 2
+            pos._x += area.width // 2
             flags |= TEXT_CENTER
         if mode & TEXT_VCENTER:
-            pos.y += area.height // 2 - total_height // 2
+            pos._y += area.height // 2 - total_height // 2
         for line in lines:
             self.text_out(line, screen, pos, flags)
-            pos.y += line_height
+            pos._y += line_height
 
     def _calc_height(self, num_lines: int, line_spacing: int) -> tuple[int, int]:
-        line_height = self._measure_line('A').y + line_spacing
+        line_height = self._measure_line('A')._y + line_spacing
         total_height = num_lines * line_height - line_spacing
         return line_height, total_height
 
@@ -58,7 +58,7 @@ class TextRenderer:
         line = ""
         line_width = 0
         max_line_width = 0
-        space_width = self._measure_line(' ').x
+        space_width = self._measure_line(' ')._x
         while 0 < len(text):
             next_space = text.find(' ')
             if next_space > 0:
@@ -71,7 +71,7 @@ class TextRenderer:
             if text.startswith(line_separator):
                 start_new_line = True
                 text = text[len(line_separator):]
-            word_width = self._measure_line(word).x
+            word_width = self._measure_line(word)._x
             new_width = line_width + word_width
             if 0 < len(line):
                 new_width += space_width

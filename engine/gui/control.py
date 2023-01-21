@@ -69,7 +69,7 @@ class Control:
             return False
         if self._modal is not None:
             if self._modal.area.contains(mouse_pos):
-                return self._modal.handle_mouse_move(mouse_pos - self._modal.area.top_left)
+                return self._modal.handle_mouse_move(mouse_pos - self._modal.area._top_left)
             else:
                 return False
         handled = False
@@ -78,7 +78,7 @@ class Control:
                 if not c._mouse_focus:
                     c.on_mouse_enter()
                     c._mouse_focus = True
-                handled = c.handle_mouse_move(mouse_pos - c.area.top_left)
+                handled = c.handle_mouse_move(mouse_pos - c.area._top_left)
             else:
                 if c._mouse_focus and self._active_control != c:
                     c.on_mouse_leave()
@@ -92,7 +92,7 @@ class Control:
             return False
         if self._modal is not None:
             if self._modal.area.contains(mouse_pos):
-                return self._modal.handle_mouse_down(button, mouse_pos - self._modal.area.top_left)
+                return self._modal.handle_mouse_down(button, mouse_pos - self._modal.area._top_left)
             else:
                 return False
         handled = False
@@ -100,7 +100,7 @@ class Control:
             if c.visible and c.area.contains(mouse_pos):
                 if button & MOUSE_BUTTON_LEFT:
                     self._active_control = c
-                handled = c.handle_mouse_down(button, mouse_pos - c.area.top_left)
+                handled = c.handle_mouse_down(button, mouse_pos - c.area._top_left)
         if not handled:
             handled = self.on_mouse_down(button, mouse_pos)
         return handled
@@ -109,19 +109,19 @@ class Control:
         if self._garbage or not self.visible:
             return False
         if self._modal is not None:
-            return self._modal.handle_mouse_up(button, mouse_pos - self._modal.area.top_left)
+            return self._modal.handle_mouse_up(button, mouse_pos - self._modal.area._top_left)
         handled = False
         if self._active_control is not None:
             if button & MOUSE_BUTTON_LEFT:
                 if self._active_control.area.contains(mouse_pos):
                     handled = handled or self._active_control.on_mouse_click(mouse_pos)
-                handled = handled or self._active_control.handle_mouse_up(button, mouse_pos - self._active_control.area.top_left)
+                handled = handled or self._active_control.handle_mouse_up(button, mouse_pos - self._active_control.area._top_left)
                 self._active_control._mouse_focus = False
                 self._active_control = None
         else:
             for c in self.children:
                 if c.visible and c.area.contains(mouse_pos):
-                    handled = c.handle_mouse_up(button, mouse_pos - c.area.top_left)
+                    handled = c.handle_mouse_up(button, mouse_pos - c.area._top_left)
         if not handled:
             handled = self.on_mouse_up(button, mouse_pos)
         return handled
@@ -146,11 +146,11 @@ class Control:
             if c._garbage:
                 do_collect = True
             elif c.visible and self._modal != c:
-                c.handle_draw(screen, pos + c.area.top_left)
+                c.handle_draw(screen, pos + c.area._top_left)
         if self._modal is not None:
             if self._modal._garbage:
                 self._modal = None
             else:
-                self._modal.handle_draw(screen, pos + self._modal.area.top_left)
+                self._modal.handle_draw(screen, pos + self._modal.area._top_left)
         if do_collect:
             self.children = list(filter(lambda x: not x._garbage, self.children))

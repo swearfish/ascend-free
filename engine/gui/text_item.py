@@ -8,15 +8,15 @@ from foundation.vector import Vec2
 
 class TextItem(Control):
     def __init__(self, parent: Control, font: TextRenderer, text: str, pos: Vec2, flags: int):
-        super().__init__(parent, area=area_with_size_vec(Vec2(0,0), parent.area.size))
+        super().__init__(parent, area=area_with_size_vec(Vec2(0,0), parent.area._size))
         self.pos = pos
         self.text = text
         self.flags = flags
         self.font = font
 
     def on_draw(self, screen: Surface, pos: Vec2):
-        center = self.area.size / 2
-        left = center.x if self.pos.x == 0 else self.pos.x
-        top = center.y if self.pos.y == 0 else self.pos.y
+        center = self.area._size / 2
+        left = center._x if self.pos._x == 0 else self.pos._x
+        top = center._y if self.pos._y == 0 else self.pos._y
         text_pos = pos + Vec2(left, top)
         self.font.text_out(self.text, screen, text_pos, self.flags)

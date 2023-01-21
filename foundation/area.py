@@ -5,45 +5,59 @@ from foundation.vector import Vec2
 
 class Area:
     def __init__(self, top_left: Vec2, size: Vec2):
-        self.top_left = top_left
-        self.size = size
+        self._top_left = top_left
+        self._size = size
+
+    @property
+    def top_left(self):
+        return self._top_left
+
+    @property
+    def size(self):
+        return self._size
 
     @property
     def left(self):
-        return self.top_left.x
+        return self._top_left._x
 
     @property
     def top(self):
-        return self.top_left.y
+        return self._top_left._y
 
     @property
     def bottom_right(self) -> Vec2:
-        return self.top_left + self.size
+        return self._top_left + self._size
 
     @property
     def right(self):
-        return self.bottom_right.x
+        return self.bottom_right._x
 
     @property
     def bottom(self):
-        return self.bottom_right.y
+        return self.bottom_right._y
 
     @property
     def width(self):
-        return self.size.x
+        return self._size._x
 
     @property
     def height(self):
-        return self.size.y
+        return self._size._y
 
-    def new_origin(self, origin = Vec2(0,0)):
-        return Area(origin, self.size)
+    def new_origin(self, origin=Vec2(0, 0)):
+        return Area(origin, self._size)
+
+    def move_by(self, delta: Vec2):
+        return self.new_origin(self.top_left + delta)
 
     def as_tuple(self):
         return self.left, self.top, self.width, self.height
 
+    def dup(self):
+        return copy.deepcopy(self)
+
     def contains(self, v: Vec2) -> bool:
-        return self.left <= v.x <= self.right and self.top <= v.y <= self.bottom
+        return self.left <= v._x <= self.right and self.top <= v._y <= self.bottom
 
     def __str__(self):
         return f'({self.left}, {self.top}, {self.right}, {self.bottom}) x ({self.width}, {self.height})'

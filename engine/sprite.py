@@ -40,9 +40,9 @@ class ShapeRenderer:
 
     def draw(self, screen: Surface, pos: Vec2, area: Area = None):
         if area is not None:
-            screen.blit(self.surface, pos.to_tuple(), area.as_tuple())
+            screen.blit(self.surface, pos.as_tuple(), area.as_tuple())
         else:
-            screen.blit(self.surface, pos.to_tuple())
+            screen.blit(self.surface, pos.as_tuple())
 
 
 class Sprite:

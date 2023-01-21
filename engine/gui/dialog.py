@@ -1,4 +1,3 @@
-from copy import deepcopy
 from typing import Optional, Callable
 
 import pygame.draw
@@ -15,7 +14,6 @@ from .picture_box import PictureBox
 from .ui_event_listener import UiEventListener
 from ..sprite import ShapeRenderer
 from ..text.text_render import TextRenderer, TEXT_VCENTER, TEXT_CENTER
-
 
 DialogMessageHandler = Callable[[Control, Control, any], None]
 
@@ -86,7 +84,7 @@ class DialogBuilder:
         return self
 
     def button_area(self, area: Area):
-        self._button_area = deepcopy(area)
+        self._button_area = area.dup()
         return self
 
     def button_font(self, font: TextRenderer):
@@ -124,7 +122,7 @@ class DialogBuilder:
 
         self._get_fonts()
         self._add_background(result)
-        self._add_title_bar(result, area, text_area)
+        text_area = self._add_title_bar(result, area, text_area)
         self._add_image(result, text_area)
         self._add_text(result, text_area)
         self._add_buttons(result)
@@ -140,19 +138,19 @@ class DialogBuilder:
     def _resize(self, area, text_area):
         text_size = self._font.measure_text(self._text, text_area.width, self._line_spacing, self._line_separator)
         if self._title is not None:
-            text_size.y += self._title_height
-        text_size.y += self._text_border
+            text_size += Vec2(0, self._title_height)
+        text_size += Vec2(0, self._text_border)
         height_diff = text_area.height - text_size.y
         if 0 == height_diff:
             return area, text_area
         assert 0 < height_diff
-        self._pos.y += height_diff // 2
+        self._pos += Vec2(0, height_diff // 2)
         new_dlg_size = Vec2(area.width, area.height - height_diff)
-        self._button_area.top_left.y -= height_diff
-        new_background = pygame.Surface(new_dlg_size.to_tuple())
-        center = new_dlg_size.y // 2
-        top_area = area_with_size(0, 0, new_dlg_size.x, center)
-        bottom_area = area_from_rect(0, area.height - center, new_dlg_size.x - 1, area.height - 2)
+        self._button_area = self._button_area.move_by(Vec2(0, -height_diff))
+        new_background = pygame.Surface(new_dlg_size.as_tuple())
+        center = new_dlg_size.h // 2
+        top_area = area_with_size(0, 0, new_dlg_size.w, center)
+        bottom_area = area_from_rect(0, area.height - center, new_dlg_size.w - 1, area.height - 2)
         top_part = self._background.surface.subsurface(top_area.as_tuple())
         bottom_part = self._background.surface.subsurface(bottom_area.as_tuple())
         new_background.blit(top_part, (0, 0))
@@ -190,15 +188,17 @@ class DialogBuilder:
     def _add_title_bar(self, result, area, text_area):
         if self._title is not None:
             title_area = area_with_size(0, 0, area.width, self._title_height)
-            text_area.top_left.y += self._title_height
-            text_area.size.y -= self._title_height
+            text_area = area_with_size(text_area.left, text_area.top + self._title_height,
+                                       text_area.width, text_area.height - self._title_height)
             Label(result, title_area, self._title, self._title_font, TEXT_CENTER | TEXT_VCENTER)
+        return text_area
 
     def _add_image(self, result, text_area):
         if self._shape is not None:
             PictureBox(result, area_with_size_vec(self._shape_pos, self._shape.size), self._shape)
-            text_area.top_left.y += self._shape.size.y + self._text_border
-            text_area.size.y -= self._shape.size.y + self._text_border
+            text_area = area_with_size(text_area.left, text_area.top + self._shape.size.h + self._text_border,
+                                       text_area.width, text_area.height - self._shape.size.h - self._text_border)
+        return text_area
 
     def _add_text(self, result, text_area):
         if self._text is not None:
@@ -230,7 +230,7 @@ class DialogBuilder:
 class Dialog(Control):
     def __init__(self, parent: Control, area: Area, name: str = "dlg"):
         super().__init__(parent, area, name)
-        self.dimming: Surface = pygame.Surface(parent.area.size.to_tuple())
+        self.dimming: Surface = pygame.Surface(parent.area.size.as_tuple())
         self.dimming.fill([0, 0, 0, 128])
         self.dimming.set_alpha(128)
 
