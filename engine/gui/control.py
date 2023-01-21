@@ -2,7 +2,7 @@ from pygame import Surface
 
 from .ui_event_listener import UiEventListener
 from foundation.area import Area
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 MOUSE_BUTTON_LEFT = 1
 MOUSE_BUTTON_RIGHT = 2

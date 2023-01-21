@@ -8,7 +8,7 @@ from ascendancy_assets import FntFile
 from engine import FileSystem
 from engine.gcom import gcom
 from engine.text.text_utils import _scale, _scale_tuple
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class BitmapFont:

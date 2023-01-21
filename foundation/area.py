@@ -1,6 +1,6 @@
 import copy
 
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class Area:
@@ -18,11 +18,11 @@ class Area:
 
     @property
     def left(self):
-        return self._top_left._x
+        return self._top_left.x
 
     @property
     def top(self):
-        return self._top_left._y
+        return self._top_left.y
 
     @property
     def bottom_right(self) -> Vec2:
@@ -30,19 +30,19 @@ class Area:
 
     @property
     def right(self):
-        return self.bottom_right._x
+        return self.bottom_right.x
 
     @property
     def bottom(self):
-        return self.bottom_right._y
+        return self.bottom_right.y
 
     @property
     def width(self):
-        return self._size._x
+        return self._size.x
 
     @property
     def height(self):
-        return self._size._y
+        return self._size.y
 
     def new_origin(self, origin=Vec2(0, 0)):
         return Area(origin, self._size)
@@ -57,7 +57,7 @@ class Area:
         return copy.deepcopy(self)
 
     def contains(self, v: Vec2) -> bool:
-        return self.left <= v._x <= self.right and self.top <= v._y <= self.bottom
+        return self.left <= v.x <= self.right and self.top <= v.y <= self.bottom
 
     def __str__(self):
         return f'({self.left}, {self.top}, {self.right}, {self.bottom}) x ({self.width}, {self.height})'

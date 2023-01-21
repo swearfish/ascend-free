@@ -3,7 +3,7 @@ from pygame import Surface
 from engine.gui.control import Control
 from engine.text.text_render import TextRenderer
 from foundation.area import Area
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class Label(Control):

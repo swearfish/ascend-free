@@ -1,7 +1,7 @@
 from engine import Jukebox
 from engine.gcom import gcom
 from engine.scene import Scene
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class LogoScene(Scene):

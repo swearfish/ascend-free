@@ -9,7 +9,7 @@ from engine.gui.ui_event_listener import UiEventListener
 from engine.resource_manager import ResourceManager
 from engine.sound_manager import SoundManager
 from engine.text.font_manager import FontManager
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 from settings import SCREEN_SCALE
 
 

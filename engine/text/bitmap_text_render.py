@@ -4,7 +4,7 @@ from engine import FileSystem
 from engine.gcom import gcom
 from engine.text.bitmap_font import BitmapFont
 from engine.text.text_render import TextRenderer
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class BitmapTextRenderer(TextRenderer):
@@ -18,9 +18,10 @@ class BitmapTextRenderer(TextRenderer):
     def _text_out(self, text: str, screen: Surface, pos: Vec2):
         atlas = self.font.atlas
         char_map = self.font.char_map
+        x, y = pos.x, pos.y
         for ch in text:
             if ch not in char_map:
                 continue
             area = char_map[ch]
-            screen.blit(atlas, pos.as_tuple(), area.as_tuple())
-            pos._x += area.width
+            screen.blit(atlas, (x, y), area.as_tuple())
+            x += area.width

@@ -1,7 +1,7 @@
 from .control import Control, MOUSE_SHIFT_MOD
 from .ui_event_listener import UiEventListener
 from foundation.area import area_with_size_vec
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class StateFrame(Control):

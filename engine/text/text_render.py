@@ -1,11 +1,10 @@
 import copy
 from abc import abstractmethod
-from typing import Optional
 
 from pygame import Surface
 
 from foundation.area import Area
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 TEXT_VCENTER = 1 << 0
 TEXT_CENTER = 1 << 1
@@ -19,11 +18,12 @@ class TextRenderer:
             size = self._measure_line(text)
         else:
             size = (0, 0)
+        x, y = screen_pos.x, screen_pos.y
         if mode & TEXT_CENTER:
-            screen_pos._x -= size._x / 2
+            x -= size.x / 2
         if mode & TEXT_VCENTER:
-            screen_pos._y -= size._y / 2
-        self._text_out(text, screen, screen_pos)
+            y -= size.y / 2
+        self._text_out(text, screen, Vec2(x, y))
 
     def measure_text(self, text: str, max_width: int, line_spacing=0, line_separator='\n') -> Vec2:
         lines, max_width = self._split_lines(text, max_width, line_separator)
@@ -37,19 +37,19 @@ class TextRenderer:
     def draw_text(self, text: str, screen: Surface, area: Area, mode: int = 0, line_spacing=0, line_separator='\n'):
         lines, max_width = self._split_lines(text, area.width, line_separator)
         line_height, total_height = self._calc_height(len(lines), line_spacing)
-        pos = area._top_left
+        x, y = area.left, area.top
         flags = 0
         if mode & TEXT_CENTER:
-            pos._x += area.width // 2
+            x += area.width // 2
             flags |= TEXT_CENTER
         if mode & TEXT_VCENTER:
-            pos._y += area.height // 2 - total_height // 2
+            y += area.height // 2 - total_height // 2
         for line in lines:
-            self.text_out(line, screen, pos, flags)
-            pos._y += line_height
+            self.text_out(line, screen, Vec2(x, y), flags)
+            y += line_height
 
     def _calc_height(self, num_lines: int, line_spacing: int) -> tuple[int, int]:
-        line_height = self._measure_line('A')._y + line_spacing
+        line_height = self._measure_line('A').y + line_spacing
         total_height = num_lines * line_height - line_spacing
         return line_height, total_height
 
@@ -58,7 +58,7 @@ class TextRenderer:
         line = ""
         line_width = 0
         max_line_width = 0
-        space_width = self._measure_line(' ')._x
+        space_width = self._measure_line(' ').w
         while 0 < len(text):
             next_space = text.find(' ')
             if next_space > 0:
@@ -71,7 +71,7 @@ class TextRenderer:
             if text.startswith(line_separator):
                 start_new_line = True
                 text = text[len(line_separator):]
-            word_width = self._measure_line(word)._x
+            word_width = self._measure_line(word).w
             new_width = line_width + word_width
             if 0 < len(line):
                 new_width += space_width

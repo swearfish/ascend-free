@@ -5,7 +5,7 @@ from pygame import Surface
 
 from foundation.area import Area, area_with_size, area_from_rect, area_with_size_vec
 from foundation.ascendancy_exception import AscendancyException
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 from settings import SCREEN_SIZE
 from .button import Button
 from .control import Control

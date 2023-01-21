@@ -1,6 +1,6 @@
 import pygame
 
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 from game.vis.ascendancy_scene import AscendancyScene
 from settings import SCREEN_SIZE
 

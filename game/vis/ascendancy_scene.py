@@ -7,7 +7,7 @@ from engine.gui.control import Control
 from engine.gui.gui_builder import AscendancyGui
 from engine.gui.ui_event_listener import UiEventListener
 from engine.scene import Scene
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
 from settings import SCREEN_SCALE
 

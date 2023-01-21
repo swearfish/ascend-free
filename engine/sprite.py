@@ -3,7 +3,7 @@ from pygame.surface import Surface
 
 from foundation.area import Area
 from foundation.ascendancy_exception import AscendancyException
-from foundation.vector import Vec2
+from foundation.vector_2d import Vec2
 
 
 class ShapeRenderer:
