@@ -1,12 +1,13 @@
 import pygame
 
 from engine import FileSystem, Jukebox
-from engine.gcom import gcom
+from foundation.gcom import gcom_instance
 from engine.gui.gui_builder import AscendancyGui
 from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from engine.sound_manager import SoundManager
 from engine.text.font_manager import FontManager
+from game.logic.star_map import StarMap
 from game.vis.ascendancy_dialogs import AscendancyDialogs
 from game.vis.logo_scene import LogoScene
 from game.vis.main_menu import MainMenu
@@ -23,28 +24,31 @@ class GameWindow:
         self.display_surface = pygame.display.set_mode(self.screen_size)
         self.back_buffer = pygame.surface.Surface(SCREEN_SIZE)
         self.front_buffer = pygame.surface.Surface(self.screen_size)
-        gcom.register(pygame.Surface, self.back_buffer)
+        gcom_instance.register(pygame.Surface, self.back_buffer)
 
         pygame.mouse.set_visible(True)
         pygame.display.set_caption(GAME_NAME, GAME_NAME)
 
-        self.file_system: FileSystem = gcom.register(FileSystem, init_args=['../assets'])
-        self.resource_manager: ResourceManager = gcom.register(ResourceManager)
-        self.font_manager: FontManager = gcom.register(FontManager)
-        self.sound_manager: SoundManager = gcom.register(SoundManager)
-        self.jukebox: Jukebox = gcom.register(Jukebox)
+        self.file_system: FileSystem = gcom_instance.register(FileSystem, init_args=['../assets'])
+        self.resource_manager: ResourceManager = gcom_instance.register(ResourceManager)
+        self.font_manager: FontManager = gcom_instance.register(FontManager)
+        self.sound_manager: SoundManager = gcom_instance.register(SoundManager)
+        self.jukebox: Jukebox = gcom_instance.register(Jukebox)
 
         from ascendancy_assets.txt.windows_txt import parse_windows_txt
         windows = parse_windows_txt(self.file_system.read_lines('windows.txt'))
-        gcom.register(AscendancyGui, init_args=[windows])
-        self.dialogs: AscendancyDialogs = gcom.register(AscendancyDialogs)
+        gcom_instance.register(AscendancyGui, init_args=[windows])
+        self.dialogs: AscendancyDialogs = gcom_instance.register(AscendancyDialogs)
 
-        self.scene_manager: SceneManager = gcom.register(SceneManager, init_args=[self.back_buffer])
+        self.scene_manager: SceneManager = gcom_instance.register(SceneManager, init_args=[self.back_buffer])
 
         self.time = pygame.time.get_ticks()
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.enter_scene('logo')
+
+        sm = StarMap()
+        pass
 
     def __enter__(self):
         return self

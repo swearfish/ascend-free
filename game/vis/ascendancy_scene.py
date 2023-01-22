@@ -1,22 +1,24 @@
 import pygame
 from pygame import KMOD_SHIFT
 
-from engine.gcom import gcom
 from engine.gui.button import Button
 from engine.gui.control import Control
 from engine.gui.gui_builder import AscendancyGui
 from engine.gui.ui_event_listener import UiEventListener
 from engine.scene import Scene
+from foundation.gcom import component_resolve
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
 from settings import SCREEN_SCALE
 
 
+@component_resolve
 class AscendancyScene(Scene, UiEventListener):
-    def __init__(self, scene_manager, state_index: int = -1):
-        super().__init__(scene_manager)
-        self.gui_manager: AscendancyGui = gcom.get(AscendancyGui)
-        self.dialogs: AscendancyDialogs = gcom.get(AscendancyDialogs)
+    gui_manager: AscendancyGui
+    dialogs: AscendancyDialogs
+
+    def __init__(self, state_index: int = -1):
+        super().__init__()
         if 0 <= state_index:
             self.state_frame = self.gui_manager.states[state_index]
             self.state_frame.listener = self

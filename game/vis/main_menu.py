@@ -6,8 +6,8 @@ from settings import SCREEN_SIZE
 
 
 class MainMenu(AscendancyScene):
-    def __init__(self, sm):
-        super().__init__(sm, state_index=0)
+    def __init__(self):
+        super().__init__(state_index=0)
         self.bg = self.resource_manager.load_shape('data/0opening.gif')
         self.buffer = pygame.Surface(SCREEN_SIZE)
         self.click_events['INTRO'] = \

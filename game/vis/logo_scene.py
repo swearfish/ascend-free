@@ -1,14 +1,16 @@
 from engine import Jukebox
-from engine.gcom import gcom
 from engine.scene import Scene
+from foundation.gcom import component_resolve
 from foundation.vector_2d import Vec2
 
 
+@component_resolve
 class LogoScene(Scene):
-    def __init__(self, sm):
-        super().__init__(sm)
+    jukebox: Jukebox
+
+    def __init__(self):
+        super().__init__()
         self.logo = self.resource_manager.load_shape('data/logo.gif')
-        self.jukebox = gcom.get(Jukebox)
 
     def enter(self):
         pass

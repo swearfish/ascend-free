@@ -1,17 +1,19 @@
-from engine.gcom import gcom
 from engine.gui.button import Button
 from engine.gui.state_frame import StateFrame
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
+from foundation.gcom import component_resolve, Component
 from foundation.vector_2d import Vec2
 
 
 # noinspection SpellCheckingInspection
-class AscendancyGui:
+@component_resolve
+class AscendancyGui(Component):
+    resource_manager: ResourceManager
+    font_manager: FontManager
+
     def __init__(self, windows_txt: dict[str, any], screen_res=Vec2(640, 480)):
-        self.resource_manager: ResourceManager = gcom.get(ResourceManager)
-        self.font_manager: FontManager = gcom.get(FontManager)
         self.game_pal = self.resource_manager.game_pal
         self.small_font = self.font_manager.register_font('small', windows_txt['SMALLFONT'])
         self.large_font = self.font_manager.register_font('large', windows_txt['LARGEFONT'])

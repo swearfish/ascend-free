@@ -1,6 +1,6 @@
 from typing import Optional
 
-from engine.gcom import gcom
+from foundation.gcom import gcom_instance
 from engine.gui.button import Button
 from engine.gui.control import Control
 from engine.gui.dialog import DialogBuilder, DialogMessageHandler
@@ -14,9 +14,9 @@ from foundation.area import area_with_size
 
 class AscendancyDialogs(UiEventListener):
     def __init__(self):
-        self.resource_manager: ResourceManager = gcom.get(ResourceManager)
-        self.font_manager: FontManager = gcom.get(FontManager)
-        self.sound_manager: SoundManager = gcom.get(SoundManager)
+        self.resource_manager: ResourceManager = gcom_instance.get(ResourceManager)
+        self.font_manager: FontManager = gcom_instance.get(FontManager)
+        self.sound_manager: SoundManager = gcom_instance.get(SoundManager)
         self._dialog_bg = self.resource_manager.load_shape('data/help.shp')
         self._btn_font = self.font_manager.get('large')
         self._txt_font = self.font_manager.get('large')

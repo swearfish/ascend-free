@@ -1,6 +1,6 @@
 from ascendancy_assets import Palette, FntFile
 from engine import FileSystem
-from engine.gcom import gcom
+from foundation.gcom import gcom_instance
 from engine.resource_manager import ResourceManager
 from engine.text.text_render import TextRenderer
 
@@ -8,8 +8,8 @@ from engine.text.text_render import TextRenderer
 class FontManager:
     def __init__(self):
         self.fonts: dict[str, TextRenderer] = {}
-        self.resource_manager: ResourceManager = gcom.get(ResourceManager)
-        self.file_system: FileSystem = gcom.get(FileSystem)
+        self.resource_manager: ResourceManager = gcom_instance.get(ResourceManager)
+        self.file_system: FileSystem = gcom_instance.get(FileSystem)
 
     def register_font(self, name: str, font: str | TextRenderer, palette: Palette = None):
         if isinstance(font, str):

@@ -5,9 +5,10 @@ from typing import AnyStr
 
 from ascendancy_assets import CobArchive, CobFile
 from foundation import BinaryReader, binary_reader_from_buffer
+from foundation.gcom import Component
 
 
-class FileSystem:
+class FileSystem(Component):
     def __init__(self, assets_dir: str | PathLike[str], cache_dir: str | PathLike[str] | None = None):
         self.assets_dir = assets_dir
         self.cache_dir = cache_dir if cache_dir is not None else os.path.join(assets_dir, 'cache')
@@ -47,7 +48,7 @@ class FileSystem:
         else:
             return self.find_file(name, cob).open_reader()
 
-    def get_cached_name(self, name: str, include_cache_path = True) -> ntpath:
+    def get_cached_name(self, name: str, include_cache_path=True) -> ntpath:
         name = name.replace('\\', '/')
         parts = name.split('/')
         cache_dir = self.cache_dir
@@ -58,7 +59,7 @@ class FileSystem:
         # return cache_file
         return cache_file if include_cache_path else cache_file[len(self.cache_dir) + 1:]
 
-    def get_as_file(self, name: str, cob: int | None = None, include_cache_path = True) -> ntpath:
+    def get_as_file(self, name: str, cob: int | None = None, include_cache_path=True) -> ntpath:
         cache_file = self.get_cached_name(name)
         if not os.path.exists(cache_file):
             content = self.read_file(name, cob)

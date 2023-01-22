@@ -4,14 +4,16 @@ from pygame.mixer import Sound
 
 from ascendancy_assets import convert_voice
 from engine import FileSystem
-from engine.gcom import gcom
 from foundation.ascendancy_exception import AscendancyException
+from foundation.gcom import component_resolve, Component
 
 
-class SoundManager:
+@component_resolve
+class SoundManager(Component):
+    file_system: FileSystem
+
     def __init__(self):
-        self.fs: FileSystem = gcom.get(FileSystem)
-        sfx_txt = self.fs.read_lines('soundfx.txt')
+        sfx_txt = self.file_system.read_lines('soundfx.txt')
         self.sounds: dict[str, Sound] = {}
         for i in range(len(sfx_txt)):
             if sfx_txt[i].strip() == '':
@@ -32,8 +34,8 @@ class SoundManager:
         self.get_sound(name).play()
 
     def get_wav(self, name: str) -> str:
-        cached_name = self.fs.get_cached_name(name + '.wav')
+        cached_name = self.file_system.get_cached_name(name + '.wav')
         if not os.path.exists(cached_name):
-            with self.fs.open_file(name) as voc:
+            with self.file_system.open_file(name) as voc:
                 convert_voice(voc, cached_name)
         return cached_name

@@ -1,32 +1,34 @@
 from typing import Type
 
-from .gcom import gcom
+from foundation.gcom import component_resolve, Component
 from .resource_manager import ResourceManager
-from .scene import Scene
+from .abstract_scene import AbstractScene
 
 
-class SceneManager:
+@component_resolve
+class SceneManager(Component):
+    _resource_manager: ResourceManager
+
     def __init__(self, screen):
-        self._active_scene: Scene | None = None
-        self._resource_manager: ResourceManager = gcom.get(ResourceManager)
+        self._active_scene: AbstractScene | None = None
         self._scene_time = 0
         self._total_time = 0
         self._next_scene = None
         self._use_history = False
         self._screen = screen
-        self._scenes: dict[str, Type[Scene]] = {}
-        self._history: list[Scene] = []
+        self._scenes: dict[str, Type[AbstractScene]] = {}
+        self._history: list[AbstractScene] = []
 
-    def register_scene(self, name: str, clazz: Type[Scene]):
+    def register_scene(self, name: str, clazz: Type[AbstractScene]):
         self._scenes[name] = clazz
 
-    def enter_scene(self, scene: Scene | Type[Scene] | str):
+    def enter_scene(self, scene: AbstractScene | Type[AbstractScene] | str):
         if isinstance(scene, str):
             assert scene in self._scenes, f'Unknown scene {scene}'
             scene = self._scenes[scene]
         # noinspection PyTypeChecker
         if isinstance(scene, Type):
-            scene = scene(self)
+            scene = scene()
         if self._active_scene == scene or self._next_scene == scene:
             return
         self._next_scene = scene
@@ -66,4 +68,3 @@ class SceneManager:
             self._next_scene = self._history[-1]
             self._history.pop()
             self._use_history = False
-
