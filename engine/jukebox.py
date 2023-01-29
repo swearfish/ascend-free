@@ -1,16 +1,16 @@
 import pygame
 
-from foundation.gcom import component_resolve, Component
+from foundation.gcom import auto_wire, Component
 from .file_system import FileSystem
 from .sound_manager import SoundManager
 
 
-@component_resolve
 class Jukebox(Component):
     file_system: FileSystem
     sound_manager: SoundManager
 
     def __init__(self):
+        super().__init__()
         self.music_list = self.file_system.read_lines('music.txt')
         music_count = int(self.music_list[0])
         assert music_count < len(self.music_list)

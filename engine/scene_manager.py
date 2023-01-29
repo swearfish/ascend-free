@@ -1,21 +1,23 @@
 from typing import Type
 
-from foundation.gcom import component_resolve, Component
-from .resource_manager import ResourceManager
+from pygame import Surface
+
+from foundation.gcom import Component
 from .abstract_scene import AbstractScene
+from .resource_manager import ResourceManager
 
 
-@component_resolve
 class SceneManager(Component):
     _resource_manager: ResourceManager
+    _screen: Surface
 
-    def __init__(self, screen):
+    def __init__(self):
+        super().__init__()
         self._active_scene: AbstractScene | None = None
         self._scene_time = 0
         self._total_time = 0
         self._next_scene = None
         self._use_history = False
-        self._screen = screen
         self._scenes: dict[str, Type[AbstractScene]] = {}
         self._history: list[AbstractScene] = []
 

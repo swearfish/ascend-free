@@ -5,10 +5,10 @@ from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from engine.sound_manager import SoundManager
 from engine.text.font_manager import FontManager
-from foundation.gcom import component_resolve
+from foundation.gcom import auto_wire
 
 
-@component_resolve
+@auto_wire
 class Scene(AbstractScene):
     resource_manager: ResourceManager
     font_manager: FontManager

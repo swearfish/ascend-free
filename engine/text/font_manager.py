@@ -1,12 +1,13 @@
 from ascendancy_assets import Palette, FntFile
 from engine import FileSystem
-from foundation.gcom import gcom_instance
+from foundation.gcom import gcom_instance, Component
 from engine.resource_manager import ResourceManager
 from engine.text.text_render import TextRenderer
 
 
-class FontManager:
+class FontManager(Component):
     def __init__(self):
+        super().__init__()
         self.fonts: dict[str, TextRenderer] = {}
         self.resource_manager: ResourceManager = gcom_instance.get(ResourceManager)
         self.file_system: FileSystem = gcom_instance.get(FileSystem)

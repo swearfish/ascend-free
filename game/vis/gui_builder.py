@@ -3,24 +3,26 @@ from engine.gui.state_frame import StateFrame
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
-from foundation.gcom import component_resolve, Component
+from foundation.gcom import Component
 from foundation.vector_2d import Vec2
 
 
 # noinspection SpellCheckingInspection
-@component_resolve
 class AscendancyGui(Component):
     resource_manager: ResourceManager
     font_manager: FontManager
+    windows_txt: dict[str, any]
+    screen_size: Vec2
 
-    def __init__(self, windows_txt: dict[str, any], screen_res=Vec2(640, 480)):
+    def __init__(self):
+        super().__init__()
         self.game_pal = self.resource_manager.game_pal
-        self.small_font = self.font_manager.register_font('small', windows_txt['SMALLFONT'])
-        self.large_font = self.font_manager.register_font('large', windows_txt['LARGEFONT'])
+        self.small_font = self.font_manager.register_font('small', self.windows_txt['SMALLFONT'])
+        self.large_font = self.font_manager.register_font('large', self.windows_txt['LARGEFONT'])
         self.states: dict[int, StateFrame] = {}
-        for state_number, state_props in windows_txt['states'].items():
+        for state_number, state_props in self.windows_txt['states'].items():
             shape_name = state_props['SHAPEFILE']
-            state_frame = StateFrame(state_number, shape_name, screen_res)
+            state_frame = StateFrame(state_number, shape_name, self.screen_size)
             self.states[state_number] = state_frame
             for wnd in state_props['windows']:
                 if wnd['TYPE'] == 0:

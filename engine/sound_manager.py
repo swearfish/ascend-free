@@ -5,10 +5,10 @@ from pygame.mixer import Sound
 from ascendancy_assets import convert_voice
 from engine import FileSystem
 from foundation.ascendancy_exception import AscendancyException
-from foundation.gcom import component_resolve, Component
+from foundation.gcom import auto_wire, Component
 
 
-@component_resolve
+@auto_wire
 class SoundManager(Component):
     file_system: FileSystem
 

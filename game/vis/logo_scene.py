@@ -1,10 +1,10 @@
 from engine import Jukebox
 from engine.scene import Scene
-from foundation.gcom import component_resolve
+from foundation.gcom import auto_wire
 from foundation.vector_2d import Vec2
 
 
-@component_resolve
+@auto_wire
 class LogoScene(Scene):
     jukebox: Jukebox
 

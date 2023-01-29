@@ -5,14 +5,14 @@ import pygame.image
 from ascendancy_assets import Palette, ShapeFile
 from engine import FileSystem
 from engine.sprite import Sprite, ShapeRenderer
-from foundation.gcom import component_resolve, Component
+from foundation.gcom import Component, auto_wire
 
 
-@component_resolve
 class ResourceManager(Component):
     file_system: FileSystem
 
     def __init__(self):
+        super().__init__()
         self.palette: dict[str, Palette] = {}
 
         self.game_pal = self.get_palette('data/game.pal')

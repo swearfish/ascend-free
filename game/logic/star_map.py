@@ -2,11 +2,10 @@ import math
 import random
 
 from engine import FileSystem
-from foundation.gcom import component_resolve, Component
+from foundation.gcom import auto_wire, Component
 from foundation.vector_3d import Vec3
 
 
-@component_resolve
 class StarMap(Component):
     file_system: FileSystem
 

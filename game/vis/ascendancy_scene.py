@@ -3,16 +3,16 @@ from pygame import KMOD_SHIFT
 
 from engine.gui.button import Button
 from engine.gui.control import Control
-from engine.gui.gui_builder import AscendancyGui
+from game.vis.gui_builder import AscendancyGui
 from engine.gui.ui_event_listener import UiEventListener
 from engine.scene import Scene
-from foundation.gcom import component_resolve
+from foundation.gcom import auto_wire
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
 from settings import SCREEN_SCALE
 
 
-@component_resolve
+@auto_wire
 class AscendancyScene(Scene, UiEventListener):
     gui_manager: AscendancyGui
     dialogs: AscendancyDialogs
