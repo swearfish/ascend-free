@@ -5,14 +5,15 @@ from pygame.mixer import Sound
 from ascendancy_assets import convert_voice
 from engine import FileSystem
 from foundation.ascendancy_exception import AscendancyException
-from foundation.gcom import auto_wire, Component
+from foundation.gcom import Component, auto_gcom
 
 
-@auto_wire
+@auto_gcom
 class SoundManager(Component):
     file_system: FileSystem
 
     def __init__(self):
+        super().__init__()
         sfx_txt = self.file_system.read_lines('soundfx.txt')
         self.sounds: dict[str, Sound] = {}
         for i in range(len(sfx_txt)):

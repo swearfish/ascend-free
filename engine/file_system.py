@@ -1,19 +1,19 @@
 import ntpath
 import os.path
-from os import PathLike
 from typing import AnyStr, Optional
 
 from ascendancy_assets import CobArchive, CobFile
 from foundation import BinaryReader, binary_reader_from_buffer
-from foundation.gcom import Component, auto_wire
+from foundation.gcom import Component, auto_gcom
 
 
-@auto_wire
+@auto_gcom
 class FileSystem(Component):
     assets_dir: str
     cache_dir: Optional[str] = None
 
     def __init__(self):
+        super().__init__()
         if self.cache_dir is None:
             self.cache_dir = os.path.join(self.assets_dir, 'cache')
         os.makedirs(self.cache_dir, exist_ok=True)

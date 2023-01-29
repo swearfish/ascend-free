@@ -1,10 +1,11 @@
 import pygame
 
-from foundation.gcom import auto_wire, Component
+from foundation.gcom import Component, auto_gcom
 from .file_system import FileSystem
 from .sound_manager import SoundManager
 
 
+@auto_gcom
 class Jukebox(Component):
     file_system: FileSystem
     sound_manager: SoundManager

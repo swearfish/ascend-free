@@ -5,9 +5,10 @@ import pygame.image
 from ascendancy_assets import Palette, ShapeFile
 from engine import FileSystem
 from engine.sprite import Sprite, ShapeRenderer
-from foundation.gcom import Component, auto_wire
+from foundation.gcom import Component, auto_gcom
 
 
+@auto_gcom
 class ResourceManager(Component):
     file_system: FileSystem
 

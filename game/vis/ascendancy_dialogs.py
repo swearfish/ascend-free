@@ -1,7 +1,7 @@
 from typing import Optional
 
 from game.vis.gui_builder import AscendancyGui
-from foundation.gcom import Component
+from foundation.gcom import Component, auto_gcom
 from engine.gui.button import Button
 from engine.gui.control import Control
 from engine.gui.dialog import DialogBuilder, DialogMessageHandler
@@ -13,6 +13,7 @@ from engine.text.font_manager import FontManager
 from foundation.area import area_with_size
 
 
+@auto_gcom
 class AscendancyDialogs(Component, UiEventListener):
     resource_manager: ResourceManager
     font_manager: FontManager

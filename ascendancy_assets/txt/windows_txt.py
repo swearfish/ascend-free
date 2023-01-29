@@ -18,7 +18,7 @@ global_windows = [
 ]
 
 
-def parse_windows_txt(lines: str | list[str]) -> dict[str, int | str]:
+def parse_windows_txt(lines: str | list[str]) -> dict[str, dict | int | str]:
     if isinstance(lines, str):
         lines = lines.split('\r\n')
     result: dict[str, any] = {

@@ -72,6 +72,12 @@ class GlobalComponentObjectModel:
 gcom_instance: GlobalComponentObjectModel = GlobalComponentObjectModel()
 
 
+def auto_gcom(clazz):
+    assert inspect.isclass(clazz) and issubclass(clazz, Component), f'{clazz} is not a component'
+    gcom_instance.register(clazz)
+    return auto_wire(clazz)
+
+
 def auto_wire(clazz):
     orig_init = clazz.__init__
 
@@ -94,10 +100,6 @@ def auto_wire(clazz):
     return clazz
 
 
-@auto_wire
 class Component:
-    def __init__(self):
-        pass
-
     def close(self):
         pass

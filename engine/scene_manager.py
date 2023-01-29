@@ -2,11 +2,12 @@ from typing import Type
 
 from pygame import Surface
 
-from foundation.gcom import Component
+from foundation.gcom import Component, auto_gcom
 from .abstract_scene import AbstractScene
 from .resource_manager import ResourceManager
 
 
+@auto_gcom
 class SceneManager(Component):
     _resource_manager: ResourceManager
     _screen: Surface

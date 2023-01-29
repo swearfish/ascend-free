@@ -1,21 +1,25 @@
+from ascendancy_assets.txt.windows_txt import parse_windows_txt
+from engine import FileSystem
 from engine.gui.button import Button
 from engine.gui.state_frame import StateFrame
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
-from foundation.gcom import Component
+from foundation.gcom import Component, auto_gcom
 from foundation.vector_2d import Vec2
 
 
 # noinspection SpellCheckingInspection
+@auto_gcom
 class AscendancyGui(Component):
     resource_manager: ResourceManager
     font_manager: FontManager
-    windows_txt: dict[str, any]
+    file_system: FileSystem
     screen_size: Vec2
 
     def __init__(self):
         super().__init__()
+        self.windows_txt = parse_windows_txt(self.file_system.read_lines('windows.txt'))
         self.game_pal = self.resource_manager.game_pal
         self.small_font = self.font_manager.register_font('small', self.windows_txt['SMALLFONT'])
         self.large_font = self.font_manager.register_font('large', self.windows_txt['LARGEFONT'])
