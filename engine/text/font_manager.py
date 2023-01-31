@@ -19,7 +19,10 @@ class FontManager(Component):
         self.fonts[name] = font
         return font
 
-    def get(self, name: str):
+    def exists(self, name: str) -> bool:
+        return name in self.fonts
+
+    def get(self, name: str) -> TextRenderer:
         return self.fonts[name]
 
     def _load_font(self, name: str, palette: Palette = None) -> TextRenderer:

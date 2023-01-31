@@ -4,12 +4,14 @@ from engine.scene_manager import SceneManager
 from foundation.gcom import Component, auto_gcom, gcom_instance
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
-from game.vis.logo_scene import LogoScene
-from game.vis.main_menu import MainMenu
+from game.vis.gui_builder import AscendancyGuiBuilder
+from game.vis.logo.logo_scene import LogoScene
+from game.vis.main_menu.main_menu import MainMenu
 
 
 @auto_gcom
 class AscendancyGame(Component):
+    gui_builder: AscendancyGuiBuilder
     dialogs: AscendancyDialogs
     scene_manager: SceneManager
     screen_size: Vec2
@@ -24,6 +26,7 @@ class AscendancyGame(Component):
         self._inited = False
 
     def _late_init(self):
+        self.gui_builder.build()
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.enter_scene('logo')

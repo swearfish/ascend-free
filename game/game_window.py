@@ -17,8 +17,9 @@ class GameWindow:
         pygame.display.set_caption(GAME_NAME, GAME_NAME)
 
         gcom_instance.set_config('assets_dir', '../assets')
-        gcom_instance.set_config('screen_size', Vec2(SCREEN_SIZE[0], SCREEN_SIZE[1]))
-        gcom_instance.set_config('display_size', Vec2(SCREEN_SIZE[0] * SCREEN_SCALE, SCREEN_SIZE[1] * SCREEN_SCALE))
+        screen_size = Vec2(SCREEN_SIZE[0], SCREEN_SIZE[1])
+        gcom_instance.set_config('screen_size', screen_size)
+        gcom_instance.set_config('display_size', screen_size * SCREEN_SCALE)
 
         self.game: AscendancyGame = gcom_instance.get(AscendancyGame)
 

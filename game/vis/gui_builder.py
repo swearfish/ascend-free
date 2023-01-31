@@ -5,13 +5,13 @@ from engine.gui.state_frame import StateFrame
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
-from foundation.gcom import Component, auto_gcom
+from foundation.gcom import auto_wire, auto_gcom, Component
 from foundation.vector_2d import Vec2
 
 
 # noinspection SpellCheckingInspection
 @auto_gcom
-class AscendancyGui(Component):
+class AscendancyGuiBuilder(Component):
     resource_manager: ResourceManager
     font_manager: FontManager
     file_system: FileSystem
@@ -24,6 +24,8 @@ class AscendancyGui(Component):
         self.small_font = self.font_manager.register_font('small', self.windows_txt['SMALLFONT'])
         self.large_font = self.font_manager.register_font('large', self.windows_txt['LARGEFONT'])
         self.states: dict[int, StateFrame] = {}
+
+    def build(self):
         for state_number, state_props in self.windows_txt['states'].items():
             shape_name = state_props['SHAPEFILE']
             state_frame = StateFrame(state_number, shape_name, self.screen_size)

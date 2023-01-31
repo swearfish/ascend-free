@@ -1,6 +1,5 @@
 from typing import Optional
 
-from game.vis.gui_builder import AscendancyGui
 from foundation.gcom import Component, auto_gcom
 from engine.gui.button import Button
 from engine.gui.control import Control
@@ -18,11 +17,11 @@ class AscendancyDialogs(Component, UiEventListener):
     resource_manager: ResourceManager
     font_manager: FontManager
     sound_manager: SoundManager
-    gui: AscendancyGui
 
     def __init__(self):
         super().__init__()
         self._dialog_bg = self.resource_manager.load_shape('data/help.shp')
+        assert self.font_manager.exists('large'), f'"large" font is not registered. Did you init AscendancyGuiBuilder?'
         self._btn_font = self.font_manager.get('large')
         self._txt_font = self.font_manager.get('large')
         self._dialog_button_area = area_with_size(8, 256 - 39, 320, 31)
