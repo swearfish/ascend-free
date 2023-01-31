@@ -45,6 +45,9 @@ class GameWindow:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.game.on_back_button()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.game.on_back_button()
+                else:
+                    self.game.on_key_press(event)
         return True

@@ -7,6 +7,7 @@ from game.vis.ascendancy_dialogs import AscendancyDialogs
 from game.vis.gui_builder import AscendancyGuiBuilder
 from game.vis.logo.logo_scene import LogoScene
 from game.vis.main_menu.main_menu import MainMenu
+from game.vis.new_game.new_game_scene import NewGameScene
 
 
 @auto_gcom
@@ -29,6 +30,7 @@ class AscendancyGame(Component):
         self.gui_builder.build()
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
+        self.scene_manager.register_scene('new_game', NewGameScene)
         self.scene_manager.enter_scene('logo')
 
     def draw(self):
@@ -45,3 +47,8 @@ class AscendancyGame(Component):
 
     def on_back_button(self):
         self.scene_manager.back_button_press()
+
+    def on_key_press(self, ev):
+        if ev.key == pygame.K_x and ev.mod & pygame.KMOD_ALT:
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
+        pass

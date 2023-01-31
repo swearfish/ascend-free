@@ -44,7 +44,7 @@ class ResourceManager(Component):
             self.read_shape(name, index).export_to_png(full_extracted_path)
         return pygame.image.load(full_extracted_path)
 
-    def sprite_from_shape_file(self, name: str, index: int = -1, size=None) -> Sprite:
+    def sprite_from_shape_file(self, name: str, index: int = 1, size=None) -> Sprite:
         return Sprite(self.surface_from_shape_file(name, index), size=size)
 
     def load_shape(self, name: str, index: int = -1, size=None) -> ShapeRenderer:
