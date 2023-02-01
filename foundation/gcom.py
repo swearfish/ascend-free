@@ -2,10 +2,19 @@ import inspect
 import typing
 
 
+class Component:
+    """
+    Root class of all GCOM components
+    """
+
+    def close(self):
+        pass
+
+
 class GlobalComponentObjectModel:
     """
     GCOM library, rarely used directly
-    Use @auto_wire and @auto_gcom instead
+    Use @auto_wire and @auto_gcom instead or subclass Component
     """
 
     def __init__(self):
@@ -75,7 +84,7 @@ class GlobalComponentObjectModel:
             inst.close()
         self._instances = []
 
-    def get(self, clazz):
+    def get(self, clazz) -> Component:
         """
         Get an instance to a GCOM component. The component must be registered, but this function will init
         if not yet initialized. All components are singleton.
@@ -129,6 +138,19 @@ def auto_gcom(clazz):
     return auto_wire(clazz)
 
 
+def _auto_wire_init(self):
+    hint = typing.get_type_hints(self.__class__)
+    for name, member_type in hint.items():
+        if inspect.isclass(member_type) and issubclass(member_type, Component):
+            inst = gcom_instance.get(member_type)
+            setattr(self, name, inst)
+        else:
+            param_name = name.lstrip('_')
+            param_value = gcom_instance.get_config(param_name)
+            if param_value is not None:
+                setattr(self, name, param_value)
+
+
 def auto_wire(clazz):
     """
     Use to initialize non-GCOM components. Auto-wire will:
@@ -154,26 +176,8 @@ def auto_wire(clazz):
     # Make copy of original __init__, so we can call it without recursion
 
     def __init__(self, *args, **kws):
-        hint = typing.get_type_hints(self.__class__)
-        for name, member_type in hint.items():
-            if inspect.isclass(member_type) and issubclass(member_type, Component):
-                inst = gcom_instance.get(member_type)
-                setattr(self, name, inst)
-            else:
-                param_name = name.lstrip('_')
-                param_value = gcom_instance.get_config(param_name)
-                if param_value is not None:
-                    setattr(self, name, param_value)
+        _auto_wire_init(self)
         orig_init(self, *args, **kws)  # Call the original __init__
 
     clazz.__init__ = __init__  # Set the class' __init__ to the new one
     return clazz
-
-
-class Component:
-    """
-    Root class of all GCOM components
-    """
-
-    def close(self):
-        pass
