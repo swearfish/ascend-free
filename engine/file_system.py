@@ -42,8 +42,11 @@ class FileSystem(Component):
     def read_text(self, name: str, cob: int | None = None) -> str:
         return self.read_file(name, cob).decode('utf-8')
 
-    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n') -> list[str]:
-        return self.read_text(name, cob).split(line_ending)
+    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n', skip_empty: bool = False) -> list[str]:
+        result = self.read_text(name, cob).split(line_ending)
+        if skip_empty:
+            result = list(filter(lambda x: x is not None and 0 < len(x), result))
+        return result
 
     def open_file(self, name: str, cob: int | None = None, buffered: bool = False) -> BinaryReader:
         if buffered:
