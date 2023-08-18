@@ -4,7 +4,8 @@ import pygame.image
 
 from ascendancy_assets import Palette, ShapeFile
 from engine import FileSystem
-from engine.sprite import Sprite, ShapeRenderer
+from engine.sprite import Sprite
+from engine.shape_renderer import ShapeRenderer
 from foundation.gcom import Component, auto_gcom
 
 

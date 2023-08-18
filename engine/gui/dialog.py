@@ -12,7 +12,7 @@ from .control import Control
 from .label import Label
 from .picture_box import PictureBox
 from .ui_event_listener import UiEventListener
-from ..sprite import ShapeRenderer
+from ..shape_renderer import ShapeRenderer
 from ..text.text_render import TextRenderer, TEXT_VCENTER, TEXT_CENTER
 
 DialogMessageHandler = Callable[[Control, Control, any], None]

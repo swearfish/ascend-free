@@ -1,61 +1,102 @@
-import pygame.transform
+from typing import TypeVar
+
 from pygame.surface import Surface
 
-from foundation.area import Area
-from foundation.ascendancy_exception import AscendancyException
+from engine.shape_renderer import ShapeRenderer
 from foundation.vector_2d import Vec2
 
+shape_like = ShapeRenderer | Surface | list[ShapeRenderer | Surface]
 
-class ShapeRenderer:
-    def __init__(self, image, size=None):
-        if isinstance(image, Surface):
-            self._orig_img: Surface = image
-        elif isinstance(image, ShapeRenderer):
-            self._orig_img: Surface = image.surface
+
+class SpriteTemplate:
+    def __init__(self, image: shape_like, center=Vec2(0, 0), size: Vec2=None):
+        if isinstance(image, ShapeRenderer) and size is None:
+            self._shapes = [image]
+        elif isinstance(image, list):
+            self._shapes = []
+            for i in image:
+                if size is not None or not isinstance(i, ShapeRenderer):
+                    self._shapes.append(ShapeRenderer(i, size))
+                else:
+                    self._shapes.append(i)
+                self._shapes.append(i)
         else:
-            raise AscendancyException('ShapeRenderer requires a shape or surface')
-        self.surface = self._orig_img
-        if size is not None:
-            self.scale(size)
+            self._shapes = [ShapeRenderer(image, size)]
+        self._center = center
 
     @property
-    def width(self) -> int:
-        return self.surface.get_width()
+    def num_images(self) -> int:
+        return len(self._shapes)
 
-    @property
-    def height(self) -> int:
-        return self.surface.get_height()
-
-    @property
-    def size(self) -> Vec2:
-        return Vec2(self.width, self.height)
-
-    def scale(self, size):
-        if size is not None:
-            self.surface = pygame.transform.scale(self._orig_img, size)
-
-    def set_opacity(self, opacity: int = 255):
-        assert 0 <= opacity < 256
-        self.surface.set_alpha(opacity)
-
-    def draw(self, screen: Surface, pos: Vec2, area: Area = None):
-        if area is not None:
-            screen.blit(self.surface, pos.as_tuple(), area.as_tuple())
-        else:
-            screen.blit(self.surface, pos.as_tuple())
+    def draw(self, dest: Surface, pos: Vec2, index: int = 0):
+        self._shapes[index].draw(dest, pos - self._center)
 
 
 class Sprite:
-    def __init__(self, image: ShapeRenderer | Surface, pos=Vec2(0, 0), center=Vec2(0, 0), size=None):
-        if isinstance(image, ShapeRenderer):
-            self.shape = image
+    def __init__(self, image: SpriteTemplate | shape_like, pos=Vec2(0, 0), center=Vec2(0, 0), size: Vec2=None):
+        if isinstance(image, SpriteTemplate):
+            assert size is None, f"Can't resize sprite template"
+            self._template = image
+            self._center = center
         else:
-            self.shape = ShapeRenderer(image)
-        if size is not None:
-            self.shape = ShapeRenderer(self.shape, size)
+            self._template = SpriteTemplate(image, center, size)
+            self._center = Vec2(0,0)
         self._pos = Vec2(0,0)
-        self._center = center
+        self._state = 0
+        self._anim_start: int | None = None
+        self._anim_end: int | None = None
+        self._anim_loop: bool = False
+        self._anim_speed: float = 0.0
+        self._anim_state: float = 0.0
+        self._destroy_on_end = False
         self.move(pos)
+
+    def stop_animation(self):
+        self._anim_start = self._anim_end = None
+        self._anim_loop = False
+        self._anim_speed = 0.0
+
+    def animate(self, start: int, end: int, loop = False, speed = 1.0, destroy_on_end = False):
+        assert start <= end, f'Invalid frame range: {start}-{end}'
+        assert 0 < speed, f'Invalid speed: {speed}'
+        self._state = start
+        self._anim_state = start
+        if start == end:
+            self.stop_animation()
+        else:
+            self._anim_start = start
+            self._anim_end = end
+            self._anim_loop = loop
+            self._destroy_on_end = destroy_on_end
+
+    @property
+    def state(self) -> int:
+        return self._state
+
+    @state.setter
+    def state(self, state):
+        self._state = state
+        self.stop_animation()
+
+    @property
+    def animating(self) -> bool:
+        return self._anim_start is not None
+
+    @property
+    def dead(self) -> bool:
+        return self._destroy_on_end and not self.animating
+
+    def update(self, dt: float) -> bool:
+        if self._anim_start is None:
+            return False
+        self._anim_state += dt * self._anim_speed
+        if self._anim_end < self._anim_state:
+            if not self._anim_loop:
+                self.stop_animation()
+                return False
+            self._anim_state = self._anim_start
+        self._state = int(self._anim_state)
+        return True
 
     @property
     def position(self) -> Vec2:
@@ -68,4 +109,26 @@ class Sprite:
         self._pos += delta
 
     def draw(self, screen: Surface):
-        self.shape.draw(screen, self._pos)
+        self._template.draw(screen, self._pos, self._state)
+
+
+class SpriteBatch:
+    def __init__(self):
+        self.sprites: list[Sprite] = []
+
+    def add(self, sprite: Sprite | SpriteTemplate | shape_like) -> Sprite:
+        if isinstance(sprite, Sprite):
+            self.sprites.append(sprite)
+            return sprite
+        else:
+            result = Sprite(sprite)
+            self.sprites.append(result)
+            return result
+
+    def update(self, dt: float):
+        has_garbage = False
+        for sprite in self.sprites:
+            sprite.update(dt)
+            has_garbage |= sprite.dead
+        if has_garbage:
+            self.sprites = list(filter(lambda x: not x.dead, self.sprites))

@@ -24,7 +24,6 @@ class StateFrame(Control):
                 handled = self.handle_mouse_down(mb_flag | shift_flag, mouse_pos)
                 self.mouse_buttons |= mb_flag
             if (not buttons[i]) and (self.mouse_buttons & mb_flag):
-                print(f'mb_up {i} @ {mouse_pos}')
                 handled = self.handle_mouse_up(mb_flag | shift_flag, mouse_pos)
                 self.mouse_buttons &= ~mb_flag
         return handled

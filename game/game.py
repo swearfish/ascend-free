@@ -19,6 +19,7 @@ class AscendancyGame(Component):
     display_size: Vec2
 
     def __init__(self):
+        super().__init__()
         self.time = pygame.time.get_ticks()
         self.display_surface = pygame.display.set_mode(self.display_size.as_tuple())
         self.back_buffer = pygame.surface.Surface(self.screen_size.as_tuple())

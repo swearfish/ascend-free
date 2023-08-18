@@ -7,7 +7,7 @@ from engine.gui.dialog import DialogBuilder, DialogMessageHandler
 from engine.gui.ui_event_listener import UiEventListener
 from engine.resource_manager import ResourceManager
 from engine.sound_manager import SoundManager
-from engine.sprite import ShapeRenderer
+from engine.shape_renderer import ShapeRenderer
 from engine.text.font_manager import FontManager
 from foundation.area import area_with_size
 

@@ -58,8 +58,6 @@ class GlobalComponentObjectModel:
         for name, member_type in hints.items():
             if inspect.isclass(member_type) and issubclass(member_type, Component):
                 if member_type not in skip_types:
-                    print(f'WARNING: possible circular reference to {member_type} when initializing {clazz}')
-                else:
                     member_key = self._key_from_class(member_type)
                     if member_key not in self._inits:
                         self.register(member_type, skip_types=skip_types)
@@ -84,7 +82,7 @@ class GlobalComponentObjectModel:
             inst.close()
         self._instances = []
 
-    def get(self, clazz) -> Component:
+    def get(self, clazz):
         """
         Get an instance to a GCOM component. The component must be registered, but this function will init
         if not yet initialized. All components are singleton.

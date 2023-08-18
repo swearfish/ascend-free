@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (ascend-free)" project-jdk-type="Python SDK" />
+  <component name="Black">
+    <option name="enabledOnReformat" value="true" />
+    <option name="sdkUUID" value="76568a8a-d7af-48b8-8514-7a627b31b0cb" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (ascend-free)" project-jdk-type="Python SDK" />
+  <component name="PythonCompatibilityInspectionAdvertiser">
+    <option name="version" value="3" />
+  </component>
 </project>

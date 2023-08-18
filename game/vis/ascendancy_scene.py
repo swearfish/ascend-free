@@ -22,6 +22,8 @@ class AscendancyScene(Scene, UiEventListener):
         if 0 <= state_index:
             self.state_frame = self.gui_builder.states[state_index]
             self.state_frame.listener = self
+        else:
+            self.state_frame = None
         self.click_events: dict = {}
 
     def on_click(self, sender: Control, message) -> bool:
@@ -42,6 +44,10 @@ class AscendancyScene(Scene, UiEventListener):
         super().draw()
         if self.state_frame is not None:
             self.state_frame.handle_draw(self.screen, Vec2(0, 0))
+
+    def update(self, total_time: float, frame_time: float):
+        if self.state_frame is not None:
+            self.state_frame.handle_update(total_time, frame_time)
             self._update_gui_input()
 
     def _update_gui_input(self):

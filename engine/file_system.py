@@ -42,9 +42,9 @@ class FileSystem(Component):
     def read_text(self, name: str, cob: int | None = None) -> str:
         return self.read_file(name, cob).decode('utf-8')
 
-    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n', skip_empty: bool = False) -> list[str]:
+    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n', skip_empty_lines: bool = False) -> list[str]:
         result = self.read_text(name, cob).split(line_ending)
-        if skip_empty:
+        if skip_empty_lines:
             result = list(filter(lambda x: x is not None and 0 < len(x), result))
         return result
 

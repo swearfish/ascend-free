@@ -1,7 +1,8 @@
 from pygame import Surface
 
 from engine.gui.control import Control
-from engine.sprite import Sprite, ShapeRenderer
+from engine.sprite import Sprite
+from engine.shape_renderer import ShapeRenderer
 from foundation.area import Area
 from foundation.vector_2d import Vec2
 

@@ -32,6 +32,7 @@ class MainMenu(AscendancyScene):
         pass
 
     def update(self, total_time: float, frame_time: float):
+        super().update(total_time, frame_time)
         if total_time < 1000 and self.fade_in:
             self.buffer.set_alpha(int(total_time // 4))
         else:
