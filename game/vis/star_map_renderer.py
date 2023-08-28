@@ -1,12 +1,31 @@
+import math
+
 import pygame.draw
 from pygame import Surface
 
 from engine.gui import Canvas
 from engine.resource_manager import ResourceManager
-from foundation import Area, Vec2
+from foundation import Area, Vec2, Vec3
 from foundation.gcom import auto_wire
 from game.logic.star_map import StarMap
 
+
+def project_3d_to_2d(pos: Vec3, scale: float, p: float) -> Vec2 | None:
+    # Perform perspective projection
+    p_corr = p + pos.z
+    if p_corr == 0:
+        return None
+    return Vec2(
+        pos.x * scale / p_corr,
+        pos.y * scale / p_corr
+    )
+
+
+def rotate_3d_around_y(pos_3d: Vec3, angle: float) -> Vec3:
+        x = pos_3d.x * math.cos(angle) + pos_3d.z * math.sin(angle)
+        y = pos_3d.y
+        z = -pos_3d.x * math.sin(angle) + pos_3d.z * math.cos(angle)
+        return Vec3(x, y, z)
 
 @auto_wire
 class StarMapRenderer(Canvas):
@@ -16,12 +35,22 @@ class StarMapRenderer(Canvas):
         super().__init__(parent, area)
         self.star_map = star_map
         self.stars = self.resource_manager.shape_from_file("data/cos_star.shp")
+        self.rot_y = 0
 
     def on_draw(self, screen: Surface, pos: Vec2):
-        pygame.draw.rect(screen, [0x22, 0x22, 0x22], self.area.new_origin(pos).as_tuple())
+        pygame.draw.rect(screen, [0x00, 0x00, 0x00], self.area.new_origin(pos).as_tuple())
         center = Vec2(pos.x + screen.get_width() / 2, pos.y + screen.get_height() / 2)
-        scale = 1.0
+        scale = 15.0
+        self.rot_y += math.pi / 360
+        camera = Vec3(0, 0, StarMap.COSMOS_RADIUS * 2)
         for star in self.star_map.stars:
-            star_2d_pos = Vec2(star.pos.x, star.pos.y)
-            self.stars.draw(screen, center + star_2d_pos * scale, 3)
+            star_3d_pos = rotate_3d_around_y(star.pos, self.rot_y)
+            # star_3d_pos = Vec3(star.pos.x, star.pos.y, star.pos.z)
+            star_3d_pos -= camera
+            star_2d_pos = project_3d_to_2d(star_3d_pos, scale, 1.0)
+            dist = star_3d_pos.z / camera.z
+            dist_index = 4 - max(1, min(4, math.floor(dist * -4)))
+            shape_index = star.type*4 + dist_index
+            if star_2d_pos is not None:
+                self.stars.draw(screen, center + star_2d_pos * scale, shape_index)
             pass

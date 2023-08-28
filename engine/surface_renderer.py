@@ -13,7 +13,7 @@ class SurfaceRenderer:
         elif isinstance(image, SurfaceRenderer):
             self._orig_img: Surface = image.surface
         else:
-            raise AscendancyException('ShapeRenderer requires a shape or surface')
+            raise AscendancyException('SurfaceRenderer requires another renderer or surface')
         self.surface = self._orig_img
         self.center = Vec2(0,0) if center is None else center
         if size is not None:
