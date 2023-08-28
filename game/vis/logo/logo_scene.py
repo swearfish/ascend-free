@@ -10,13 +10,14 @@ class LogoScene(Scene):
 
     def __init__(self):
         super().__init__()
-        self.logo = self.resource_manager.load_shape('data/logo.gif')
+        self.logo = self.resource_manager.renderer_from_shape_or_gif('data/logo.gif')
 
     def enter(self):
         pass
 
     def exit(self):
-        self.jukebox.play_now(0)
+        # self.jukebox.play_now(0)
+        pass
 
     def update(self, total_time: float, frame_time: float):
         if total_time < 500:

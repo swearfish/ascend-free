@@ -1,2 +1,2 @@
-pygame==2.4.0
+pygame==2.5.1
 pypng

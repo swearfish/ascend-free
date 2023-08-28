@@ -55,13 +55,13 @@ class StarMap:
 
 class Star:
     def __init__(self, name: str, pos: Vec3, type: int):
-        self._name = name
-        self._pos = pos
-        self._type = type
+        self.name = name
+        self.pos = pos
+        self.type = type
         self.star_lanes: list[StarLane] = []
 
     def distance_to(self, other) -> float:
-        return (self._pos - other._pos).length
+        return (self.pos - other.pos).length
 
 
 class StarLane:
@@ -72,7 +72,8 @@ class StarLane:
         self.distance = self.star_1.distance_to(self.star_2)
 
 
-def generate_star_cluster(radius: int, num_stars: int, names: list[str], stats: dict[str, tuple[float, float]]) -> list[Star]:
+def generate_star_cluster(radius: int, num_stars: int, names: list[str],
+                          stats: dict[str, tuple[float, float]]) -> list[Star]:
     def is_in_sphere(x, y, z, radius):
         return x ** 2 + y ** 2 + z ** 2 <= radius ** 2
 

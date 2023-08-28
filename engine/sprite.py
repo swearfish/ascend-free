@@ -1,45 +1,17 @@
-from typing import TypeVar
-
 from pygame.surface import Surface
 
-from engine.shape_renderer import ShapeRenderer
+from engine.shape import Shape, surface_like, shape_like
 from foundation.vector_2d import Vec2
-
-shape_like = ShapeRenderer | Surface | list[ShapeRenderer | Surface]
-
-
-class SpriteTemplate:
-    def __init__(self, image: shape_like, center=Vec2(0, 0), size: Vec2=None):
-        if isinstance(image, ShapeRenderer) and size is None:
-            self._shapes = [image]
-        elif isinstance(image, list):
-            self._shapes = []
-            for i in image:
-                if size is not None or not isinstance(i, ShapeRenderer):
-                    self._shapes.append(ShapeRenderer(i, size))
-                else:
-                    self._shapes.append(i)
-                self._shapes.append(i)
-        else:
-            self._shapes = [ShapeRenderer(image, size)]
-        self._center = center
-
-    @property
-    def num_images(self) -> int:
-        return len(self._shapes)
-
-    def draw(self, dest: Surface, pos: Vec2, index: int = 0):
-        self._shapes[index].draw(dest, pos - self._center)
 
 
 class Sprite:
-    def __init__(self, image: SpriteTemplate | shape_like, pos=Vec2(0, 0), center=Vec2(0, 0), size: Vec2=None):
-        if isinstance(image, SpriteTemplate):
+    def __init__(self, image: shape_like, pos=Vec2(0, 0), center=Vec2(0, 0), size: Vec2=None):
+        if isinstance(image, Shape):
             assert size is None, f"Can't resize sprite template"
             self._template = image
             self._center = center
         else:
-            self._template = SpriteTemplate(image, center, size)
+            self._template = Shape(image, center, size)
             self._center = Vec2(0,0)
         self._pos = Vec2(0,0)
         self._state = 0
@@ -116,7 +88,7 @@ class SpriteBatch:
     def __init__(self):
         self.sprites: list[Sprite] = []
 
-    def add(self, sprite: Sprite | SpriteTemplate | shape_like) -> Sprite:
+    def add(self, sprite: Sprite | Shape | surface_like) -> Sprite:
         if isinstance(sprite, Sprite):
             self.sprites.append(sprite)
             return sprite

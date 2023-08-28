@@ -18,6 +18,6 @@ class Canvas(Control):
         if self._surface is None or \
                 self._surface.get_width() != self.area.width or \
                 self._surface.get_height() != self.area.height:
-            self._surface = Surface(self.area.as_tuple())
+            self._surface = Surface(self.area.size.as_tuple())
         super().handle_draw(self._surface, Vec2(0, 0))
         screen.blit(self._surface, pos.as_tuple())

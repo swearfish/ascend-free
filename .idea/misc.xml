@@ -4,7 +4,7 @@
     <option name="enabledOnReformat" value="true" />
     <option name="sdkUUID" value="76568a8a-d7af-48b8-8514-7a627b31b0cb" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (ascend-free)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (venv)" project-jdk-type="Python SDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">
     <option name="version" value="3" />
   </component>

@@ -7,7 +7,7 @@ from engine.gui.dialog import DialogBuilder, DialogMessageHandler
 from engine.gui.ui_event_listener import UiEventListener
 from engine.resource_manager import ResourceManager
 from engine.sound_manager import SoundManager
-from engine.shape_renderer import ShapeRenderer
+from engine.surface_renderer import SurfaceRenderer
 from engine.text.font_manager import FontManager
 from foundation.area import area_with_size
 
@@ -20,7 +20,7 @@ class AscendancyDialogs(Component, UiEventListener):
 
     def __init__(self):
         super().__init__()
-        self._dialog_bg = self.resource_manager.load_shape('data/help.shp')
+        self._dialog_bg = self.resource_manager.renderer_from_shape_or_gif('data/help.shp')
         assert self.font_manager.exists('large'), f'"large" font is not registered. Did you init AscendancyGuiBuilder?'
         self._btn_font = self.font_manager.get('large')
         self._txt_font = self.font_manager.get('large')
@@ -41,7 +41,7 @@ class AscendancyDialogs(Component, UiEventListener):
     def question_box(self, parent: Control, message: str, buttons: list[str],
                      listener: DialogMessageHandler,
                      title: Optional[str] = None,
-                     shape: ShapeRenderer = None):
+                     shape: SurfaceRenderer = None):
         builder = DialogBuilder(parent) \
             .background(self._dialog_bg) \
             .button_area(self._dialog_button_area) \
@@ -51,7 +51,7 @@ class AscendancyDialogs(Component, UiEventListener):
         if title is not None:
             builder.title(title)
         if shape is not None:
-            builder.shape(shape)
+            builder.background(shape)
         for button in buttons:
             builder.add_button(button)
         dlg = builder.build()

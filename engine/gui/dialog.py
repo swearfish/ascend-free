@@ -12,7 +12,7 @@ from .control import Control
 from .label import Label
 from .picture_box import PictureBox
 from .ui_event_listener import UiEventListener
-from ..shape_renderer import ShapeRenderer
+from ..surface_renderer import SurfaceRenderer
 from ..text.text_render import TextRenderer, TEXT_VCENTER, TEXT_CENTER
 
 DialogMessageHandler = Callable[[Control, Control, any], None]
@@ -46,9 +46,9 @@ class DialogBuilder:
         self._button_area: Area | None = None
         self._button_font: TextRenderer | None = None
 
-        self._background: ShapeRenderer | None = None
+        self._background: SurfaceRenderer | None = None
 
-        self._shape: ShapeRenderer | None = None
+        self._shape: SurfaceRenderer | None = None
         self._shape_pos: Vec2 | None = None
 
         self._text: str | None = None
@@ -68,7 +68,7 @@ class DialogBuilder:
 
         self._pos = pos
 
-    def background(self, shape: ShapeRenderer):
+    def background(self, shape: SurfaceRenderer):
         self._background = shape
         return self
 
@@ -95,7 +95,7 @@ class DialogBuilder:
         self._buttons.append((title, name, msg))
         return self
 
-    def shape(self, shape: ShapeRenderer, border=10):
+    def shape(self, shape: SurfaceRenderer, border=10):
         self._shape = shape
         self._shape_pos = Vec2(border, border)
         return self
@@ -155,7 +155,7 @@ class DialogBuilder:
         bottom_part = self._background.surface.subsurface(bottom_area.as_tuple())
         new_background.blit(top_part, (0, 0))
         new_background.blit(bottom_part, (0, top_part.get_height()))
-        self._background = ShapeRenderer(new_background)
+        self._background = SurfaceRenderer(new_background)
         return self._get_area()
 
     def _validate(self):

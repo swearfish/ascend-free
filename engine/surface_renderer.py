@@ -6,11 +6,11 @@ from foundation.ascendancy_exception import AscendancyException
 from foundation.vector_2d import Vec2
 
 
-class ShapeRenderer:
+class SurfaceRenderer:
     def __init__(self, image, size=None, center: Vec2 = None):
         if isinstance(image, Surface):
             self._orig_img: Surface = image
-        elif isinstance(image, ShapeRenderer):
+        elif isinstance(image, SurfaceRenderer):
             self._orig_img: Surface = image.surface
         else:
             raise AscendancyException('ShapeRenderer requires a shape or surface')

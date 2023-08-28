@@ -2,13 +2,13 @@ from pygame import Surface
 
 from engine.gui.control import Control
 from engine.sprite import Sprite
-from engine.shape_renderer import ShapeRenderer
+from engine.surface_renderer import SurfaceRenderer
 from foundation.area import Area
 from foundation.vector_2d import Vec2
 
 
 class PictureBox(Control):
-    def __init__(self, parent, area: Area, shape: ShapeRenderer):
+    def __init__(self, parent, area: Area, shape: SurfaceRenderer):
         super().__init__(parent, area)
         self.shape = shape
 
