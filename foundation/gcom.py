@@ -25,8 +25,8 @@ class GlobalComponentObjectModel:
     def set_config(self, name: str, value):
         """
         Set the configuration parameter that can be resolved later
-        :param name: Name of the parameter
-        :param value: Parameter value
+        :param name: Name of the parameter to set
+        :param value: New value of the parameter
         """
         self._config[name] = value
 
@@ -35,7 +35,7 @@ class GlobalComponentObjectModel:
         Read a parameter or default_value if not defined
         :param name: Name of the parameter
         :param default_value: Default value returned when parameter is undefined
-        :return: Parameter value or default value
+        :return: Value of the existing parameter value or default_value otherwise
         """
         return self._config[name] if name in self._config else default_value
 
@@ -68,8 +68,8 @@ class GlobalComponentObjectModel:
 
     def register_all(self, classes):
         """
-        Register all classes in list
-        :param classes: List of class objects
+        Register all classes from the classes list
+        :param classes: Class objects to be registered
         """
         for clazz in classes:
             self.register(clazz)
@@ -86,8 +86,8 @@ class GlobalComponentObjectModel:
         """
         Get an instance to a GCOM component. The component must be registered, but this function will init
         if not yet initialized. All components are singleton.
-        :param clazz: Class of the component
-        :return: Component instance
+        :param clazz: Class of the component to get
+        :return: Instance of the type Component
         """
         assert issubclass(clazz, Component)
         key = self._key_from_class(clazz)

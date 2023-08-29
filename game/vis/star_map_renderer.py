@@ -22,10 +22,10 @@ def project_3d_to_2d(pos: Vec3, scale: float, p: float) -> Vec2 | None:
 
 
 def rotate_3d_around_y(pos_3d: Vec3, angle: float) -> Vec3:
-        x = pos_3d.x * math.cos(angle) + pos_3d.z * math.sin(angle)
-        y = pos_3d.y
-        z = -pos_3d.x * math.sin(angle) + pos_3d.z * math.cos(angle)
-        return Vec3(x, y, z)
+    x = pos_3d.x * math.cos(angle) + pos_3d.z * math.sin(angle)
+    y = pos_3d.y
+    z = -pos_3d.x * math.sin(angle) + pos_3d.z * math.cos(angle)
+    return Vec3(x, y, z)
 
 
 def project_logarithmically(value: float, max_value: float) -> float:
@@ -58,4 +58,3 @@ class StarMapRenderer(Canvas):
             shape_index = star.type*4 + dist_index
             if star_2d_pos is not None:
                 self.stars.draw(screen, center + star_2d_pos * scale, shape_index)
-

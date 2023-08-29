@@ -6,6 +6,7 @@ from game.vis.star_map_renderer import StarMapRenderer
 
 class NewGameScene(AscendancyScene):
     def __init__(self):
+        # noinspection SpellCheckingInspection
         super().__init__(state_index=3, template_file="data/3cfgnew.tmp")
         self.star_map = StarMap()
         self.star_map_renderer = StarMapRenderer(self.state_frame,

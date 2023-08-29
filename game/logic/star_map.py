@@ -16,6 +16,7 @@ class StarMap:
     def __init__(self):
         self.star_names = self.file_system.read_lines('names.txt', skip_empty_lines=True)
         random.shuffle(self.star_names)
+        # noinspection SpellCheckingInspection
         starstat_txt = self.file_system.read_lines('starstat.txt', skip_empty_lines=True)
         self.stat = {}
         for line in starstat_txt:
@@ -77,7 +78,7 @@ def generate_star_cluster(radius: int, num_stars: int, names: list[str],
     type_limits = [int(num_stars * x[0] / 100) for x in stats.values()]
     type_limit = type_limits[0]
     star_type = 0
-    #point_generator = BalancedSphericalPointGenerator(radius, num_stars)
+    # point_generator = BalancedSphericalPointGenerator(radius, num_stars)
     point_generator = RandomSphericalPointGenerator(radius)
     for i in range(num_stars):
         # Generate a random point on the sphere

@@ -5,7 +5,7 @@ from engine.gui.state_frame import StateFrame
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
-from foundation.gcom import auto_wire, auto_gcom, Component
+from foundation.gcom import auto_gcom, Component
 from foundation.vector_2d import Vec2
 
 
