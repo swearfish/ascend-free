@@ -27,6 +27,12 @@ def rotate_3d_around_y(pos_3d: Vec3, angle: float) -> Vec3:
         z = -pos_3d.x * math.sin(angle) + pos_3d.z * math.cos(angle)
         return Vec3(x, y, z)
 
+
+def project_logarithmically(value: float, max_value: float) -> float:
+    # Perform logarithmic projection
+    return (math.log(value + 1) / math.log(max_value + 1)) * 3
+
+
 @auto_wire
 class StarMapRenderer(Canvas):
     resource_manager: ResourceManager
@@ -45,12 +51,11 @@ class StarMapRenderer(Canvas):
         camera = Vec3(0, 0, StarMap.COSMOS_RADIUS * 2)
         for star in self.star_map.stars:
             star_3d_pos = rotate_3d_around_y(star.pos, self.rot_y)
-            # star_3d_pos = Vec3(star.pos.x, star.pos.y, star.pos.z)
             star_3d_pos -= camera
             star_2d_pos = project_3d_to_2d(star_3d_pos, scale, 1.0)
             dist = star_3d_pos.z / camera.z
-            dist_index = 4 - max(1, min(4, math.floor(dist * -4)))
+            dist_index = 3-int(max(0, min(3, (dist + 0.25) * -3)))
             shape_index = star.type*4 + dist_index
             if star_2d_pos is not None:
                 self.stars.draw(screen, center + star_2d_pos * scale, shape_index)
-            pass
+
