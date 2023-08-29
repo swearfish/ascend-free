@@ -73,28 +73,16 @@ class StarLane:
 
 def generate_star_cluster(radius: int, num_stars: int, names: list[str],
                           stats: dict[str, tuple[float, float]]) -> list[Star]:
-    def is_in_sphere(x, y, z):
-        return x ** 2 + y ** 2 + z ** 2 <= radius ** 2
-
-    def random_spherical_coordinates():
-        theta = random.uniform(0, 2 * math.pi)
-        phi = math.acos(random.uniform(-1, 1))
-        x = radius * math.sin(phi) * math.cos(theta)
-        y = radius * math.sin(phi) * math.sin(theta)
-        z = radius * math.cos(phi)
-        return x, y, z
-
     stars: list[Star] = []
     type_limits = [int(num_stars * x[0] / 100) for x in stats.values()]
     type_limit = type_limits[0]
     star_type = 0
+    #point_generator = BalancedSphericalPointGenerator(radius, num_stars)
+    point_generator = RandomSphericalPointGenerator(radius)
     for i in range(num_stars):
         # Generate a random point on the sphere
-        x, y, z = random_spherical_coordinates()
-        while not is_in_sphere(x, y, z):
-            x, y, z = random_spherical_coordinates()
         # Assign a random color
-        pos = Vec3(x, y, z)
+        pos = point_generator.next()
         name = names[i]
         if type_limit <= 0:
             star_type = (star_type + 1) % len(type_limits)
@@ -104,3 +92,48 @@ def generate_star_cluster(radius: int, num_stars: int, names: list[str],
         stars.append(Star(name, pos, star_type))
 
     return stars
+
+
+class AbstractPointGenerator:
+
+    def next(self) -> Vec3:
+        return Vec3(0, 0, 0)
+
+
+class RandomSphericalPointGenerator(AbstractPointGenerator):
+
+    def __init__(self, radius: float):
+        self.radius = radius
+
+    def next(self) -> Vec3:
+        theta = random.uniform(0, 2 * math.pi)
+        phi = math.acos(random.uniform(-1, 1))
+        distance = random.uniform(0, self.radius)
+        x = distance * math.sin(phi) * math.cos(theta)
+        y = distance * math.sin(phi) * math.sin(theta)
+        z = distance * math.cos(phi)
+        return Vec3(x, y, z)
+
+
+class BalancedSphericalPointGenerator(AbstractPointGenerator):
+
+    def __init__(self, radius: float, num_points: int):
+        self.radius = radius
+        self.increment = math.pi * (3 - math.sqrt(5))
+        self.offset = 2 / num_points
+        self.index = 0
+
+    def next(self) -> Vec3:
+        y = self.index * self.offset - 1 + (self.offset / 2)
+        radius_xy = math.sqrt(1 - y * y)
+        theta = self.index * self.increment
+
+        x = math.cos(theta) * radius_xy
+        z = math.sin(theta) * radius_xy
+
+        # Scale the coordinates by the desired radius
+        return Vec3(x, y, z) * self.radius
+
+
+def is_in_sphere(x, y, z, radius):
+    return x ** 2 + y ** 2 + z ** 2 <= radius ** 2
