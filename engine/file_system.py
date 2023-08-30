@@ -35,6 +35,13 @@ class FileSystem(Component):
                 return cob.get_file(name)
         raise FileNotFoundError(f'{name}')
 
+    def get_all_files(self):
+        result = set()
+        for cob in self.cobs:
+            for file in cob.files:
+                result.add(file)
+        return result
+
     def read_file(self, name: str, cob: int | None = None) -> AnyStr:
         file = self.find_file(name, cob)
         return file.read_all()

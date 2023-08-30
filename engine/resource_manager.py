@@ -79,3 +79,12 @@ class ResourceManager(Component):
 
     def sprite_from_gif(self, name: str, size=None) -> Sprite:
         return Sprite(self.surface_from_gif(name), size=size)
+
+    def cache_all(self):
+        for file in self.file_system.get_all_files():
+            full_path = self.file_system.get_as_file(file)
+            try:
+                if file.lower().endswith('shp') or file.lower().endswith('tmp'):
+                    shape = self.shape_from_file(file)
+            except Exception as e:
+                print(f'Failed to process file: {file}@{full_path} -- {e}')
