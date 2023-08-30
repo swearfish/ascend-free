@@ -14,8 +14,12 @@ class Shape:
         elif isinstance(image, list):
             self._shapes = []
             for i in image:
-                if size is not None or not isinstance(i, SurfaceRenderer):
-                    self._shapes.append(SurfaceRenderer(i, size))
+                if i is None:
+                    self._shapes.append(None)
+                elif size is not None or not isinstance(i, SurfaceRenderer):
+                    renderer = SurfaceRenderer(i, size)
+                    renderer.set_color_key()
+                    self._shapes.append(renderer)
                 else:
                     self._shapes.append(i)
         else:

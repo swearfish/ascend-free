@@ -28,7 +28,8 @@ class AscendancyGuiBuilder(Component):
     def build(self):
         for state_number, state_props in self.windows_txt['states'].items():
             shape_name = state_props['SHAPEFILE']
-            state_frame = StateFrame(state_number, shape_name, self.screen_size)
+            shape_frame = state_props['SHAPEFRAME'] if 'SHAPEFRAME' in state_props else 0
+            state_frame = StateFrame(state_number, shape_name, shape_frame, self.screen_size)
             self.states[state_number] = state_frame
             for wnd in state_props['windows']:
                 if wnd['TYPE'] == 0:
@@ -40,9 +41,15 @@ class AscendancyGuiBuilder(Component):
                     y1 = wnd['Y1']
                     help_index = wnd['HELPINDEX']
                     msg = (wnd['SENDMESSAGE'], wnd['SENDPARAM1'], wnd['SENDPARAM2'])
-                    button = Button(state_frame, name, area_from_rect(x0, y0, x1, y1), help_index, msg)
+                    focus = wnd['MOUSEFOCUS'] == 1
+                    button = Button(state_frame, name, area_from_rect(x0, y0, x1, y1), help_index, msg, focus)
+                    state_frame.controls[name] = button
                     for item_type, item_args in wnd['items']:
                         if item_type == 'TEXTITEM':
                             unused, text, flags, x, y = item_args
                             button.add_text_item(font=self.large_font, text=text.replace('^', ' '),
                                                  pos=Vec2(x, y), flags=flags)
+
+                        if item_type == 'SHAPEITEM':
+                            frame, shape, flags, x, y = item_args
+                            button.add_shape_item(frame, shape, pos=Vec2(x, y), flags=flags)

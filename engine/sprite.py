@@ -5,15 +5,15 @@ from foundation.vector_2d import Vec2
 
 
 class Sprite:
-    def __init__(self, image: shape_like, pos=Vec2(0, 0), center=Vec2(0, 0), size: Vec2=None):
+    def __init__(self, image: shape_like, pos=Vec2(0, 0), center=Vec2(0, 0), size: Vec2 = None):
         if isinstance(image, Shape):
             assert size is None, f"Can't resize sprite template"
             self._template = image
             self._center = center
         else:
             self._template = Shape(image, center, size)
-            self._center = Vec2(0,0)
-        self._pos = Vec2(0,0)
+            self._center = Vec2(0, 0)
+        self._pos = Vec2(0, 0)
         self._state = 0
         self._anim_start: int | None = None
         self._anim_end: int | None = None
@@ -28,7 +28,7 @@ class Sprite:
         self._anim_loop = False
         self._anim_speed = 0.0
 
-    def animate(self, start: int, end: int, loop = False, speed = 1.0, destroy_on_end = False):
+    def animate(self, start: int, end: int, loop=False, speed=1.0, destroy_on_end=False):
         assert start <= end, f'Invalid frame range: {start}-{end}'
         assert 0 < speed, f'Invalid speed: {speed}'
         self._state = start

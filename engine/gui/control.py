@@ -125,7 +125,7 @@ class Control:
                 if not handled:
                     handled = self._active_control.handle_mouse_up(button,
                                                                    mouse_pos - self._active_control.area.top_left)
-                self._active_control._mouse_focus = False
+                # self._active_control._mouse_focus = False
                 self._active_control = None
         else:
             for c in self.children:
@@ -171,3 +171,15 @@ class Control:
         self.on_update(total_time, frame_time)
         for c in self.children:
             c.handle_update(total_time, frame_time)
+
+    def get_children_of_class(self, clazz) -> list:
+        result = []
+        for item in self.children:
+            if isinstance(item, clazz):
+                result.append(item)
+        return result
+
+    def get_child_of_class(self, clazz):
+        result = self.get_children_of_class(clazz)
+        assert 0 < len(result)
+        return result[0]

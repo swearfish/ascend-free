@@ -38,6 +38,7 @@ def parse_windows_txt(lines: str | list[str]) -> dict[str, dict | int | str]:
             args = [int(x) for x in args]
         if name == 'TABLE':
             result['tables'].append(args[0])
+        # noinspection SpellCheckingInspection
         if name == 'TYPE':
             type_id: int = args[0]
             if type_id == 100:

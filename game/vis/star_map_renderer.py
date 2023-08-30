@@ -7,17 +7,17 @@ from engine.gui import Canvas
 from engine.resource_manager import ResourceManager
 from foundation import Area, Vec2, Vec3
 from foundation.gcom import auto_wire
-from game.logic.star_map import StarMap
+from game.logic.starmap.star_map import StarMap
 
 
-def project_3d_to_2d(pos: Vec3, scale: float, p: float) -> Vec2 | None:
+def project_3d_to_2d(pos: Vec3, focal_width: float, p: float) -> Vec2 | None:
     # Perform perspective projection
     p_corr = p + pos.z
     if p_corr == 0:
         return None
     return Vec2(
-        pos.x * scale / p_corr,
-        pos.y * scale / p_corr
+        pos.x * focal_width / p_corr,
+        pos.y * focal_width / p_corr
     )
 
 
@@ -42,19 +42,26 @@ class StarMapRenderer(Canvas):
         self.star_map = star_map
         self.stars = self.resource_manager.shape_from_file("data/cos_star.shp")
         self.rot_y = 0
+        self.scale = 1.0
+        self.animate = False
 
     def on_draw(self, screen: Surface, pos: Vec2):
         pygame.draw.rect(screen, [0x00, 0x00, 0x00], self.area.new_origin(pos).as_tuple())
         center = Vec2(pos.x + screen.get_width() / 2, pos.y + screen.get_height() / 2)
-        scale = 15.0
-        self.rot_y += math.pi / 360
-        camera = Vec3(0, 0, StarMap.COSMOS_RADIUS * 2)
+        camera_focal_width = 15.0
+        camera = Vec3(0, 0, self.star_map.radius * 2)
         for star in self.star_map.stars:
             star_3d_pos = rotate_3d_around_y(star.pos, self.rot_y)
             star_3d_pos -= camera
-            star_2d_pos = project_3d_to_2d(star_3d_pos, scale, 1.0)
+            star_2d_pos = project_3d_to_2d(star_3d_pos, camera_focal_width, 1.0) * self.scale
             dist = star_3d_pos.z / camera.z
             dist_index = 3-int(max(0, min(3, (dist + 0.25) * -3)))
             shape_index = star.type*4 + dist_index
             if star_2d_pos is not None:
-                self.stars.draw(screen, center + star_2d_pos * scale, shape_index)
+                self.stars.draw(screen, center + star_2d_pos * camera_focal_width, shape_index)
+
+    def on_update(self, total_time: float, frame_time: float):
+        if self.animate:
+            self.rot_y += math.pi / 180 * frame_time * 0.1
+            if 2*math.pi < self.rot_y:
+                self.rot_y -= 2*math.pi

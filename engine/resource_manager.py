@@ -60,7 +60,10 @@ class ResourceManager(Component):
         surfaces = []
         for image in shape_file.images:
             index = len(surfaces)
-            surface = self._surface_from_shape_image(name, index, image)
+            if image:
+                surface = self._surface_from_shape_image(name, index, image)
+            else:
+                surface = None
             surfaces.append(surface)
         return Shape(surfaces, center, size)
 
