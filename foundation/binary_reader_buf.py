@@ -2,12 +2,14 @@ from typing import AnyStr
 
 from .binary_reader import BinaryReader, ENDIANNESS
 
+
 class BinaryReaderBuf(BinaryReader):
-    def __init__(self, buffer: AnyStr, endianness: ENDIANNESS = 'NATIVE'):
+    def __init__(self, buffer: AnyStr, endianness: ENDIANNESS = 'NATIVE', name: str = None):
         super().__init__(endianness)
         self._buffer = buffer
         self._position = 0
         self._size = len(buffer)
+        self._name = name
 
     def seek(self, offset: int) -> int:
         self._position = min(self._size, offset)
@@ -21,6 +23,10 @@ class BinaryReaderBuf(BinaryReader):
     def remaining(self) -> int:
         return self._size - self._position
 
+    @property
+    def name(self) -> str:
+        return self._name
+
     def close(self):
         pass
 
@@ -32,5 +38,5 @@ class BinaryReaderBuf(BinaryReader):
         return result
 
 
-def binary_reader_from_buffer(buffer: AnyStr, endianness: ENDIANNESS = 'NATIVE') -> BinaryReader:
-    return BinaryReaderBuf(buffer, endianness)
+def binary_reader_from_buffer(buffer: AnyStr, endianness: ENDIANNESS = 'NATIVE', name: str = None) -> BinaryReader:
+    return BinaryReaderBuf(buffer, endianness, name=name)

@@ -6,9 +6,10 @@ from .binary_reader import BinaryReader, ENDIANNESS
 
 class BinaryReaderIO(BinaryReader):
     def __init__(self, handle: BinaryIO, endianness: ENDIANNESS = 'NATIVE', close_handle: bool = True,
-                 _offset: int = None, size: int = None):
+                 _offset: int = None, size: int = None, name: str | None = None):
         self._handle = handle
         self._close_handle = close_handle
+        self._name = name
         super().__init__(endianness)
         tmp_pos = self._handle.tell()
         if size is None:
@@ -31,6 +32,10 @@ class BinaryReaderIO(BinaryReader):
     def remaining(self) -> int:
         return self._size - self._position
 
+    @property
+    def name(self) -> str:
+        return self._name
+
     def close(self):
         if self._close_handle:
             self._handle.close()
@@ -51,5 +56,6 @@ def binary_reader_from_file_handle(handle: BinaryIO,
                                    endianness: ENDIANNESS = 'NATIVE',
                                    close_handle: bool = False,
                                    start_pos: int | None = None,
-                                   size: int | None = None) -> BinaryReader:
-    return BinaryReaderIO(handle, endianness, close_handle, start_pos, size)
+                                   size: int | None = None,
+                                   name: str = None) -> BinaryReader:
+    return BinaryReaderIO(handle, endianness, close_handle, start_pos, size, name=name)

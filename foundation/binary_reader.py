@@ -76,6 +76,11 @@ class BinaryReader:
     def read_bytes(self, byte_count: int) -> AnyStr:
         pass
 
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
     def read_all(self) -> AnyStr:
         return self.read_bytes(self.remaining)
 
@@ -107,8 +112,5 @@ class BinaryReader:
     @staticmethod
     def _get_fmt_str(endianness: ENDIANNESS, signed: bool, size: int) -> str:
         endianness_chr = ENDIANNESS_CHR[endianness]
-        if signed:
-            format_chr = SIZE_CHR[size]
-        else:
-            format_chr = U_SIZE_CHR[size]
+        format_chr = SIZE_CHR[size] if signed else U_SIZE_CHR[size]
         return endianness_chr + format_chr

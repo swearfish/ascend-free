@@ -21,9 +21,10 @@ class CobFile:
         cob_file.seek(self.offset)
         return cob_file
 
-    def open_reader(self) -> BinaryReader:
+    def open_reader(self, name: str = None) -> BinaryReader:
         handle = self.open()
-        return binary_reader_from_file_handle(handle, endianness='LITTLE_ENDIAN', close_handle=True, size=self.size)
+        return binary_reader_from_file_handle(handle, endianness='LITTLE_ENDIAN', close_handle=True,
+                                              size=self.size, name=name)
 
     def read_all(self) -> AnyStr:
         with self.open() as f:

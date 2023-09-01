@@ -43,9 +43,9 @@ class ShapeFile:
             try:
                 shape = image_from_reader(palette, reader)
             except ShapeException as e:
-                print(f'Failed to load {i} / {image_count}: {e.msg}')
+                print(f'Failed to load {i} / {image_count} from {reader.name}: {e.msg}')
             except Exception as e:
-                print(f'Failed to load {i} / {image_count}: {e}')
+                print(f'Failed to load {i} / {image_count} from {reader.name}: {e}')
             self.images.append(shape)
             reader.seek(off_restore)
 

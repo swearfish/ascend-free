@@ -49,7 +49,8 @@ class FileSystem(Component):
     def read_text(self, name: str, cob: int | None = None) -> str:
         return self.read_file(name, cob).decode('utf-8')
 
-    def read_lines(self, name: str, cob: int | None = None, line_ending: str = '\r\n', skip_empty_lines: bool = False) -> list[str]:
+    def read_lines(self, name: str, cob: int | None = None,
+                   line_ending: str = '\r\n', skip_empty_lines: bool = False) -> list[str]:
         result = self.read_text(name, cob).split(line_ending)
         if skip_empty_lines:
             result = list(filter(lambda x: x is not None and 0 < len(x), result))
@@ -58,9 +59,9 @@ class FileSystem(Component):
     def open_file(self, name: str, cob: int | None = None, buffered: bool = False) -> BinaryReader:
         if buffered:
             buffer = self.read_file(name, cob)
-            return binary_reader_from_buffer(buffer, 'LITTLE_ENDIAN')
+            return binary_reader_from_buffer(buffer, 'LITTLE_ENDIAN', name)
         else:
-            return self.find_file(name, cob).open_reader()
+            return self.find_file(name, cob).open_reader(name)
 
     def get_cached_name(self, name: str, include_cache_path=True) -> ntpath:
         name = name.replace('\\', '/')
