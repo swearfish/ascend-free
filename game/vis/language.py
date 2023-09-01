@@ -15,7 +15,8 @@ class Language(Component):
         line_number = 0
         for line in static_txt:
             line = line.strip()
-            if 0 == len(line): continue
+            if 0 == len(line):
+                continue
             if line.startswith('//'):
                 indexer = line[2:].strip()
                 if indexer.isnumeric():
@@ -34,33 +35,27 @@ class Language(Component):
                     text = line
                 if file_name not in self.text_dict:
                     self.text_dict[file_name] = {}
+                text = text.replace('\\n', '\n')
                 self.text_dict[file_name][line_number] = text
                 line_number += 1
                 self.text_array.append(text)
 
-    def get_text_file(self, file_name: None, index: int, *args):
+    def get(self, file_name: str | None, index: int, *args):
         if file_name is None:
             raw = self.text_array[index]
         else:
-            key = f'{file_name}:{index}'
-            raw = self.text_dict[key]
-        return self._replace(raw, args)
+            raw = self.text_dict[file_name][index]
+        return self._replace(raw, *args)
 
     @staticmethod
     def _replace(text: str, *args) -> str:
-        arg_index = 0
+        arg_value_index = 0
         index = 0
-        result = ""
-        while 0 <= index < len(text):
-            next_arg_index = text.find('%', index)
-            if 0 < next_arg_index:
-                result += text[index: next_arg_index]
-                result += args[arg_index]
-                arg_index += 1
-                if text[next_arg_index] == 'l':
-                    next_arg_index += 3
-                else:
-                    next_arg_index += 2
-            index = next_arg_index
-        result = text[index: ]
+        result = text
+        text_arg_index = result.find('%', index)
+        while 0 <= text_arg_index:
+            arg = result[text_arg_index:text_arg_index+2]
+            result = result.replace(arg, str(args[arg_value_index]), 1)
+            text_arg_index = result.find('%', index)
+            arg_value_index += 1
         return result

@@ -38,7 +38,7 @@ class NewGameScene(AscendancyScene):
     def draw(self):
         super().draw()
         self.large_font.draw_text(self.controller.setting_text, self.screen, area_from_rect(7, 310, 300, 350), TEXT_CENTER)
-        self.large_font.text_out('Player Species', self.screen, Vec2(565, 22), TEXT_CENTER | TEXT_VCENTER)
+        self.large_font.text_out(self.controller.player_species_text, self.screen, Vec2(565, 22), TEXT_CENTER | TEXT_VCENTER)
 
     def on_update(self, controller: NewGameController):
         self.btn_galaxy.shape_frame = controller.star_density
