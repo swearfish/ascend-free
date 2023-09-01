@@ -58,8 +58,7 @@ class NewGameController:
     def setting_text(self):
         number = self.language.get(STATUS_CPP, 163 + self.num_species - self._min_species)
         difficulty = self.language.get(STATUS_CPP, 160 + self._atmosphere)
-        return self.language.get(STATUS_CPP, 168,
-                          self._star_density, number, difficulty)
+        return self.language.get(STATUS_CPP, 168, self._star_density, number, difficulty)
 
     @property
     def player_species_text(self):

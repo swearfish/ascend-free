@@ -17,9 +17,9 @@ class NewGameScene(AscendancyScene):
         # noinspection SpellCheckingInspection
         super().__init__(state_index=3, template_file="data/3cfgnew.tmp")
 
-        self.btn_galaxy:Button = self.state_frame.controls['GALAXY_MORE']
-        self.btn_players:Button = self.state_frame.controls['PLAYERS_MORE']
-        self.btn_atmosphere:Button = self.state_frame.controls['DIFFICULTYMORE']
+        self.btn_galaxy: Button = self.state_frame.controls['GALAXY_MORE']
+        self.btn_players: Button = self.state_frame.controls['PLAYERS_MORE']
+        self.btn_atmosphere: Button = self.state_frame.controls['DIFFICULTYMORE']
 
         self.controller = NewGameController()
         self.controller.event_handler = lambda c: self.on_update(c)
@@ -28,17 +28,19 @@ class NewGameScene(AscendancyScene):
                                                  area_from_rect(7, 7, 300, 300),
                                                  self.controller.star_map)
         self.star_map_renderer.animate = True
-        self.click_events['GALAXY_MORE'] = lambda s,m: self.controller.next_star_density()
-        self.click_events['PLAYERS_MORE'] = lambda s,m: self.controller.next_species()
-        self.click_events['DIFFICULTYMORE'] = lambda s,m: self.controller.next_atmosphere()
+        self.click_events['GALAXY_MORE'] = lambda s, m: self.controller.next_star_density()
+        self.click_events['PLAYERS_MORE'] = lambda s, m: self.controller.next_species()
+        self.click_events['DIFFICULTYMORE'] = lambda s, m: self.controller.next_atmosphere()
 
         self.large_font = self.font_manager.get('large')
         self.small_font = self.font_manager.get('small')
 
     def draw(self):
         super().draw()
-        self.large_font.draw_text(self.controller.setting_text, self.screen, area_from_rect(7, 310, 300, 350), TEXT_CENTER)
-        self.large_font.text_out(self.controller.player_species_text, self.screen, Vec2(565, 22), TEXT_CENTER | TEXT_VCENTER)
+        self.large_font.draw_text(self.controller.setting_text, self.screen,
+                                  area_from_rect(7, 310, 300, 350), TEXT_CENTER)
+        self.large_font.text_out(self.controller.player_species_text, self.screen,
+                                 Vec2(565, 22), TEXT_CENTER | TEXT_VCENTER)
 
     def on_update(self, controller: NewGameController):
         self.btn_galaxy.shape_frame = controller.star_density

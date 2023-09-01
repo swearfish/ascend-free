@@ -8,6 +8,7 @@ from game.vis.language import Language
 from .generator import _generate_star_cluster
 from .star import Star, StarLane
 
+
 @auto_wire
 class StarMap:
     file_system: FileSystem
