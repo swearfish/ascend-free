@@ -8,8 +8,8 @@
     * learn anything, 
     * experiment with cutting edge tech
     * making money
-    * demonstrating coding skills
-    * reference
+    * demonstrate coding skills
+    * use as reference
 * Don't stick to problems
   * When you encounter a problem:
     1. Implement a workaround
@@ -18,6 +18,7 @@
   * Examples:
     * Shape file loading issues
     * Resources from COB vs using intermediate files
+    * Shape transparency
 * Prefer fast Edit > Run > Debug > Fail cycles over design, TDD
 * Use technologies, libraries where they really help and/or you're not interested in implementation
   * Reinventing the wheel is okay if its fun
