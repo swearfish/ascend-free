@@ -44,6 +44,10 @@ class Area:
     def height(self):
         return self._size.y
 
+    @property
+    def center(self) -> Vec2:
+        return self.top_left + self.size / 2
+
     def new_origin(self, origin=Vec2(0, 0)):
         return Area(origin, self._size)
 

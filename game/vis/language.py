@@ -8,9 +8,13 @@ class Language(Component):
 
     def __init__(self):
         super().__init__()
+        self._static_text_dict = {}
+        self._static_text_array = []
+        self._parse_static_txt()
+        self.race_description = self.file_system.read_lines('newgame.txt')
+
+    def _parse_static_txt(self):
         static_txt = self.file_system.read_lines('static.txt')
-        self.text_dict = {}
-        self.text_array = []
         file_name = ""
         line_number = 0
         for line in static_txt:
@@ -33,18 +37,18 @@ class Language(Component):
                     text = line[1:end_index]
                 else:
                     text = line
-                if file_name not in self.text_dict:
-                    self.text_dict[file_name] = {}
+                if file_name not in self._static_text_dict:
+                    self._static_text_dict[file_name] = {}
                 text = text.replace('\\n', '\n')
-                self.text_dict[file_name][line_number] = text
+                self._static_text_dict[file_name][line_number] = text
                 line_number += 1
-                self.text_array.append(text)
+                self._static_text_array.append(text)
 
-    def get(self, file_name: str | None, index: int, *args):
+    def get_static(self, file_name: str | None, index: int, *args):
         if file_name is None:
-            raw = self.text_array[index]
+            raw = self._static_text_array[index]
         else:
-            raw = self.text_dict[file_name][index]
+            raw = self._static_text_dict[file_name][index]
         return self._replace(raw, *args)
 
     @staticmethod

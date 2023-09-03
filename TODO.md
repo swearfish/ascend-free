@@ -1,0 +1,7 @@
+- [ ] Bottom line of shape images are cut (e.g.: scrollbar arrows)
+- [ ] Some shape images can't be loaded due to weird header / size (check logs: Failed to load 2 / 68 from data\1starmap.shp: Invalid bounds (w:51, h:31, x:2147483065, y:2147483067))
+- [ ] Investigate possibility of loading resources directly from COB files (no intermediate files in cache folder for shapes and waves)
+- [ ] Update lists in list boxes
+- [ ] Update controls at runtime
+- [ ] Use mouse wheel for scrolling in lists
+- [ ] Investigate transparency (e.g.: Star Cluster button or Species glyphs in New Game)

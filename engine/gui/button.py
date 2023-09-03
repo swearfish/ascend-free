@@ -1,15 +1,13 @@
 import pygame.draw
 from pygame import Surface
 
+from engine.gui.colors import COLOR_BUTTON_BG, COLOR_BUTTON_BG_HIGH
 from engine.gui.control import Control
 from engine.gui.shape_item import ShapeItem
 from engine.gui.text_item import TextItem
 from engine.text.text_render import TextRenderer
 from foundation.area import Area
 from foundation.vector_2d import Vec2
-
-COLOR_BUTTON_BG = (12, 32, 49)
-COLOR_BUTTON_BG_HIGH = (16, 69, 77)
 
 
 class Button(Control):

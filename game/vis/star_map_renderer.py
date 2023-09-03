@@ -3,7 +3,7 @@ import math
 import pygame.draw
 from pygame import Surface
 
-from engine.gui import Canvas
+from engine.gui import Canvas, Control
 from engine.resource_manager import ResourceManager
 from foundation import Area, Vec2, Vec3
 from foundation.gcom import auto_wire
@@ -34,7 +34,7 @@ def project_logarithmically(value: float, max_value: float) -> float:
 
 
 @auto_wire
-class StarMapRenderer(Canvas):
+class StarMapRenderer(Control):
     resource_manager: ResourceManager
 
     def __init__(self, parent, area: Area, star_map: StarMap):
@@ -44,10 +44,12 @@ class StarMapRenderer(Canvas):
         self.rot_y = 0
         self.scale = 1.0
         self.animate = False
+        self.transparent = False
 
     def on_draw(self, screen: Surface, pos: Vec2):
-        pygame.draw.rect(screen, [0x00, 0x00, 0x00], self.area.new_origin(pos).as_tuple())
-        center = Vec2(pos.x + screen.get_width() / 2, pos.y + screen.get_height() / 2)
+        if not self.transparent:
+            pygame.draw.rect(screen, [0x00, 0x00, 0x00], self.area.new_origin(pos).as_tuple())
+        center = Vec2(pos.x + self.area.width / 2, pos.y + self.area.height / 2)
         camera_focal_width = 15.0
         camera = Vec3(0, 0, self.star_map.radius * 2)
         for star in self.star_map.stars:

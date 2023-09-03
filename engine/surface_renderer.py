@@ -15,7 +15,7 @@ class SurfaceRenderer:
         else:
             raise AscendancyException('SurfaceRenderer requires another renderer or surface')
         self.surface = self._orig_img
-        self.center = Vec2(0,0) if center is None else center
+        self.center = Vec2(0, 0) if center is None else center
         if size is not None:
             self.scale(size)
 
@@ -39,12 +39,12 @@ class SurfaceRenderer:
         assert 0 <= opacity < 256
         self.surface.set_alpha(opacity)
 
-    def set_color_key(self, color = None):
+    def set_color_key(self, color=None):
         if color is None:
             color = self.surface.get_at((0, 0))
         self.surface.set_colorkey(color)
 
-    def draw(self, screen: Surface, pos: Vec2, area: Area = None, center = False):
+    def draw(self, screen: Surface, pos: Vec2, area: Area = None, center=False):
         if center:
             draw_pos = pos - self.center
         else:

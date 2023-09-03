@@ -1,3 +1,5 @@
+import argparse
+
 from game.game_window import GameWindow
 from settings import GAME_NAME, COPYRIGHT, LICENSE, ORIGINAL_TITLE
 

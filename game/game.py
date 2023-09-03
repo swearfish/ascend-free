@@ -1,3 +1,5 @@
+import argparse
+
 import pygame
 
 from engine.scene_manager import SceneManager
@@ -26,13 +28,18 @@ class AscendancyGame(Component):
         self.front_buffer = pygame.surface.Surface(self.display_size.as_tuple())
         gcom_instance.set_config('screen', self.back_buffer)
         self._inited = False
+        args = parse_command_line_args()
+        self.skip_logo = args.skip_logo
 
     def _late_init(self):
         self.gui_builder.build()
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.register_scene('new_game', NewGameScene)
-        self.scene_manager.enter_scene('logo')
+        if self.skip_logo:
+            self.scene_manager.enter_scene('main_menu')
+        else:
+            self.scene_manager.enter_scene('logo')
 
     def draw(self):
         if not self._inited:
@@ -49,7 +56,16 @@ class AscendancyGame(Component):
     def on_back_button(self):
         self.scene_manager.back_button_press()
 
+    # noinspection PyMethodMayBeStatic
     def on_key_press(self, ev):
         if ev.key == pygame.K_x and ev.mod & pygame.KMOD_ALT:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
         pass
+
+
+def parse_command_line_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--skip-logo", action="store_true", help="Skip displaying the logo")
+
+    args = parser.parse_args()
+    return args
