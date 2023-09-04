@@ -1,7 +1,7 @@
 from pygame import Surface
 
 from engine.surface_renderer import SurfaceRenderer
-from foundation import Vec2
+from foundation import Vec2, Area
 
 surface_like = SurfaceRenderer | Surface
 shape_images_like = surface_like | list[surface_like]
@@ -32,6 +32,9 @@ class Shape:
 
     def draw(self, dest: Surface, pos: Vec2, index: int = 0):
         self._shapes[index].draw(dest, pos - self._center)
+
+    def draw_scaled(self, dest: Surface, area: Area, index: int = 0):
+        self._shapes[index].draw_scaled(dest, area)
 
 
 shape_like = Shape | shape_images_like

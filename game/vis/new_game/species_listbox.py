@@ -23,7 +23,7 @@ class SpeciesListBox(Control, UiEventListener):
     def on_listbox_draw_item(self, listbox, surface: Surface, area: Area, item, _index):
         if listbox == self.lst_species:
             species: Species = item
-            self.game_fx.draw_player_ring(surface, area.top_left, species)
+            self.game_fx.draw_player_ring(surface, area.top_left + Vec2(4, 2), species)
 
     def on_listbox_select(self, listbox, _item, index):
         if listbox == self.lst_species:

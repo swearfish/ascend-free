@@ -1,10 +1,13 @@
+from pygame import Surface
+
 from engine.gui import Button
 from engine.text.font_manager import FontManager
 from engine.text.text_render import TEXT_CENTER
 from foundation import Area, Vec2
-from foundation.area import area_from_rect
+from foundation.area import area_from_rect, area_with_size
 from foundation.gcom import auto_wire
 from game.logic.new_game_controller import NewGameController
+from game.vis.game_fx import GameFx
 from game.vis.language import Language
 from game.vis.star_map_renderer import StarMapRenderer
 
@@ -14,6 +17,7 @@ class BeginGameButton(Button):
 
     font_manager: FontManager
     language: Language
+    game_fx: GameFx
 
     def __init__(self, parent, name: str, area: Area, controller: NewGameController):
         super().__init__(parent, name, area)
@@ -24,3 +28,11 @@ class BeginGameButton(Button):
         self.star_map.animate = True
         self.star_map.scale = 0.2
         self.star_map.transparent = True
+        self.controller = controller
+
+    def on_draw(self, screen: Surface, pos: Vec2):
+        super().on_draw(screen, pos)
+        self.game_fx.draw_player_ring_scaled(screen,
+                                             area_with_size(pos.x+67, pos.y + 7, 50, 50),
+                                             self.controller.player_species,
+                                             self.controller.player_color)

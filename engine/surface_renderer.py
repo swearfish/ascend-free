@@ -17,7 +17,7 @@ class SurfaceRenderer:
         self.surface = self._orig_img
         self.center = Vec2(0, 0) if center is None else center
         if size is not None:
-            self.scale(size)
+            self.inplace_scale(size)
 
     @property
     def width(self) -> int:
@@ -31,9 +31,15 @@ class SurfaceRenderer:
     def size(self) -> Vec2:
         return Vec2(self.width, self.height)
 
-    def scale(self, size):
+    def inplace_scale(self, size: Vec2):
         if size is not None:
-            self.surface = pygame.transform.scale(self._orig_img, size)
+            self.surface = self.transform_scale(size)
+
+    def transform_scale(self, size: Vec2):
+        result = pygame.transform.scale(self._orig_img, size)
+        result.set_colorkey(self.surface.get_colorkey())
+        result.set_alpha(self.surface.get_alpha())
+        return result
 
     def set_opacity(self, opacity: int = 255):
         assert 0 <= opacity < 256
@@ -53,3 +59,12 @@ class SurfaceRenderer:
             screen.blit(self.surface, draw_pos.as_tuple(), area.as_tuple())
         else:
             screen.blit(self.surface, draw_pos.as_tuple())
+
+    def draw_scaled(self, screen: Surface, dst_area: Area = None, center=False):
+        pos = dst_area.top_left
+        if center:
+            draw_pos = pos - self.center
+        else:
+            draw_pos = pos
+        surface = self.transform_scale(dst_area.size)
+        screen.blit(surface, draw_pos.as_tuple())

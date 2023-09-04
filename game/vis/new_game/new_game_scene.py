@@ -70,7 +70,7 @@ class NewGameScene(AscendancyScene):
         lg_font.text_out(species.name, self.screen, Vec2(400, 22), TEXT_CENTER | TEXT_VCENTER)
         sm_font.draw_text(species.description, self.screen, area_from_rect(330, 260, 480, 350), TEXT_WRAP)
 
-        self.game_fx.draw_player_ring(self.screen, Vec2(340, 36), species)
+        self.game_fx.draw_player_ring(self.screen, Vec2(344, 40), species, self.controller.player_color)
 
         self.game_fx.small_home.draw(self.screen, Vec2(370, 190), index=species.index)
         banner = species.banner_for_color(self.controller.player_color)
