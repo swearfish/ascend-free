@@ -30,6 +30,8 @@ https://mikefay.info/wiki/index.php?title=Game-Ascendancy
 
 https://github.com/btigi/iiAscendancyLib
 
+https://github.com/PetePete1984/godot-SpaceRace/tree/master
+
 ## Motivation
 
 Ascendancy was a childhood favourite for me. Unfortunately I had no access to the

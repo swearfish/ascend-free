@@ -11,6 +11,7 @@ class AbstractPointGenerator:
 
 
 class RandomSphericalPointGenerator(AbstractPointGenerator):
+    """Position stars randomly within in a sphere within the given RADIUS """
 
     def __init__(self, radius: float):
         self.radius = radius
@@ -26,6 +27,7 @@ class RandomSphericalPointGenerator(AbstractPointGenerator):
 
 
 class BalancedSphericalPointGenerator(AbstractPointGenerator):
+    """Position stars semi-randomly with even distribution within in a sphere within the given RADIUS """
 
     def __init__(self, radius: float, num_points: int):
         self.radius = radius

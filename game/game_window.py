@@ -18,14 +18,16 @@ class GameWindow:
         pygame.mouse.set_visible(True)
         pygame.display.set_caption(GAME_NAME, GAME_NAME)
 
-        args = parse_command_line_args()
-        gcom_instance.set_config('assets_dir', args.assets_dir)
-        gcom_instance.set_config('cache_dir', args.cache_dir)
         screen_size = Vec2(SCREEN_SIZE[0], SCREEN_SIZE[1])
         gcom_instance.set_config('screen_size', screen_size)
+
+        args = parse_command_line_args()
+        for key in dir(args):
+            if key.startswith('_'):
+                continue
+            value = args.__getattribute__(key)
+            gcom_instance.set_config(key, value)
         gcom_instance.set_config('display_size', screen_size * args.display_scale)
-        gcom_instance.set_config('display_scale', args.display_scale)
-        gcom_instance.set_config('skip_logo', args.skip_logo)
 
         self.game: AscendancyGame = gcom_instance.get(AscendancyGame)
 
@@ -61,10 +63,31 @@ class GameWindow:
 
 def parse_command_line_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--skip-logo", action="store_true", help="Skip displaying the logo")
-    parser.add_argument("--display-scale", type=float, default=1.5, help="Scale factor for display")
-    parser.add_argument("--assets-dir", default="../assets", help="Path to COB files")
-    parser.add_argument("--cache-dir", default="../assets/cache", help="Writable path to intermediate files")
+
+    parser.add_argument("--skip-logo",
+                        action="store_true",
+                        help="Skip displaying the logo")
+
+    parser.add_argument("--resume-game",
+                        action="store_true",
+                        help="Immediately resume last game")
+
+    parser.add_argument("--display-scale",
+                        type=float,
+                        default=1.5,
+                        help="Scale factor for display")
+
+    parser.add_argument("--assets-dir",
+                        default="../assets",
+                        help="Path to COB files")
+
+    parser.add_argument("--cache-dir",
+                        default="../assets/cache",
+                        help="Writable path to intermediate files")
+
+    parser.add_argument("--save-dir",
+                        default="../save",
+                        help="Writable path for save files")
 
     args = parser.parse_args()
     return args

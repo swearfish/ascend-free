@@ -1,48 +1,12 @@
-from engine.resource_manager import ResourceManager
-from engine.surface_renderer import SurfaceRenderer
 from foundation.gcom import auto_wire
-from game.game_const import STAR_DENSITY, DEFAULT_NUM_PLAYERS, MIN_PLAYERS, MAX_PLAYERS, NUM_SPECIES
+from game.game_const import STAR_DENSITY, MIN_PLAYERS, MAX_PLAYERS, NUM_SPECIES
+from game.logic.new_game_data_model import NewGameDataModel
+from game.logic.species import Species
 from game.logic.starmap import StarMap
 from game.vis.language import Language
 
 STATUS_CPP = 'status.cpp'
 
-
-@auto_wire
-class Species:
-    resource_manager: ResourceManager
-    language: Language
-
-    def __init__(self, index: int):
-        self.name = self.language.get_static('race.cpp', 101 + index)
-        self.index = index
-        self._large_face = None
-        self._small_face = None
-        self._description = self.language.race_description[index]
-        pass
-
-    @property
-    def description(self):
-        return self.language.get_static('status.cpp', 154, self.name, self._description)
-
-    @property
-    def large_face(self) -> SurfaceRenderer:
-        if not self._large_face:
-            self._large_face = self.resource_manager.renderer_from_shape_or_gif(
-                f'data/lgrace{self.index:02}.shp', 0)
-        return self._large_face
-
-    @property
-    def small_face(self) -> SurfaceRenderer:
-        if not self._small_face:
-            self._small_face = self.resource_manager.renderer_from_shape_or_gif(
-                f'data/smrace{self.index:02}.shp', 0)
-            self._small_face.set_color_key()
-        return self._small_face
-
-    def banner_for_color(self, color: int):
-        return self.resource_manager.renderer_from_shape_or_gif('data/raceflag.shp', self.index,
-                                                                palette_shift=color*4)
 
 @auto_wire
 class NewGameController:
@@ -51,12 +15,10 @@ class NewGameController:
     def __init__(self):
         self.event_handler = None
 
-        self._star_density_idx = 0
-        self._star_density = ""
-        self._num_species = DEFAULT_NUM_PLAYERS
-        self._player_color = 0
-        self._player_species = 0
-        self._atmosphere = 1
+        self.data_model = NewGameDataModel()
+
+        self._star_density_idx = 2
+        self._star_density_text = ""
 
         self._star_densities = STAR_DENSITY
         self._min_species = MIN_PLAYERS
@@ -64,8 +26,7 @@ class NewGameController:
 
         self.star_map = StarMap(10)
 
-        self.next_star_density()
-        self.next_star_density()
+        self._update_star_density()
 
         self.species = [Species(x) for x in range(0, NUM_SPECIES)]
 
@@ -77,28 +38,31 @@ class NewGameController:
         self._star_density_idx += 1
         if len(self._star_densities) <= self._star_density_idx:
             self._star_density_idx = 0
-        self._star_density = self.language.get_static(STATUS_CPP, 155 + self._star_density_idx)
-        num_stars = self._star_densities[self._star_density_idx]
-        self.star_map.generate_cluster(num_stars)
+        self._update_star_density()
         self._on_update()
 
+    def _update_star_density(self):
+        self._star_density_text = self.language.get_static(STATUS_CPP, 155 + self._star_density_idx)
+        self.data_model.num_stars = self._star_densities[self._star_density_idx]
+        self.star_map.generate_cluster(self.data_model.num_stars)
+
     def next_species(self):
-        self._num_species += 1
-        if self._max_species < self._num_species:
-            self._num_species = self._min_species
+        self.data_model.num_species += 1
+        if self._max_species < self.data_model.num_species:
+            self.data_model.num_species = self._min_species
         self._on_update()
 
     def next_atmosphere(self):
-        self._atmosphere += 1
-        if 3 <= self._atmosphere:
-            self._atmosphere = 0
+        self.data_model.atmosphere += 1
+        if 3 <= self.data_model.atmosphere:
+            self.data_model.atmosphere = 0
         self._on_update()
 
     @property
     def setting_text(self):
         number = self.language.get_static(STATUS_CPP, 163 + self.num_species - self._min_species)
-        difficulty = self.language.get_static(STATUS_CPP, 160 + self._atmosphere)
-        return self.language.get_static(STATUS_CPP, 168, self._star_density, number, difficulty)
+        difficulty = self.language.get_static(STATUS_CPP, 160 + self.data_model.atmosphere)
+        return self.language.get_static(STATUS_CPP, 168, self._star_density_text, number, difficulty)
 
     @property
     def player_species_text(self):
@@ -110,29 +74,29 @@ class NewGameController:
 
     @property
     def num_species(self):
-        return self._num_species
+        return self.data_model.num_species
 
     @property
     def atmosphere(self):
-        return self._atmosphere
+        return self.data_model.atmosphere
 
     @property
     def player_species(self):
-        return self.species[self._player_species]
+        return self.species[self.data_model.player_species]
 
     @player_species.setter
     def player_species(self, value):
         if isinstance(value, Species):
-            self._player_species = value.index
+            self.data_model.player_species = value.index
         else:
-            self._player_species = value
+            self.data_model.player_species = value
         self._on_update()
 
     @property
     def player_color(self):
-        return self._player_color
+        return self.data_model.player_color
 
     @player_color.setter
     def player_color(self, value):
-        self._player_color = value
+        self.data_model.player_color = value
         self._on_update()

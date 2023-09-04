@@ -18,6 +18,7 @@ class StarMap:
         self.stat = {}
         self.star_names = self.file_system.read_lines('names.txt', skip_empty_lines=True)
         self.stars: list[Star] = []
+        self.star_lanes: list[StarLane] = []
         random.shuffle(self.star_names)
         # noinspection SpellCheckingInspection
         starstat_txt: list[str] = self.file_system.read_lines('starstat.txt', skip_empty_lines=True)
@@ -37,6 +38,7 @@ class StarMap:
                 continue
             lane0 = StarLane(star, no_lane[0], False)
             star.star_lanes.append(lane0)
+            self.star_lanes.append(lane0)
             num_lanes = random.randint(1, 4) - len(star.star_lanes)
             prev = 0
             for i in range(0, num_lanes):
@@ -47,6 +49,7 @@ class StarMap:
                 lane = StarLane(star, no_lane[end_id], is_red_link)
                 prev = end_id
                 star.star_lanes.append(lane)
+                self.star_lanes.append(lane)
 
     def _fill_star_stat_from_txt(self, star_stat_txt):
         for line in star_stat_txt:

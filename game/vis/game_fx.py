@@ -6,7 +6,7 @@ from engine.text.font_manager import FontManager
 from foundation import Vec2, Area
 from foundation.area import area_with_size
 from foundation.gcom import auto_gcom, Component
-from game.logic.new_game_controller import Species
+from game.logic.species import Species
 
 
 @auto_gcom

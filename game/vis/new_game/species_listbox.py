@@ -4,7 +4,8 @@ from engine.gui import Control, UiEventListener
 from engine.gui.listbox import ListBox
 from foundation import Area, Vec2
 from foundation.gcom import auto_wire
-from game.logic.new_game_controller import NewGameController, Species
+from game.logic.new_game_controller import NewGameController
+from game.logic.species import Species
 from game.vis.game_fx import GameFx
 
 

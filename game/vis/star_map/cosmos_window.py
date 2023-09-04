@@ -34,7 +34,7 @@ def project_logarithmically(value: float, max_value: float) -> float:
 
 
 @auto_wire
-class StarMapRenderer(Control):
+class CosmosWindow(Control):
     resource_manager: ResourceManager
 
     def __init__(self, parent, area: Area, star_map: StarMap):

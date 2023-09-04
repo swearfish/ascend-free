@@ -85,7 +85,10 @@ class TextRenderer:
             if 0 < line_width and max_width < new_width:
                 start_new_line = True
             if start_new_line:
-                lines.append(line)
+                lines.append(replace_starting_spaces(line))
+                while word.startswith(line_separator):
+                    lines.append('')
+                    word = word[1:]
                 line = word
                 max_line_width = max(max_line_width, line_width)
                 line_width = word_width
@@ -97,7 +100,7 @@ class TextRenderer:
                     line = word
         if line != "":
             max_line_width = max(max_line_width, line_width)
-            lines.append(line)
+            lines.append(replace_starting_spaces(line))
         return lines, max_line_width
 
     @abstractmethod
@@ -107,3 +110,11 @@ class TextRenderer:
     @abstractmethod
     def _text_out(self, text: str, screen: Surface, pos: Vec2):
         pass
+
+
+def replace_starting_spaces(line: str) -> str:
+    if line.startswith('_'):
+        for i in range(0, len(line)):
+            if line[i] != '_':
+                return ' ' * i + line[i:]
+    return line

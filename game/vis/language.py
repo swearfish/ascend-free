@@ -10,7 +10,9 @@ class Language(Component):
         super().__init__()
         self._static_text_dict = {}
         self._static_text_array = []
+        self.history = {}
         self._parse_static_txt()
+        self._parse_history_txt()
         self.race_description = self.file_system.read_lines('newgame.txt')
 
     def _parse_static_txt(self):
@@ -43,6 +45,27 @@ class Language(Component):
                 self._static_text_dict[file_name][line_number] = text
                 line_number += 1
                 self._static_text_array.append(text)
+
+    def _parse_history_txt(self):
+        history_txt = self.file_system.read_lines('history.txt')
+        species_history = {}
+        mode = ''
+        for line in history_txt:
+            if line.startswith('//') or line=="":
+                continue
+            if line.startswith('specnum'):
+                specnum = int(line[7:].strip())
+                species_history = {}
+                self.history[specnum] = species_history
+            if line.startswith('power') or line.startswith('intro') or line.startswith('text'):
+                mode = line
+            elif line.startswith('endpower') or line.startswith('endintro') or line.startswith('endtext'):
+                mode = ""
+            elif mode != '':
+                if mode not in species_history:
+                    species_history[mode] = [line]
+                else:
+                    species_history[mode].append(line)
 
     def get_static(self, file_name: str | None, index: int, *args):
         if file_name is None:

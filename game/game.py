@@ -8,6 +8,8 @@ from game.vis.gui_builder import AscendancyGuiBuilder
 from game.vis.logo.logo_scene import LogoScene
 from game.vis.main_menu.main_menu import MainMenu
 from game.vis.new_game.new_game_scene import NewGameScene
+from game.vis.new_game.start_scene import StartScene
+from game.vis.star_map.star_map_scene import StarMapScene
 
 
 @auto_gcom
@@ -18,6 +20,7 @@ class AscendancyGame(Component):
     screen_size: Vec2
     display_size: Vec2
     skip_logo: bool = False
+    resume_game: bool = False
 
     def __init__(self):
         super().__init__()
@@ -33,6 +36,8 @@ class AscendancyGame(Component):
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.register_scene('new_game', NewGameScene)
+        self.scene_manager.register_scene('start', StartScene)
+        self.scene_manager.register_scene('star_map', StarMapScene)
         if self.skip_logo:
             self.scene_manager.enter_scene('main_menu')
         else:

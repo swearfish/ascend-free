@@ -23,15 +23,15 @@ class AscendancyScene(Scene, UiEventListener):
                  template_file: Optional[str] = None,
                  template_index: int = 1):
         super().__init__()
-        if 0 <= state_index:
+        if 0 <= state_index and state_index in self.gui_builder.states:
             self.state_frame = self.gui_builder.states[state_index]
-            if template_file:
-                self.background = self.resource_manager.renderer_from_shape_or_gif(template_file, template_index-1)
-            else:
-                self.background = None
             self.state_frame.listener = self
         else:
             self.state_frame = None
+        if template_file:
+            self.background = self.resource_manager.renderer_from_shape_or_gif(template_file, template_index-1)
+        else:
+            self.background = None
         self.click_events: dict = {}
 
     def on_click(self, sender: Control, message) -> bool:
@@ -50,9 +50,9 @@ class AscendancyScene(Scene, UiEventListener):
 
     def draw(self):
         super().draw()
+        if self.background:
+            self.background.draw(self.screen, Vec2(0, 0))
         if self.state_frame is not None:
-            if self.background:
-                self.background.draw(self.screen, Vec2(0, 0))
             self.state_frame.handle_draw(self.screen, Vec2(0, 0))
 
     def update(self, total_time: float, frame_time: float):

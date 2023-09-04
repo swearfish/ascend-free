@@ -35,7 +35,7 @@ class LogoScene(Scene):
 
     def draw(self):
         self.screen.fill([0, 0, 0])
-        self.logo.draw(self.screen, Vec2(0,0))
+        self.logo.draw(self.screen, Vec2(0, 0))
 
     def handle_back_key(self) -> bool:
         self.scene_manager.enter_scene('main_menu')

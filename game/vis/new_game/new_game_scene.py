@@ -11,7 +11,7 @@ from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
 from game.vis.new_game.player_color_select import PlayerColorPicker
 from game.vis.new_game.species_listbox import SpeciesListBox
-from game.vis.star_map_renderer import StarMapRenderer
+from game.vis.star_map.cosmos_window import CosmosWindow
 
 
 class NewGameScene(AscendancyScene):
@@ -46,14 +46,15 @@ class NewGameScene(AscendancyScene):
         self.controller.event_handler = lambda c: self.on_update(c)
         self.on_update(self.controller)
 
-        self.star_map_renderer = StarMapRenderer(self.state_frame,
-                                                 area_from_rect(7, 7, 300, 300),
-                                                 self.controller.star_map)
-        self.star_map_renderer.animate = True
+        self.cosmos_wnd = CosmosWindow(self.state_frame,
+                                       area_from_rect(7, 7, 300, 300),
+                                       self.controller.star_map)
+        self.cosmos_wnd.animate = True
 
         self.btn_galaxy.on_click_handler = lambda s, m: self.controller.next_star_density()
         self.btn_players.on_click_handler = lambda s, m: self.controller.next_species()
         self.btn_atmosphere.on_click_handler = lambda s, m: self.controller.next_atmosphere()
+        self.btn_begin_game.on_click_handler = lambda s, m: self.scene_manager.enter_scene('start')
 
     def draw(self):
         super().draw()

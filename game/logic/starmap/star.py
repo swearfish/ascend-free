@@ -10,6 +10,7 @@ class Star:
     def distance_to(self, other) -> float:
         return (self.pos - other.pos).length
 
+
 class StarLane:
     def __init__(self, star1: Star, star2: Star, is_red_link: bool):
         self.star_1 = star1
