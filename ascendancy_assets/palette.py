@@ -18,10 +18,10 @@ class Palette:
                 break
             self.entries.append([rgb[0] << 2, rgb[1] << 2, rgb[2] << 2, 0xFF])
 
-    def get_color_for_index(self, index: int, shift: int = 0):
+    def get_color_for_index(self, index: int, fn_transform):
         assert 0 <= index < len(self.entries), f"Color {index} is out of bounds"
-        real_index = index + shift
-        assert 0 <= real_index < len(self.entries), f"Color {real_index} is out of bounds"
+        real_index = fn_transform(index) if fn_transform is not None else index
+        assert 0 <= real_index < len(self.entries), f"Transformed color {real_index} is out of bounds"
         return self.entries[real_index]
 
 

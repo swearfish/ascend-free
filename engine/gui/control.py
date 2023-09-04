@@ -24,6 +24,7 @@ class Control:
         self._garbage = False
         if self.parent is not None:
             self.parent.children.append(self)
+        self.on_click_handler = None
 
     @property
     def listener(self):
@@ -57,7 +58,10 @@ class Control:
 
     # noinspection PyUnusedLocal
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
-        return self._invoke_listener(lambda listener: listener.on_click(self, self._message))
+        if self.on_click_handler is not None:
+            self.on_click_handler(self, self._message)
+        else:
+            return self._invoke_listener(lambda listener: listener.on_click(self, self._message))
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def on_mouse_down(self, button: int, mouse_pos: Vec2) -> bool:
@@ -121,7 +125,7 @@ class Control:
         if self._active_control is not None:
             if button & MOUSE_BUTTON_LEFT:
                 if self._active_control.area.contains(mouse_pos):
-                    handled = handled or self._active_control.on_mouse_click(mouse_pos)
+                    handled = handled or self._active_control.on_mouse_click(mouse_pos - self._active_control.area.top_left)
                 if not handled:
                     handled = self._active_control.handle_mouse_up(button,
                                                                    mouse_pos - self._active_control.area.top_left)

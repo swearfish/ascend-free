@@ -80,14 +80,14 @@ class ShapeImageReader:
                 row += self.background * num_bg_pixels
             elif (b & 1) == 0:
                 index = reader.read_uint8() or 0
-                clr = self.palette.get_color_for_index(index, shift=self._palette_shift)
+                clr = self.get_palette_color(index)
                 repeat_clr = b >> 1
                 row += clr * repeat_clr
             else:
                 num_pixels = b >> 1
                 for i in range(num_pixels):
                     index = reader.read_uint8() or 0
-                    clr = self.palette.get_color_for_index(index, self._palette_shift)
+                    clr = self.get_palette_color(index)
                     row += clr
 
             if len(row) == read_width:
@@ -96,6 +96,16 @@ class ShapeImageReader:
                 row = []
                 y += 1
         return pixels
+
+    def get_palette_color(self, index):
+        def shift_color(color):
+            # Only shift race colors
+            if 16 < color < 128:
+                return (color+self._palette_shift) % 256
+            else:
+                return color
+
+        return self.palette.get_color_for_index(index, shift_color)
 
 
 class ShapeImage:

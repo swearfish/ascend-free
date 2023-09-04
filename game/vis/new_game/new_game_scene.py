@@ -9,6 +9,7 @@ from game.vis.ascendancy_scene import AscendancyScene
 from game.vis.game_fx import GameFx
 from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
+from game.vis.new_game.player_color_select import PlayerColorPicker
 from game.vis.new_game.species_listbox import SpeciesListBox
 from game.vis.star_map_renderer import StarMapRenderer
 
@@ -29,15 +30,9 @@ class NewGameScene(AscendancyScene):
         self.btn_players: Button = self.state_frame.controls['PLAYERS_MORE']
         self.btn_atmosphere: Button = self.state_frame.controls['DIFFICULTYMORE']
 
-        self.btn_player_color = Button(self.state_frame,
-                                       "color",
-                                       area=area_with_size(378, 381, 116, 92),
-                                       mouse_focus=False)
-
-        self.btn_player_color.add_text_item(self.game_fx.large_font,
-                                            "Player Color",
-                                            Vec2(0, 10),
-                                            TEXT_CENTER)
+        self.player_color_picker = PlayerColorPicker(self.state_frame,
+                                                     area=area_with_size(378, 381, 116, 92),
+                                                     controller=self.controller)
 
         self.btn_begin_game = BeginGameButton(self.state_frame,
                                               'begin',
@@ -56,9 +51,9 @@ class NewGameScene(AscendancyScene):
                                                  self.controller.star_map)
         self.star_map_renderer.animate = True
 
-        self.click_events['GALAXY_MORE'] = lambda s, m: self.controller.next_star_density()
-        self.click_events['PLAYERS_MORE'] = lambda s, m: self.controller.next_species()
-        self.click_events['DIFFICULTYMORE'] = lambda s, m: self.controller.next_atmosphere()
+        self.btn_galaxy.on_click_handler = lambda s, m: self.controller.next_star_density()
+        self.btn_players.on_click_handler = lambda s, m: self.controller.next_species()
+        self.btn_atmosphere.on_click_handler = lambda s, m: self.controller.next_atmosphere()
 
     def draw(self):
         super().draw()
