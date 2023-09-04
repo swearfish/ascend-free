@@ -21,8 +21,18 @@ class AscendancyGuiBuilder(Component):
         super().__init__()
         self.windows_txt = parse_windows_txt(self.file_system.read_lines('windows.txt'))
         self.game_pal = self.resource_manager.game_pal
-        self.small_font = self.font_manager.register_font('small', self.windows_txt['SMALLFONT'])
-        self.large_font = self.font_manager.register_font('large', self.windows_txt['LARGEFONT'])
+
+        small_font_name = self.windows_txt['SMALLFONT']
+        large_font_name = self.windows_txt['LARGEFONT']
+
+        self.small_font = self.font_manager.register_font('small', small_font_name)
+        self.large_font = self.font_manager.register_font('large', large_font_name)
+
+        for i in range(0, 8):
+            self.font_manager.register_font(f'large/color={i}', large_font_name, self.game_pal, -243 + 16 + 3 + i*4)
+            self.font_manager.register_font(f'small/color={i}', small_font_name, self.game_pal, -243 + 16 + 3 + i*4)
+
+
         self.states: dict[int, StateFrame] = {}
 
     def build(self):

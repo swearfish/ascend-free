@@ -15,10 +15,11 @@ from foundation import BinaryReader
 
 
 class ShapeImageReader:
-    def __init__(self, palette: Palette, reader: BinaryReader):
+    def __init__(self, palette: Palette, reader: BinaryReader, palette_shift: int = 0):
         self.palette = palette
         self._read_header(reader)
         self._calc_bounds()
+        self._palette_shift = palette_shift
 
         self.background = [0, 0, 0, 0xFF]
         self.pad_row = self.background * self.width
@@ -79,14 +80,14 @@ class ShapeImageReader:
                 row += self.background * num_bg_pixels
             elif (b & 1) == 0:
                 index = reader.read_uint8() or 0
-                clr = self.palette.get_color_for_index(index)
+                clr = self.palette.get_color_for_index(index, shift=self._palette_shift)
                 repeat_clr = b >> 1
                 row += clr * repeat_clr
             else:
                 num_pixels = b >> 1
                 for i in range(num_pixels):
                     index = reader.read_uint8() or 0
-                    clr = self.palette.get_color_for_index(index)
+                    clr = self.palette.get_color_for_index(index, self._palette_shift)
                     row += clr
 
             if len(row) == read_width:
@@ -110,7 +111,7 @@ class ShapeImage:
             w.write(png_file, self.pixels)
 
 
-def image_from_reader(palette: Palette, reader: BinaryReader) -> ShapeImage:
-    reader = ShapeImageReader(palette, reader)
+def image_from_reader(palette: Palette, reader: BinaryReader, palette_shift: int = 0) -> ShapeImage:
+    reader = ShapeImageReader(palette, reader, palette_shift=palette_shift)
     image = ShapeImage(reader)
     return image

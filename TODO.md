@@ -5,3 +5,4 @@
 - [ ] Update controls at runtime
 - [ ] Use mouse wheel for scrolling in lists
 - [ ] Investigate transparency (e.g.: Star Cluster button or Species glyphs in New Game)
+- [ ] In-memory color blending for fonts (color text is written with palette manipulation for now)

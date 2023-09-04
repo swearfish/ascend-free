@@ -1,5 +1,3 @@
-import argparse
-
 import pygame
 
 from engine.scene_manager import SceneManager
@@ -19,6 +17,7 @@ class AscendancyGame(Component):
     scene_manager: SceneManager
     screen_size: Vec2
     display_size: Vec2
+    skip_logo: bool = False
 
     def __init__(self):
         super().__init__()
@@ -28,8 +27,6 @@ class AscendancyGame(Component):
         self.front_buffer = pygame.surface.Surface(self.display_size.as_tuple())
         gcom_instance.set_config('screen', self.back_buffer)
         self._inited = False
-        args = parse_command_line_args()
-        self.skip_logo = args.skip_logo
 
     def _late_init(self):
         self.gui_builder.build()
@@ -60,12 +57,3 @@ class AscendancyGame(Component):
     def on_key_press(self, ev):
         if ev.key == pygame.K_x and ev.mod & pygame.KMOD_ALT:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
-        pass
-
-
-def parse_command_line_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--skip-logo", action="store_true", help="Skip displaying the logo")
-
-    args = parser.parse_args()
-    return args

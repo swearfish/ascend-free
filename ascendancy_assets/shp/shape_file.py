@@ -13,13 +13,13 @@ SHAPE_MAGIC = 0x30312E31
 
 
 class ShapeFile:
-    def __init__(self, reader: BinaryReader, default_palette: Palette):
+    def __init__(self, reader: BinaryReader, default_palette: Palette, palette_shift=0):
         self.images: list[ShapeImage] = []
         self.default_palette: Palette = default_palette
 
-        self._read_images(reader)
+        self._read_images(reader,palette_shift)
 
-    def _read_images(self, reader: BinaryReader):
+    def _read_images(self, reader: BinaryReader, palette_shift=0):
         reader.set_endianness('LITTLE_ENDIAN')
         magic = reader.read_uint32()
         if magic != SHAPE_MAGIC:
@@ -41,12 +41,10 @@ class ShapeFile:
             reader.seek(off_dat)
             shape = None
             try:
-                shape = image_from_reader(palette, reader)
+                shape = image_from_reader(palette, reader, palette_shift)
             except ShapeException as e:
                 print(f'Failed to load {i} / {image_count} from {reader.name}: {e.msg}')
             except Exception as e:
                 print(f'Failed to load {i} / {image_count} from {reader.name}: {e}')
             self.images.append(shape)
             reader.seek(off_restore)
-
-

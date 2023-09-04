@@ -33,27 +33,30 @@ class ResourceManager(Component):
         physical_file = self.file_system.get_as_file(name)
         return pygame.image.load(physical_file)
 
-    def read_shape_file(self, name: str) -> ShapeFile:
+    def read_shape_file(self, name: str, palette_shift=0) -> ShapeFile:
         if name not in self.shapes:
             with self.file_system.open_file(name) as shp_file:
-                shape = ShapeFile(shp_file, self.game_pal)
+                shape = ShapeFile(shp_file, self.game_pal, palette_shift)
                 self.shapes[name] = shape
         return self.shapes[name]
 
-    def read_shape_image(self, name: str, index: int = 1) -> ShapeImage:
-        shape = self.read_shape_file(name)
+    def read_shape_image(self, name: str, index: int = 1, palette_shift=0) -> ShapeImage:
+        shape = self.read_shape_file(name, palette_shift)
         return shape.images[index - 1]
 
-    def _surface_from_shape_image(self, shape_name: str, index: int, shape_image: ShapeImage):
-        extracted_name = f'{shape_name}.ext/{index}.png'
+    def _surface_from_shape_image(self, shape_name: str, index: int, shape_image: ShapeImage, palette_shift=0):
+        if 0 < palette_shift:
+            extracted_name = f'{shape_name}.ext/pal_{palette_shift}/{index}.png'
+        else:
+            extracted_name = f'{shape_name}.ext/{index}.png'
         full_extracted_path = self.file_system.get_cached_name(extracted_name)
         if not os.path.exists(full_extracted_path):
             shape_image.export_to_png(full_extracted_path)
         return pygame.image.load(full_extracted_path)
 
-    def surface_from_shape_file(self, name: str, index: int = 1):
+    def surface_from_shape_file(self, name: str, index: int = 1, palette_shift=0):
         shape_image = self.read_shape_image(name, index)
-        return self._surface_from_shape_image(name, index, shape_image)
+        return self._surface_from_shape_image(name, index, shape_image, palette_shift)
 
     def shape_from_file(self, name: str, center=Vec2(0, 0), size=None) -> Shape:
         shape_file = self.read_shape_file(name)
@@ -67,15 +70,16 @@ class ResourceManager(Component):
             surfaces.append(surface)
         return Shape(surfaces, center, size)
 
-    def sprite_from_shape_file(self, name: str, center = Vec2(0, 0), size=None) -> Sprite:
+    def sprite_from_shape_file(self, name: str, center=Vec2(0, 0), size=None) -> Sprite:
         template = self.shape_from_file(name, center, size)
         return Sprite(template)
 
-    def renderer_from_shape_or_gif(self, name: str, index: int = 1, size=None) -> SurfaceRenderer:
+    def renderer_from_shape_or_gif(self, name: str, index: int = 1, size=None, palette_shift=0) -> SurfaceRenderer:
         if name.lower().endswith('.gif'):
+            assert palette_shift==0, "GIF file does not support palette manipulation"
             return SurfaceRenderer(self.surface_from_gif(name), size=size)
         else:
-            return SurfaceRenderer(self.surface_from_shape_file(name, index), size=size)
+            return SurfaceRenderer(self.surface_from_shape_file(name, index, palette_shift), size=size)
 
     def sprite_from_gif(self, name: str, size=None) -> Sprite:
         return Sprite(self.surface_from_gif(name), size=size)
@@ -85,6 +89,6 @@ class ResourceManager(Component):
             full_path = self.file_system.get_as_file(file)
             try:
                 if file.lower().endswith('shp') or file.lower().endswith('tmp'):
-                    shape = self.shape_from_file(file)
+                    _shape = self.shape_from_file(file)
             except Exception as e:
                 print(f'Failed to process file: {file}@{full_path} -- {e}')

@@ -14,7 +14,7 @@ from foundation import BinaryReader
 
 
 class FntFile:
-    def __init__(self, name: str, reader: BinaryReader, pal: Palette):
+    def __init__(self, name: str, reader: BinaryReader, pal: Palette, palette_shift=0):
         self.name = name
         self.palette = pal
         self.color_key: int | None = None
@@ -23,7 +23,7 @@ class FntFile:
         self.character_height: int | None = None
         self.total_width = 0
         self.pixels = []
-        self._read(reader)
+        self._read(reader, palette_shift)
 
     def measure_text(self, line: str):
         width = 0
@@ -32,7 +32,7 @@ class FntFile:
                 width += self.char_map[c].width
         return width, self.character_height
 
-    def _read(self, reader: BinaryReader):
+    def _read(self, reader: BinaryReader, palette_shift):
         magic = reader.read_uint32()
         if magic != 0x00002e31:
             raise Exception("Invalid FNT file (bad signature).")
@@ -50,12 +50,12 @@ class FntFile:
             off_char = reader.read_uint32()
             off_restore = reader.position
             reader.seek(off_char)
-            area = self._read_chr(reader)
+            area = self._read_chr(reader, palette_shift)
             if area is not None:
                 self.char_map[chr(i)] = area
             reader.seek(off_restore)
 
-    def _read_chr(self, reader: BinaryReader) -> Optional[Area]:
+    def _read_chr(self, reader: BinaryReader, palette_shift) -> Optional[Area]:
         width = reader.read_uint32()
         if not width:
             return None
@@ -66,6 +66,8 @@ class FntFile:
             row = self.pixels[y]
             for x in range(width):
                 index = reader.read_uint8()
+                if index != self.color_key:
+                    index += palette_shift
                 row += self.palette.entries[index]
         return result
 

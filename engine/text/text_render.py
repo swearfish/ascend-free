@@ -61,6 +61,9 @@ class TextRenderer:
         space_width = self._measure_line(' ').w
         while 0 < len(text):
             next_space = text.find(' ')
+            if next_space == 0:
+                text = text[1:]
+                continue
             next_newline = text.find(line_separator)
             if 0 < next_newline < next_space:
                 word = text[0:next_newline]

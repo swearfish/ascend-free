@@ -10,12 +10,14 @@ class FontManager(Component):
     def __init__(self):
         super().__init__()
         self.fonts: dict[str, TextRenderer] = {}
+        self.registry: dict[str, str] = {}
         self.resource_manager: ResourceManager = gcom_instance.get(ResourceManager)
         self.file_system: FileSystem = gcom_instance.get(FileSystem)
 
-    def register_font(self, name: str, font: str | TextRenderer, palette: Palette = None):
+    def register_font(self, name: str, font: str | TextRenderer, palette: Palette = None, palette_shift=0):
         if isinstance(font, str):
-            font = self._load_font(font, palette)
+            self.registry[name] = font
+            font = self._load_font(font, palette, palette_shift)
         self.fonts[name] = font
         return font
 
@@ -25,13 +27,13 @@ class FontManager(Component):
     def get(self, name: str) -> TextRenderer:
         return self.fonts[name]
 
-    def _load_font(self, name: str, palette: Palette = None) -> TextRenderer:
+    def _load_font(self, name: str, palette: Palette = None, palette_shift=0) -> TextRenderer:
         from engine.text.bitmap_font import BitmapFont
         from engine.text.bitmap_text_render import BitmapTextRenderer
         if palette is None:
             palette = self.resource_manager.game_pal
         with self.file_system.open_file(name) as f:
-            fnt_file = FntFile(name, f, palette)
-            bitmap_font = BitmapFont(fnt_file)
+            fnt_file = FntFile(name, f, palette, palette_shift)
+            bitmap_font = BitmapFont(fnt_file, palette_shift=palette_shift)
             renderer = BitmapTextRenderer(bitmap_font)
             return renderer

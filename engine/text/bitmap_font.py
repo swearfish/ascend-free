@@ -12,10 +12,10 @@ from foundation.vector_2d import Vec2
 
 
 class BitmapFont:
-    def __init__(self, font: FntFile, atlas=None, char_map=None):
+    def __init__(self, font: FntFile, atlas=None, char_map=None, palette_shift=0):
         self.file_system: FileSystem = gcom_instance.get(FileSystem)
         self.font = font
-        atlas_file_name = self.file_system.get_cached_name(font.name + '.png')
+        atlas_file_name = self.file_system.get_cached_name(f'{font.name}_{palette_shift}.png')
         if not os.path.isfile(atlas_file_name):
             font.export_to_png(atlas_file_name)
         self.atlas = pygame.image.load(atlas_file_name) if atlas is None else atlas

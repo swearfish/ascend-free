@@ -11,13 +11,13 @@ from foundation.gcom import auto_wire
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
 from game.vis.gui_builder import AscendancyGuiBuilder
-from settings import SCREEN_SCALE
 
 
 @auto_wire
 class AscendancyScene(Scene, UiEventListener):
     dialogs: AscendancyDialogs
     gui_builder: AscendancyGuiBuilder
+    display_scale: float
 
     def __init__(self, state_index: int = -1,
                  template_file: Optional[str] = None,
@@ -64,5 +64,5 @@ class AscendancyScene(Scene, UiEventListener):
         mouse_buttons = pygame.mouse.get_pressed()
         mods = pygame.key.get_mods()
         shift = mods & KMOD_SHIFT == KMOD_SHIFT
-        mouse_pos = Vec2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) / SCREEN_SCALE
+        mouse_pos = Vec2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) / self.display_scale
         self.state_frame.update_mouse(mouse_pos, mouse_buttons, shift)

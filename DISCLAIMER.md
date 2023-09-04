@@ -8,7 +8,7 @@ The Free Ascendancy Team is:
 
 | Author        | Email                  | Web                | Job                              |
 |---------------|------------------------|--------------------|----------------------------------|
-| **Ákos Nagy** | akos.nagy.mr@gmail.com | www.unicornkit.com | engine and game play programming 
+| **Ákos Nagy** | akos.nagy.mr@gmail.com | www.unicornkit.com | engine and game play programming |
 
 ## Ownership and Original Game Assets:
 
@@ -26,15 +26,22 @@ This reimplementation is distributed under an open-source license, [MIT License]
 
 Author(s) as the creator of this reimplementation, provides it "as is" without any warranties, expressed or implied. The use of this reimplementation is at your own risk, and The author(s) shall not be held liable for any damages or issues arising from its use.
 
-# Acknowledgment:
+
+For any inquiries or concerns regarding this reimplementation, please contact the author(s).
+
+# Acknowledgment
 
 We acknowledge and appreciate the work of '**The Logic Factory**' in creating the original game, and we encourage users to support and respect their intellectual property rights.
 
 By using this reimplementation, you agree to abide by the terms and conditions outlined in this disclaimer. If you do not agree with any part of this disclaimer, please refrain from using this reimplementation.
 
-For any inquiries or concerns regarding this reimplementation, please contact the author(s).
+## Open Source components
 
+The Free Ascendancy Team would like to thank the authors of the following open source projects:
 
+- Free Ascendancy was implemented using [Python language](https://www.python.org)
+- [PyGame](https://www.pygame.org/) framework
+- COB, SHP, VOC and FNT file format is based on work of https://github.com/daumiller/ascendancy
 
-_The Free Ascendancy Team_ <br>
-_03 September, 2023_
+_The Free Ascendancy Team <br> 
+_03 September 2023

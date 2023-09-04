@@ -1,0 +1,26 @@
+from engine.gui import Button
+from engine.text.font_manager import FontManager
+from engine.text.text_render import TEXT_CENTER
+from foundation import Area, Vec2
+from foundation.area import area_from_rect
+from foundation.gcom import auto_wire
+from game.logic.new_game_controller import NewGameController
+from game.vis.language import Language
+from game.vis.star_map_renderer import StarMapRenderer
+
+
+@auto_wire
+class BeginGameButton(Button):
+
+    font_manager: FontManager
+    language: Language
+
+    def __init__(self, parent, name: str, area: Area, controller: NewGameController):
+        super().__init__(parent, name, area)
+        large_font = self.font_manager.get('large')
+        text = self.language.get_static('status.cpp', 169)
+        self.add_text_item(large_font, text, Vec2(0, 70), TEXT_CENTER)
+        self.star_map = StarMapRenderer(self, area_from_rect(7, 7, 60, 60), controller.star_map)
+        self.star_map.animate = True
+        self.star_map.scale = 0.2
+        self.star_map.transparent = True

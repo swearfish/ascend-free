@@ -40,7 +40,9 @@ class Species:
             self._small_face.set_color_key()
         return self._small_face
 
-
+    def banner_for_color(self, color: int):
+        return self.resource_manager.renderer_from_shape_or_gif('data/raceflag.shp', self.index,
+                                                                palette_shift=color*4)
 
 @auto_wire
 class NewGameController:
@@ -113,3 +115,24 @@ class NewGameController:
     @property
     def atmosphere(self):
         return self._atmosphere
+
+    @property
+    def player_species(self):
+        return self.species[self._player_species]
+
+    @player_species.setter
+    def player_species(self, value):
+        if isinstance(value, Species):
+            self._player_species = value.index
+        else:
+            self._player_species = value
+        self._on_update()
+
+    @property
+    def player_color(self):
+        return self._player_color
+
+    @player_color.setter
+    def player_color(self, value):
+        self._player_color = value
+        self._on_update()
