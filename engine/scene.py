@@ -10,6 +10,10 @@ from foundation.gcom import auto_wire
 
 @auto_wire
 class Scene(AbstractScene):
+    """
+    Scene class with auto-wired basic resources
+    """
+
     resource_manager: ResourceManager
     font_manager: FontManager
     sound_manager: SoundManager

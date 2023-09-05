@@ -41,3 +41,10 @@ class StartScene(AscendancyScene):
         self.lg_font_color.draw_text(self.history, self.screen,
                                      area_from_rect(17, 267, 626, 460), TEXT_WRAP,
                                      line_separator='@')
+
+    def use_history(self) -> bool:
+        return False
+
+    def handle_back_key(self) -> bool:
+        self.scene_manager.enter_scene('galaxy')
+        return False

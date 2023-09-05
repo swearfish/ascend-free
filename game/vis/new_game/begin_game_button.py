@@ -9,7 +9,7 @@ from foundation.gcom import auto_wire
 from game.logic.new_game_controller import NewGameController
 from game.vis.game_fx import GameFx
 from game.vis.language import Language
-from game.vis.star_map.cosmos_window import CosmosWindow
+from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
 @auto_wire

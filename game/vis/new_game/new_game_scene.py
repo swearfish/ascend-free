@@ -11,7 +11,7 @@ from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
 from game.vis.new_game.player_color_select import PlayerColorPicker
 from game.vis.new_game.species_listbox import SpeciesListBox
-from game.vis.star_map.cosmos_window import CosmosWindow
+from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
 class NewGameScene(AscendancyScene):
@@ -81,3 +81,6 @@ class NewGameScene(AscendancyScene):
         self.btn_galaxy.shape_frame = controller.star_density
         self.btn_players.shape_frame = 5 + controller.num_species - MIN_PLAYERS
         self.btn_atmosphere.shape_frame = 10 + controller.atmosphere
+
+    def use_history(self) -> bool:
+        return False

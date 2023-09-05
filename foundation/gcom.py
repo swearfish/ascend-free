@@ -13,8 +13,11 @@ class Component:
 
 class GlobalComponentObjectModel:
     """
-    GCOM library, rarely used directly
-    Use @auto_wire and @auto_gcom instead or subclass Component
+    The component repository, not used directly.
+    Use @auto_wire and @auto_gcom instead or subclass Component.
+
+    GlobalComponentObjectModel is responsible for storing Component instances, retrieving them
+    and supporting auto_gcom and auto_wire decorators.
     """
 
     def __init__(self):
@@ -24,7 +27,9 @@ class GlobalComponentObjectModel:
 
     def set_config(self, name: str, value):
         """
-        Set the configuration parameter that can be resolved later
+        Set the configuration parameter.
+        Components or classes with auto_wire decorator may resolve properties based on GCOM configs.
+        See @auto_wire for usage example.
         :param name: Name of the parameter to set
         :param value: New value of the parameter
         """
@@ -33,6 +38,7 @@ class GlobalComponentObjectModel:
     def get_config(self, name: str, default_value=None):
         """
         Read a parameter or default_value if not defined
+        Components or classes with auto_wire decorator may resolve properties based on GCOM configs.
         :param name: Name of the parameter
         :param default_value: Default value returned when parameter is undefined
         :return: Value of the existing parameter value or default_value otherwise
@@ -126,7 +132,8 @@ gcom_instance: GlobalComponentObjectModel = GlobalComponentObjectModel()
 
 def auto_gcom(clazz):
     """
-    Similar to auto_wire, but also registers the class as a GCOM component.
+    Register the component to GCOM and auto-wire it's component dependencies and parameters.
+    Works similarly to auto_wire, but also registers the class as a GCOM component.
     Note: clazz must be a subclass of Component
     :param clazz: Class to be initialized and registered
     :return: Class with prepared initializer

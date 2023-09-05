@@ -35,7 +35,6 @@ class SceneManager(Component):
         if self._active_scene == scene or self._next_scene == scene:
             return
         self._next_scene = scene
-        self._use_history = True
 
     def _do_scene_switch(self):
         if self._active_scene == self._next_scene:
@@ -43,7 +42,8 @@ class SceneManager(Component):
         if self._active_scene is not None:
             self._active_scene.exit()
             if self._use_history:
-                self._history.append(self._active_scene)
+                if self._active_scene.use_history():
+                    self._history.append(self._active_scene)
                 self._use_history = False
         self._active_scene = self._next_scene
         self._next_scene = None
@@ -64,10 +64,10 @@ class SceneManager(Component):
 
     def back_button_press(self):
         if self._active_scene is not None:
-            is_handled = self._active_scene.handle_back_key()
+            should_handle = self._active_scene.handle_back_key()
         else:
-            is_handled = False
-        if not is_handled and 0 < len(self._history):
+            should_handle = True
+        if should_handle and 0 < len(self._history):
             self._next_scene = self._history[-1]
             self._history.pop()
             self._use_history = False

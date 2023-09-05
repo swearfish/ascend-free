@@ -9,7 +9,7 @@ from game.vis.logo.logo_scene import LogoScene
 from game.vis.main_menu.main_menu import MainMenu
 from game.vis.new_game.new_game_scene import NewGameScene
 from game.vis.new_game.start_scene import StartScene
-from game.vis.star_map.star_map_scene import StarMapScene
+from game.vis.galaxy.galaxy_scene import GalaxyScene
 
 
 @auto_gcom
@@ -37,7 +37,7 @@ class AscendancyGame(Component):
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.register_scene('new_game', NewGameScene)
         self.scene_manager.register_scene('start', StartScene)
-        self.scene_manager.register_scene('star_map', StarMapScene)
+        self.scene_manager.register_scene('galaxy', GalaxyScene)
         if self.skip_logo:
             self.scene_manager.enter_scene('main_menu')
         else:

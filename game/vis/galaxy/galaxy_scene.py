@@ -11,10 +11,10 @@ from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
 from game.vis.new_game.player_color_select import PlayerColorPicker
 from game.vis.new_game.species_listbox import SpeciesListBox
-from game.vis.star_map.cosmos_window import CosmosWindow
+from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
-class StarMapScene(AscendancyScene):
+class GalaxyScene(AscendancyScene):
 
     font_manager: FontManager
     language: Language
