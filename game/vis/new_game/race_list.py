@@ -10,16 +10,25 @@ from game.vis.game_fx import GameFx
 
 
 @auto_wire
-class SpeciesListBox(Control, UiEventListener):
+class RaceList(Control, UiEventListener):
 
     game_fx: GameFx
 
-    def __init__(self, parent, area: Area, controller: NewGameController):
+    def __init__(self, parent, area: Area):
         super().__init__(parent, area)
-        self.controller = controller
+        self._controller: NewGameController | None = None
         self.lst_species = ListBox(self, area.new_origin(Vec2(0, 0)), small=True,
-                                   items=self.controller.species,
                                    listener=self)
+
+    @property
+    def controller(self):
+        return self._controller
+
+    @controller.setter
+    def controller(self, value):
+        self._controller = value
+        if self._controller:
+            self.lst_species.items = self.controller.species
 
     def on_listbox_draw_item(self, listbox, surface: Surface, area: Area, item, _index):
         if listbox == self.lst_species:

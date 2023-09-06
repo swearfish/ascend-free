@@ -13,7 +13,7 @@ from foundation.gcom import auto_wire
 class ScrollBar(Control):
     resource_manager: ResourceManager
 
-    def __init__(self, parent, area: Area, offset: int, max: int, items_per_page: int):
+    def __init__(self, parent, area: Area, offset: int, max_items: int, items_per_page: int):
         super().__init__(parent, area, listener=parent)
         large = area.width > 15
         offset = 0 if large else 2
@@ -24,8 +24,16 @@ class ScrollBar(Control):
         self.shp_up = self.resource_manager.renderer_from_shape_or_gif('data/listbox.shp', offset)
         self.shp_down = self.resource_manager.renderer_from_shape_or_gif('data/listbox.shp', offset+1)
         self.offset = offset
-        self._max = max
+        self._max_items = max_items
         self._items_per_page = items_per_page
+
+    @property
+    def max(self):
+        return self._max_items
+
+    @max.setter
+    def max(self, value):
+        self._max_items = value
 
     def handle_draw(self, screen: Surface, pos: Vec2):
         super().handle_draw(screen, pos)
@@ -43,7 +51,7 @@ class ScrollBar(Control):
         return result
 
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
-        if self._highlight_bottom and self.offset < self._max - self._items_per_page:
+        if self._highlight_bottom and self.offset < self._max_items - self._items_per_page:
             self.offset += 1
             self._invoke_listener(lambda l: l.on_scroll(self, 1, self.offset))
         if self._highlight_top and self.offset > 0:

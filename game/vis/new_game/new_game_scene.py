@@ -10,7 +10,7 @@ from game.vis.game_fx import GameFx
 from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
 from game.vis.new_game.player_color_select import PlayerColorPicker
-from game.vis.new_game.species_listbox import SpeciesListBox
+from game.vis.new_game.race_list import RaceList
 from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
@@ -29,6 +29,9 @@ class NewGameScene(AscendancyScene):
         self.btn_galaxy: Button = self.state_frame.controls['GALAXY_MORE']
         self.btn_players: Button = self.state_frame.controls['PLAYERS_MORE']
         self.btn_atmosphere: Button = self.state_frame.controls['DIFFICULTYMORE']
+        self.lst_species: RaceList = self.state_frame.controls['RACELIST']
+
+        self.lst_species.controller = self.controller
 
         self.player_color_picker = PlayerColorPicker(self.state_frame,
                                                      area=area_with_size(378, 381, 116, 92),
@@ -38,10 +41,6 @@ class NewGameScene(AscendancyScene):
                                               'begin',
                                               area=area_with_size(501, 381, 132, 92),
                                               controller=self.controller)
-
-        self.lst_species = SpeciesListBox(self.state_frame,
-                                          area_from_rect(501, 44, 632, 372),
-                                          self.controller)
 
         self.controller.event_handler = lambda c: self.on_update(c)
         self.on_update(self.controller)

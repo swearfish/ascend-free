@@ -23,11 +23,9 @@ class AscendancyScene(Scene, UiEventListener):
                  template_file: Optional[str] = None,
                  template_index: int = 1):
         super().__init__()
-        if 0 <= state_index and state_index in self.gui_builder.states:
-            self.state_frame = self.gui_builder.states[state_index]
+        self.state_frame = self.gui_builder.build_frame(state_index)
+        if self.state_frame:
             self.state_frame.listener = self
-        else:
-            self.state_frame = None
         if template_file:
             self.background = self.resource_manager.renderer_from_shape_or_gif(template_file, template_index-1)
         else:

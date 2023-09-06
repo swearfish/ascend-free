@@ -15,12 +15,23 @@ class ListBox(Control, UiEventListener):
         super().__init__(parent, area, listener=listener)
         scroll_bar_width = 15 if small else 25
         scroll_bar_area = area_with_size(area.width - scroll_bar_width, 0, scroll_bar_width, area.height)
-        self._item_height = self.area.height / items_per_page
-        self._items = items
+        self._item_height = self.area.height // items_per_page
+        self._items = []
         self._first_item = 0
         self._items_per_page = items_per_page
         self.highlight_item = -1
-        self.scroll_bar = ScrollBar(self, scroll_bar_area, 0, len(self._items), items_per_page)
+        self.scroll_bar = ScrollBar(self, scroll_bar_area, 0, 0, items_per_page)
+        self.items = items
+
+    @property
+    def items(self):
+        return self._items
+
+    @items.setter
+    def items(self, value):
+        self._items = value
+        if self._items:
+            self.scroll_bar.max = len(self._items)
 
     def on_scroll(self, sender, direction, offset):
         self._first_item = offset
@@ -45,7 +56,7 @@ class ListBox(Control, UiEventListener):
         return True
 
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
-        if 0 <= self.highlight_item:
+        if 0 <= self.highlight_item < len(self._items):
             self._invoke_listener(
                 lambda l: l.on_listbox_select(self, self._items[self.highlight_item], self.highlight_item))
             return True
