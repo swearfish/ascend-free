@@ -1,21 +1,16 @@
 import pygame.draw
 from pygame import Surface
 
-from engine.gui import Control, Button
 from engine.gui.colors import COLOR_BUTTON_BG
 from engine.text.text_render import TEXT_CENTER
 from foundation import Area, Vec2
 from foundation.area import area_with_size
-from foundation.gcom import auto_wire
 from game.game_const import MAX_PLAYERS
 from game.logic.new_game_controller import NewGameController
-from game.vis.game_fx import GameFx
+from game.vis.ascendancy_control import AscendancyControl
 
 
-@auto_wire
-class PlayerColorPicker(Control):
-
-    game_fx: GameFx
+class PlayerColorPicker(AscendancyControl):
 
     def __init__(self, parent, area: Area, controller: NewGameController):
         super().__init__(parent, area)

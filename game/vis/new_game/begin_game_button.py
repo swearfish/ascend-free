@@ -7,17 +7,13 @@ from foundation import Area, Vec2
 from foundation.area import area_from_rect, area_with_size
 from foundation.gcom import auto_wire
 from game.logic.new_game_controller import NewGameController
+from game.vis.ascendancy_object import AscendancyObject
 from game.vis.game_fx import GameFx
 from game.vis.language import Language
 from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
-@auto_wire
-class BeginGameButton(Button):
-
-    font_manager: FontManager
-    language: Language
-    game_fx: GameFx
+class BeginGameButton(Button, AscendancyObject):
 
     def __init__(self, parent, name: str, area: Area, controller: NewGameController):
         super().__init__(parent, name, area)

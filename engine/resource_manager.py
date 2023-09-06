@@ -14,6 +14,7 @@ from foundation.gcom import Component, auto_gcom
 @auto_gcom
 class ResourceManager(Component):
     file_system: FileSystem
+    extract_all: bool
 
     def __init__(self):
         super().__init__()
@@ -21,6 +22,9 @@ class ResourceManager(Component):
 
         self.game_pal = self.get_palette('data/game.pal')
         self.shapes: dict[str, ShapeFile] = {}
+
+        if self.extract_all:
+            self.cache_all()
 
     def get_palette(self, name: str, start=0, size=256) -> Palette:
         if name in self.palette:
