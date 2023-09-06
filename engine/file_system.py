@@ -5,19 +5,28 @@ from typing import AnyStr, Optional
 from ascendancy_assets import CobArchive, CobFile
 from foundation import BinaryReader, binary_reader_from_buffer
 from foundation.gcom import Component, auto_gcom
+from foundation.utils import read_lines
 
 
 @auto_gcom
 class FileSystem(Component):
     assets_dir: str
+    ascend_dir: Optional[str] = None
     cache_dir: Optional[str] = None
 
     def __init__(self):
         super().__init__()
         if self.cache_dir is None:
             self.cache_dir = os.path.join(self.assets_dir, 'cache')
+        if self.ascend_dir is None:
+            self.ascend_dir = os.path.join(self.assets_dir, 'cob')
         os.makedirs(self.cache_dir, exist_ok=True)
-        self.cobs = [CobArchive(os.path.join(self.assets_dir, f'ascend0{x}.cob')) for x in range(3)]
+        cob_cfg_file = os.path.join(self.ascend_dir, 'cob.cfg')
+        if os.path.isfile(cob_cfg_file):
+            cob_cfg = read_lines(cob_cfg_file)
+            self.cobs = [CobArchive(os.path.join(self.ascend_dir, x)) for x in cob_cfg]
+        else:
+            self.cobs = [CobArchive(os.path.join(self.ascend_dir, f'ascend0{x}.cob')) for x in range(3)]
 
     def close(self):
         for cob in self.cobs:

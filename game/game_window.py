@@ -72,6 +72,10 @@ def parse_command_line_args():
                         action="store_true",
                         help="Immediately resume last game")
 
+    parser.add_argument("--nougat-lf",
+                        action="store_true",
+                        help="Enable cheat codes")
+
     parser.add_argument("--display-scale",
                         type=float,
                         default=1.5,
@@ -79,11 +83,19 @@ def parse_command_line_args():
 
     parser.add_argument("--assets-dir",
                         default="../assets",
+                        help="Path to game assets")
+
+    parser.add_argument("--ascend-dir",
+                        default="../assets/cob",
                         help="Path to COB files")
 
     parser.add_argument("--cache-dir",
                         default="../assets/cache",
                         help="Writable path to intermediate files")
+
+    parser.add_argument("--extract-all",
+                        action="store_true",
+                        help="Extract all contents from COB files into cache on startup")
 
     parser.add_argument("--save-dir",
                         default="../save",
