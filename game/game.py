@@ -19,8 +19,6 @@ class AscendancyGame(Component):
     scene_manager: SceneManager
     screen_size: Vec2
     display_size: Vec2
-    skip_logo: bool = False
-    resume_game: bool = False
 
     def __init__(self):
         super().__init__()
@@ -32,16 +30,12 @@ class AscendancyGame(Component):
         self._inited = False
 
     def _late_init(self):
-        self.gui_builder.build()
         self.scene_manager.register_scene('logo', LogoScene)
         self.scene_manager.register_scene('main_menu', MainMenu)
         self.scene_manager.register_scene('new_game', NewGameScene)
         self.scene_manager.register_scene('start', StartScene)
         self.scene_manager.register_scene('galaxy', GalaxyScene)
-        if self.skip_logo:
-            self.scene_manager.enter_scene('main_menu')
-        else:
-            self.scene_manager.enter_scene('logo')
+        self.scene_manager.enter_scene('logo')
 
     def draw(self):
         if not self._inited:

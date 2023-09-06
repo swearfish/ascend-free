@@ -31,7 +31,8 @@ class Shape:
         return len(self._shapes)
 
     def draw(self, dest: Surface, pos: Vec2, index: int = 0):
-        self._shapes[index].draw(dest, pos - self._center)
+        if self._shapes[index] is not None:
+            self._shapes[index].draw(dest, pos - self._center)
 
     def draw_scaled(self, dest: Surface, area: Area, index: int = 0):
         self._shapes[index].draw_scaled(dest, area)

@@ -10,7 +10,7 @@ from game.vis.game_fx import GameFx
 from game.vis.language import Language
 from game.vis.new_game.begin_game_button import BeginGameButton
 from game.vis.new_game.player_color_select import PlayerColorPicker
-from game.vis.new_game.species_listbox import SpeciesListBox
+from game.vis.new_game.race_list import RaceList
 from game.vis.galaxy.cosmos_window import CosmosWindow
 
 
@@ -22,11 +22,11 @@ class GalaxyScene(AscendancyScene):
 
     def __init__(self):
         # noinspection SpellCheckingInspection
-        super().__init__(state_index=3, template_file="data/1starmap.tmp")
+        super().__init__(state_index=1, template_file="data/1starmap.tmp")
 
-        self.star_map_renderer = CosmosWindow(self.state_frame,
-                                              area_from_rect(7, 7, 300, 300),
-                                              self.controller.cosmos_wnd)
+#        self.star_map_renderer = CosmosWindow(self.state_frame,
+#                                              area_from_rect(7, 7, 300, 300),
+#                                              self.controller.cosmos_wnd)
 
     def draw(self):
         super().draw()

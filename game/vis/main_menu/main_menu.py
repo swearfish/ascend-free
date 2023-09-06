@@ -1,19 +1,24 @@
 import pygame
 
+from foundation.gcom import auto_wire
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_scene import AscendancyScene
 from settings import SCREEN_SIZE
 
 
+@auto_wire
 class MainMenu(AscendancyScene):
+
+    resume_game: bool = False
+
     def __init__(self):
         super().__init__(state_index=0)
         self.bg = self.resource_manager.renderer_from_shape_or_gif('data/0opening.gif')
         self.buffer = pygame.Surface(SCREEN_SIZE)
         self.click_events['FRESHGAME'] = lambda s, m: self.scene_manager.enter_scene('new_game')
+        self.click_events['RESUME'] = lambda s, m: self._resume_game()
         self.click_events['INTRO'] = \
             self.click_events['PLAYTUTORIAL'] = \
-            self.click_events['RESUME'] = \
             self.click_events['LOAD'] = \
             self.click_events['SAVE'] = lambda s, m: self.dialogs.message_box(self.state_frame,
                                                                               s.title,
@@ -26,7 +31,8 @@ class MainMenu(AscendancyScene):
         self.fade_in = True
 
     def enter(self):
-        pass
+        if self.resume_game:
+            self._resume_game()
 
     def exit(self):
         pass
@@ -46,4 +52,8 @@ class MainMenu(AscendancyScene):
         super().draw()
 
     def handle_back_key(self) -> bool:
-        return True
+        return False
+
+    def _resume_game(self):
+        self.scene_manager.enter_scene('galaxy')
+        self.resume_game = False

@@ -7,13 +7,15 @@ from foundation.vector_2d import Vec2
 @auto_wire
 class LogoScene(Scene):
     jukebox: Jukebox
+    skip_logo: bool = False
 
     def __init__(self):
         super().__init__()
         self.logo = self.resource_manager.renderer_from_shape_or_gif('data/logo.gif')
 
     def enter(self):
-        pass
+        if self.skip_logo:
+            self.scene_manager.enter_scene('main_menu')
 
     def exit(self):
         # self.jukebox.play_now(0)

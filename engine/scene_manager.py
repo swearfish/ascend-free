@@ -35,6 +35,7 @@ class SceneManager(Component):
         if self._active_scene == scene or self._next_scene == scene:
             return
         self._next_scene = scene
+        self._use_history = True
 
     def _do_scene_switch(self):
         if self._active_scene == self._next_scene:
