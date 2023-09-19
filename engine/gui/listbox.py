@@ -45,7 +45,7 @@ class ListBox(Control, UiEventListener):
                 return
             if self.highlight_item == i and self._mouse_focus:
                 pygame.draw.rect(screen, COLOR_BUTTON_BG_HIGH, item_area.as_tuple())
-            self._invoke_listener(lambda l: l.on_listbox_draw_item(self, screen, item_area, self._items[i], i))
+            self.invoke_listener(lambda l: l.on_listbox_draw_item(self, screen, item_area, self._items[i], i))
             item_area = item_area.move_by(Vec2(0, self._item_height))
 
     def on_mouse_move(self, mouse_pos: Vec2) -> bool:
@@ -57,7 +57,7 @@ class ListBox(Control, UiEventListener):
 
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
         if 0 <= self.highlight_item < len(self._items):
-            self._invoke_listener(
+            self.invoke_listener(
                 lambda l: l.on_listbox_select(self, self._items[self.highlight_item], self.highlight_item))
             return True
         return False

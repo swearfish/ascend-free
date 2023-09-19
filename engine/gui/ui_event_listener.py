@@ -7,6 +7,9 @@ class UiEventListener:
     def on_click(self, sender, message) -> bool:
         pass
 
+    def on_toggle(self, sender, message, state) -> bool:
+        pass
+
     def on_scroll(self, sender, direction, offset):
         pass
 

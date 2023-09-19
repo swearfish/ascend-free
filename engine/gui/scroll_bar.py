@@ -53,9 +53,9 @@ class ScrollBar(Control):
     def on_mouse_click(self, mouse_pos: Vec2) -> bool:
         if self._highlight_bottom and self.offset < self._max_items - self._items_per_page:
             self.offset += 1
-            self._invoke_listener(lambda l: l.on_scroll(self, 1, self.offset))
+            self.invoke_listener(lambda l: l.on_scroll(self, 1, self.offset))
         if self._highlight_top and self.offset > 0:
             self.offset -= 1
-            self._invoke_listener(lambda l: l.on_scroll(self, -1, self.offset))
+            self.invoke_listener(lambda l: l.on_scroll(self, -1, self.offset))
         return False
 

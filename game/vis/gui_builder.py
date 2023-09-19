@@ -2,15 +2,18 @@ from ascendancy_assets.txt.windows_txt import parse_windows_txt
 from engine import FileSystem
 from engine.gui.button import Button
 from engine.gui.state_frame import StateFrame
+from engine.gui.toggle_button import ToggleButton
 from engine.resource_manager import ResourceManager
 from engine.text.font_manager import FontManager
 from foundation.area import area_from_rect
 from foundation.gcom import auto_gcom, Component
 from foundation.vector_2d import Vec2
+from game.vis.galaxy.cosmos_window import CosmosWindow
 from game.vis.galaxy.turn_count import TurnCount
 from game.vis.new_game.race_list import RaceList
 
 TYPE_BUTTON = 0
+TYPE_COSMOS_WND = 2
 TYPE_TOGGLE_BUTTON = 25
 TYPE_LIST = 10
 TYPE_TURN_COUNT = 15
@@ -57,22 +60,31 @@ class AscendancyGuiBuilder(Component):
             area = area_from_rect(x0, y0, x1, y1)
             control = None
             if wnd_type == TYPE_BUTTON or wnd_type == TYPE_TOGGLE_BUTTON:
-                control = self._build_button(state_frame, wnd, name, area)
+                control = self._build_button(state_frame, wnd, name, area, wnd_type)
             elif wnd_type == TYPE_LIST:
                 if name == 'RACELIST':
-                    control = self._build_race_list(state_frame, area)
+                    control = RaceList(state_frame, area)
             elif wnd_type == TYPE_TURN_COUNT:
-                control = self._build_turn_count(state_frame, area)
+                control = TurnCount(state_frame, area, state_frame.shape)
+            elif wnd_type == TYPE_COSMOS_WND:
+                control = CosmosWindow(state_frame, area)
             if control:
                 state_frame.controls[name] = control
         return state_frame
 
-    def _build_button(self, state_frame, wnd, name, area):
+    def _build_button(self, state_frame, wnd, name, area, btn_type):
         help_index = wnd['HELPINDEX']
         msg = (wnd['SENDMESSAGE'], wnd['SENDPARAM1'], wnd['SENDPARAM2'])
-        focus = wnd['MOUSEFOCUS'] == 1
         shape_frame = wnd['SHAPEFRAME']
-        button = Button(state_frame, name, area, help_index, msg, focus)
+        if btn_type == TYPE_BUTTON:
+            focus = wnd['MOUSEFOCUS'] == 1
+            button = Button(state_frame, name, area, help_index, msg, focus)
+        elif btn_type == TYPE_TOGGLE_BUTTON:
+            state = wnd['BUTTONSTATE'] == 1
+            button = ToggleButton(state_frame, name, area, help_index, msg, state)
+        else:
+            assert f"Unknown button type {btn_type}"
+            return None
         if 0 <= shape_frame:
             button.add_shape_item(shape_frame, state_frame.shape_name, pos=Vec2(0, 0), flags=0)
         for item_type, item_args in wnd['items']:
@@ -85,9 +97,3 @@ class AscendancyGuiBuilder(Component):
                 _unused, shape, frame, x, y = item_args
                 button.add_shape_item(frame, shape, pos=Vec2(x, y), flags=0)
         return button
-
-    def _build_race_list(self, state_frame, area):
-        return RaceList(state_frame, area)
-
-    def _build_turn_count(self, state_frame, area):
-        return TurnCount(state_frame, area, state_frame.shape)

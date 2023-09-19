@@ -22,7 +22,7 @@ class BeginGameButton(Button, AscendancyObject):
         self.add_text_item(large_font, text, Vec2(0, 70), TEXT_CENTER)
         self.cosmos_wnd = CosmosWindow(self, area_from_rect(7, 7, 60, 60), controller.star_map)
         self.cosmos_wnd.animate = True
-        self.cosmos_wnd.scale = 0.2
+        self.cosmos_wnd.zoom = 0.2
         self.cosmos_wnd.transparent = True
         self.controller = controller
 

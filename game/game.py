@@ -1,9 +1,11 @@
 import pygame
 
+from engine.resource_manager import ResourceManager
 from engine.scene_manager import SceneManager
 from foundation.gcom import Component, auto_gcom, gcom_instance
 from foundation.vector_2d import Vec2
 from game.vis.ascendancy_dialogs import AscendancyDialogs
+from game.vis.game_fx import GameFx
 from game.vis.gui_builder import AscendancyGuiBuilder
 from game.vis.logo.logo_scene import LogoScene
 from game.vis.main_menu.main_menu import MainMenu
@@ -17,6 +19,8 @@ class AscendancyGame(Component):
     gui_builder: AscendancyGuiBuilder
     dialogs: AscendancyDialogs
     scene_manager: SceneManager
+    resource_manager: ResourceManager
+    game_fx: GameFx
     screen_size: Vec2
     display_size: Vec2
 
@@ -36,6 +40,9 @@ class AscendancyGame(Component):
         self.scene_manager.register_scene('start', StartScene)
         self.scene_manager.register_scene('galaxy', GalaxyScene)
         self.scene_manager.enter_scene('logo')
+
+        icon = self.resource_manager.surface_from_shape_file(f'data/smrace19.shp', 0)
+        pygame.display.set_icon(icon)
 
     def draw(self):
         if not self._inited:

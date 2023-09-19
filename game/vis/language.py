@@ -1,6 +1,10 @@
 from engine import FileSystem
 from foundation.gcom import Component, auto_gcom
 
+STATIC_TXT = 'static.txt'
+# noinspection SpellCheckingInspection
+NEWGAME_TXT = 'newgame.txt'
+
 
 @auto_gcom
 class Language(Component):
@@ -13,10 +17,10 @@ class Language(Component):
         self.history = {}
         self._parse_static_txt()
         self._parse_history_txt()
-        self.race_description = self.file_system.read_lines('newgame.txt')
+        self.race_description = self.file_system.read_lines(NEWGAME_TXT)
 
     def _parse_static_txt(self):
-        static_txt = self.file_system.read_lines('static.txt')
+        static_txt = self.file_system.read_lines(STATIC_TXT)
         file_name = ""
         line_number = 0
         for line in static_txt:
@@ -51,12 +55,14 @@ class Language(Component):
         species_history = {}
         mode = ''
         for line in history_txt:
-            if line.startswith('//') or line=="":
+            if line.startswith('//') or line == "":
                 continue
+            # noinspection SpellCheckingInspection
             if line.startswith('specnum'):
-                specnum = int(line[7:].strip())
+                idx_species = int(line[7:].strip())
                 species_history = {}
-                self.history[specnum] = species_history
+                self.history[idx_species] = species_history
+            # noinspection SpellCheckingInspection
             if line.startswith('power') or line.startswith('intro') or line.startswith('text'):
                 mode = line
             elif line.startswith('endpower') or line.startswith('endintro') or line.startswith('endtext'):
@@ -86,3 +92,6 @@ class Language(Component):
             text_arg_index = result.find('%', index)
             arg_value_index += 1
         return result
+
+    def get_star_type_text(self, star_type):
+        return self.get_static('cosmos.cpp', 178 + star_type)

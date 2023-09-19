@@ -5,6 +5,7 @@ int_attrs = [
     'STATENUMBER',
     'STATE',
     'MOUSEFOCUS',
+    'BUTTONSTATE',
     'X0', 'Y0', 'X1', 'Y1',
     'SHAPEFRAME',
     'SENDMESSAGE', 'SENDPARAM1', 'SENDPARAM2',
